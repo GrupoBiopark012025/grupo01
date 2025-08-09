@@ -4,6 +4,8 @@
 [![Conventional Commits](https://img.shields.io/badge/commits-Conventional%20Commits-blue)](https://www.conventionalcommits.org/pt-br/v1.0.0/)
 [![License](https://img.shields.io/badge/license-MIT-green)](#)
 [![Kanban](https://img.shields.io/badge/Kanban-Organizado-orange)](#)
+![Agile](https://img.shields.io/badge/Methodology-Agile-blue)
+![User Stories](https://img.shields.io/badge/User%20Stories-Available-yellowgreen)
 
 ## 📖 Sobre o Projeto
 O **ActionPlanner** é um projeto desenvolvido como parte de um trabalho acadêmico, tendo como objetivo atender a demanda de um cliente real.  

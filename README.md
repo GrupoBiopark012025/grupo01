@@ -53,10 +53,10 @@ Ao finalizar o desenvolvimento da tarefa:
 3. Apenas após a validação e testes, o código será encaminhado para produção.
 
 ## 📂 Estrutura do Repositório
-*(Opcional, definir conforme evolução do projeto)*
+*(Definir)*
 
 ## 👥 Equipe
-*(Adicionar nomes e papéis dos integrantes do grupo)*
+Isaac, João, Kelvin, Bernardo, Igor
 
 ## 📜 Licença
 Este projeto está sob a licença **MIT** - veja o arquivo [LICENSE](LICENSE) para mais detalhes.

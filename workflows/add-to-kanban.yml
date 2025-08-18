@@ -1,0 +1,47 @@
+name: Add Issue to Kanban Project
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  add_to_kanban:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Add issue to Kanban project
+      uses: actions/github-script@v5
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const issueNumber = context.issue.number;
+          const projectName = 'ActionPlanner Board';
+          const columnName = 'Backlog';
+          
+          // Obtém o ID do projeto
+          const { data: projects } = await github.projects.listForRepo({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+          });
+
+          const project = projects.find(p => p.name === projectName);
+          if (!project) {
+            throw new Error(`Projeto "${projectName}" não encontrado.`);
+          }
+
+          // Obtém o ID da coluna
+          const { data: columns } = await github.projects.listColumns({
+            project_id: project.id,
+          });
+
+          const column = columns.find(c => c.name === columnName);
+          if (!column) {
+            throw new Error(`Coluna "${columnName}" não encontrada no projeto.`);
+          }
+
+          // Adiciona a issue à coluna
+          await github.projects.createCard({
+            column_id: column.id,
+            content_id: issueNumber,
+            content_type: 'Issue',
+          });

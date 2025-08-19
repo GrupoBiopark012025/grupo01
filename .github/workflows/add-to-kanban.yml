@@ -1,47 +1,57 @@
-name: Add Issue to Kanban Project
+name: Add Issue to GitHub Projects v2
 
 on:
   issues:
     types: [opened]
 
 jobs:
-  add_to_kanban:
+  add-to-project:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Add issue to Kanban project
-      uses: actions/github-script@v5
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const issueNumber = context.issue.number;
-          const projectName = 'ActionPlanner Board';
-          const columnName = 'Backlog';
-          
-          // Obtém o ID do projeto
-          const { data: projects } = await github.projects.listForRepo({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-          });
+      - name: Add issue to GitHub Projects (v2)
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueId = context.payload.issue.node_id;
 
-          const project = projects.find(p => p.name === projectName);
-          if (!project) {
-            throw new Error(`Projeto "${projectName}" não encontrado.`);
-          }
+            const projectId = "PVT_kwDODVyqM84A_bme";
+            const statusFieldId = "PVTSSF_lADODVyqM84A_bmezgyiXug";
+            const backlogOptionId = "f75ad846";
 
-          // Obtém o ID da coluna
-          const { data: columns } = await github.projects.listColumns({
-            project_id: project.id,
-          });
+            const { data: addItem } = await github.graphql(`
+              mutation($projectId:ID!, $contentId:ID!) {
+                addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
+                  item {
+                    id
+                  }
+                }
+              }
+            `, {
+              projectId,
+              contentId: issueId,
+            });
 
-          const column = columns.find(c => c.name === columnName);
-          if (!column) {
-            throw new Error(`Coluna "${columnName}" não encontrada no projeto.`);
-          }
+            const itemId = addItem.addProjectV2ItemById.item.id;
 
-          // Adiciona a issue à coluna
-          await github.projects.createCard({
-            column_id: column.id,
-            content_id: issueNumber,
-            content_type: 'Issue',
-          });
+            await github.graphql(`
+              mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+                updateProjectV2ItemFieldValue(input: {
+                  projectId: $projectId,
+                  itemId: $itemId,
+                  fieldId: $fieldId,
+                  value: {
+                    singleSelectOptionId: $optionId
+                  }
+                }) {
+                  projectV2Item {
+                    id
+                  }
+                }
+              }
+            `, {
+              projectId,
+              itemId,
+              fieldId: statusFieldId,
+              optionId: backlogOptionId,
+            });

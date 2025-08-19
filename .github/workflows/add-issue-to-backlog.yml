@@ -1,0 +1,15 @@
+name: Add Issue to Backlog
+
+on:
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  add-to-project:
+    name: Add issue to project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/add-to-project@RELEASE_VERSION
+        with:
+          project-url: https://github.com/orgs/GrupoBiopark012025/projects/1
+          github-token: ${{ secrets.PROJECT_PAT }}

@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enum para status do usuário
+enum UserStatus {
+  ATIVO
+  INATIVO
+}
+
+// Enum para níveis de acesso
+enum AccessLevel {
+  ADMIN
+  CONSULTOR
+  GESTOR_CLIENTE
+  COLABORADOR_CLIENTE
+}
+
+// Enum para ações do sistema (para auditoria)
+enum ActionType {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  VIEW
+  EXPORT
+}
+
+model Cliente {
+  id        Int      @id @default(autoincrement())
+  nome      String   @db.VarChar(255)
+  cnpj      String   @unique @db.VarChar(18)
+  email     String?  @db.VarChar(255)
+  telefone  String?  @db.VarChar(20)
+  endereco  String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relacionamentos
+  usuarios       User[]
+  userClientes   UserCliente[]
+  auditLogs      AuditLog[]
+
+  @@map("clientes")
+}
+
+// Tabela de Usuários
+model User {
+  id               Int        @id @default(autoincrement())
+  nome             String     @db.VarChar(255)
+  email            String     @unique @db.VarChar(255)
+  password         String     @db.VarChar(255)
+  clienteId        Int        @map("cliente_id")
+  isAdmin          Boolean    @default(false) @map("is_admin")
+  accessLevel      AccessLevel @map("access_level")
+  onlyAttachedTasks Boolean   @default(false) @map("only_attached_tasks")
+  status           UserStatus @default(ATIVO)
+  lastLogin        DateTime?  @map("last_login")
+  createdAt        DateTime   @default(now()) @map("created_at")
+  updatedAt        DateTime   @updatedAt @map("updated_at")
+
+  // Relacionamentos
+  cliente        Cliente       @relation(fields: [clienteId], references: [id])
+  userClientes   UserCliente[]
+  auditLogs      AuditLog[]
+
+  @@map("users")
+}
+
+// Tabela de relacionamento User-Cliente (quais clientes o usuario pode acessar)
+model UserCliente {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  clienteId Int      @map("cliente_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relacionamentos
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cliente Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+
+  // Índice único para evitar duplicação
+  @@unique([userId, clienteId])
+  @@map("user_clientes")
+}
+
+// Tabela de Auditoria/Log
+model AuditLog {
+  id          Int        @id @default(autoincrement())
+  userId      Int?       @map("user_id")
+  clienteId   Int?       @map("cliente_id")
+  action      ActionType
+  tableName   String     @map("table_name") @db.VarChar(100)
+  recordId    Int?       @map("record_id")
+  oldValues   Json?      @map("old_values")
+  newValues   Json?      @map("new_values")
+  description String?    @db.Text
+  ipAddress   String?    @map("ip_address") @db.VarChar(45)
+  userAgent   String?    @map("user_agent") @db.Text
+  createdAt   DateTime   @default(now()) @map("created_at")
+
+  // Relacionamentos
+  user    User?    @relation(fields: [userId], references: [id])
+  cliente Cliente? @relation(fields: [clienteId], references: [id])
+
+  @@map("audit_logs")
+}

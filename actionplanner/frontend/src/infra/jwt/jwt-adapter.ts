@@ -9,10 +9,9 @@ export class JwtAdapter implements Decoder {
     }
 
     try {
-      const plaintext: any = jwtDecode(token)
-      return plaintext
+      return jwtDecode(token)
     } catch (error) {
-      throw new UnexpectedError('Erro ao decodificar token')
+      throw new UnexpectedError('Erro ao decodificar token: ' + (error as Error).message)
     }
   }
 }

@@ -18,10 +18,6 @@ export const useAuth = (): AuthProps => {
   const jwtAdapter = useJwtAdapterState((s) => s.jwtAdapter)
   const localStorageAdapter = useLocalStorageAdapterState((s) => s.localStorageAdapter)
 
-  const onLogout = (user: string, unit: number): void => {
-    // TODO: fazer logout
-  }
-
   const isTokenValid = useCallback((notifyError: boolean = true): boolean => {
     const today = new Date()
     const expireDate = new Date(0)
@@ -38,8 +34,7 @@ export const useAuth = (): AuthProps => {
 
     if (isExpired) {
       if (notifyError) notify.error(new Error('Sessão Expirada, faça o login novamente!'))
-
-      onLogout(accessToken.sub, jwtLocalObject?.login_unit)
+      localStorageAdapter.set('@t_ap', undefined) // TODO: mudar para key em outro arquivo
       return false
     }
 

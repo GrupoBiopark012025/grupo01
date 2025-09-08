@@ -1,6 +1,7 @@
 import { useCallback } from "react"
 import { useJwtAdapterState, useLocalStorageAdapterState } from "@/presentation/components/states"
 import { useNotify } from "@/presentation/hooks"
+import { AUTHENTICATION_KEY_ACCESS_TOKEN } from "@/domain/usecases";
 
 type TokenPayload = {
   sub: string
@@ -22,19 +23,19 @@ export const useAuth = (): AuthProps => {
     const today = new Date()
     const expireDate = new Date(0)
 
-    const jwtLocalObject = localStorageAdapter.get('@t_ap') // TODO: mudar para key em outro arquivo
-    if (!jwtLocalObject?.access_token) {
+    const jwtLocalObject = localStorageAdapter.get(AUTHENTICATION_KEY_ACCESS_TOKEN) // TODO: mudar para key em outro arquivo
+    if (!jwtLocalObject?.token) {
       return false
     }
 
-    const accessToken = jwtAdapter.decode(jwtLocalObject?.access_token) as TokenPayload
+    const accessToken = jwtAdapter.decode(jwtLocalObject?.token) as TokenPayload
 
     expireDate.setUTCSeconds(accessToken.exp)
     const isExpired = today > expireDate
 
     if (isExpired) {
-      if (notifyError) notify.error(new Error('Sessão Expirada, faça o login novamente!'))
-      localStorageAdapter.set('@t_ap', undefined) // TODO: mudar para key em outro arquivo
+      if (notifyError) notify.error('Sessão Expirada, faça o login novamente!')
+      localStorageAdapter.set(AUTHENTICATION_KEY_ACCESS_TOKEN, undefined) // TODO: mudar para key em outro arquivo
       return false
     }
 

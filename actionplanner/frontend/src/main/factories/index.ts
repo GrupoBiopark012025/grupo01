@@ -1,10 +1,13 @@
-import * as cache from './cache'
-import * as adapters from './adapters/'
+import * as adapters from './adapters'
+import * as useCases from './usecases'
+import * as decorators from './decorators'
 
-export * from './cache'
-export * from './adapters/'
+export * from './adapters'
+export * from './usecases'
+export * from './decorators'
 
 export const Factories = {
-  ...cache,
-  ...adapters
+  ...adapters,
+  ...useCases,
+  ...decorators
 }

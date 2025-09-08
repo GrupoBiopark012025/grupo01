@@ -2,7 +2,7 @@ import { toast } from "sonner"
 
 type NotifyProps = {
   success: (text: string) => void
-  error: (error: Error) => void
+  error: (error: string) => void
   info: (text: string) => void
   warning: (text: string) => void
 }
@@ -12,8 +12,8 @@ export const useNotify = (): NotifyProps => {
     toast.success(text)
   }
 
-  const error = (error: Error): void => {
-    toast.error(error.message)
+  const error = (error: string): void => {
+    toast.error(error)
   }
 
   const info = (text: string): void => {

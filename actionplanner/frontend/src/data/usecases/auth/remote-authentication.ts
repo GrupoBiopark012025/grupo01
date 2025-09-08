@@ -24,7 +24,7 @@ export class RemoteAuthentication implements Authentication {
 
   async auth (params: AuthenticationParams): Promise<void> {
     const { statusCode, body } = await this.httpClient.request({
-      url: `${this.url}/login`,
+      url: `${this.url}/auth/login`,
       method: 'post',
       body: params,
       headers: {
@@ -38,7 +38,7 @@ export class RemoteAuthentication implements Authentication {
           throw new InvalidCredentialsError()
         }
 
-        this.setStorage.set(AUTHENTICATION_KEY_ACCESS_TOKEN, body)
+        this.setStorage.set(AUTHENTICATION_KEY_ACCESS_TOKEN, { token: body.token })
 
         return
       case HttpStatusCode.badRequest:

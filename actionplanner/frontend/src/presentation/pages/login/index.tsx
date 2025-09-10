@@ -5,6 +5,8 @@ import { Input } from "@/presentation/ui/shadcn/input"
 import { Label } from "@/presentation/ui/shadcn/label"
 import { type FormEvent, useState } from "react";
 import type { Authentication } from "@/domain/usecases";
+import { useNavigate } from "react-router-dom"
+import { useAuthStore } from "@/presentation/stores";
 
 type LoginPageProps = {
   getAuth: Authentication
@@ -12,6 +14,8 @@ type LoginPageProps = {
 
 export const LoginPage = (props: LoginPageProps) => {
   const notify = useNotify()
+  const navigate = useNavigate()
+  const { setUser } = useAuthStore()
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -25,9 +29,11 @@ export const LoginPage = (props: LoginPageProps) => {
     }
 
     try {
-      await props.getAuth.auth({ email, password })
+      const { user } = await props.getAuth.auth({ email, password })
 
-      notify.success(`Bem-vindo, ${email}!`)
+      notify.success(`Bem-vindo, ${user.nome}!`)
+      setUser(user)
+      navigate('/')
     } catch (error) {
       notify.error((error as Error).message)
     }

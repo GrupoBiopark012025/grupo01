@@ -22,7 +22,7 @@ export class RemoteAuthentication implements Authentication {
     this.setStorage = setStorage
   }
 
-  async auth (params: AuthenticationParams): Promise<void> {
+  async auth (params: AuthenticationParams): Promise<AuthenticationResult> {
     const { statusCode, body } = await this.httpClient.request({
       url: `${this.url}/auth/login`,
       method: 'post',
@@ -40,7 +40,7 @@ export class RemoteAuthentication implements Authentication {
 
         this.setStorage.set(AUTHENTICATION_KEY_ACCESS_TOKEN, { token: body.token })
 
-        return
+        return body
       case HttpStatusCode.badRequest:
         throw new InvalidCredentialsError('Dados inválidos')
       case HttpStatusCode.timeout:

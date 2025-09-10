@@ -1,5 +1,7 @@
+import type { AuthenticationModel } from "@/domain/models/auth";
+
 export interface Authentication {
-  auth: (params: AuthenticationParams) => Promise<void>
+  auth: (params: AuthenticationParams) => Promise<AuthenticationResult>
 }
 
 export type AuthenticationParams = {
@@ -7,8 +9,6 @@ export type AuthenticationParams = {
   password: string
 }
 
-export type AuthenticationResult = {
-  token: string
-}
+export type AuthenticationResult = AuthenticationModel
 
 export const AUTHENTICATION_KEY_ACCESS_TOKEN = '@t_ap'

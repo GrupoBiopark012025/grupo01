@@ -4,11 +4,11 @@ import { ZardButtonComponent } from "@shared/components/zardui/button/button.com
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ZardFormModule } from "@shared/components/zardui/form/form.module";
 import { ZardInputDirective } from "@shared/components/zardui/input/input.directive";
-import { AuthenticationDataService } from "@data/authentication/authentication-data.service";
 import { take } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute } from "@angular/router";
 import { toast } from "ngx-sonner";
+import { AuthenticationService } from "@core/services/authentication/authentication.service";
 
 @Component({
   selector: 'app-login',
@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
 
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
-  private readonly authenticationDataService = inject(AuthenticationDataService);
+  private readonly authenticationService = inject(AuthenticationService);
   private readonly destroyRef = inject(DestroyRef);
 
   form = this.fb.nonNullable.group({
@@ -41,8 +41,10 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (this.form.invalid) { return }
 
-    this.authenticationDataService
-      .login(this.form.getRawValue())
+    const { email, password } = this.form.getRawValue();
+
+    this.authenticationService
+      .login(email, password)
       .pipe(
         take(1),
         takeUntilDestroyed(this.destroyRef)

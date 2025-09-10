@@ -6,7 +6,8 @@ export const routes: Routes = [
   {
     path: 'login',
     title: 'ActionPlanner - Login',
-    component: LoginComponent
+    component: LoginComponent,
+    canActivate: [authenticationGuard]
   },
   {
     path: '',

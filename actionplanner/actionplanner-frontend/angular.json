@@ -6,9 +6,14 @@
     "actionplanner-frontend": {
       "projectType": "application",
       "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
+        "@schematics/angular:component": { "type": "component" },
+        "@schematics/angular:directive": { "type": "directive" },
+        "@schematics/angular:service": { "type": "service" },
+        "@schematics/angular:guard": { "typeSeparator": "." },
+        "@schematics/angular:interceptor": { "typeSeparator": "." },
+        "@schematics/angular:module": { "typeSeparator": "." },
+        "@schematics/angular:pipe": { "typeSeparator": "." },
+        "@schematics/angular:resolver": { "typeSeparator": "." }
       },
       "root": "",
       "sourceRoot": "src",
@@ -22,7 +27,6 @@
               "zone.js"
             ],
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
@@ -30,7 +34,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
             "server": "src/main.server.ts",
             "outputMode": "server",
@@ -85,7 +89,6 @@
               "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
@@ -93,7 +96,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ]
           }
         }

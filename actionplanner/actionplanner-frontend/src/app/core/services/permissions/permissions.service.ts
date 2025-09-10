@@ -16,8 +16,6 @@ export class PermissionsService {
     const isUsuarioLogado = this.authService.isLoggedIn();
 
     if (isUsuarioLogado && isLoginPage) {
-      console.log('usuário logado e login')
-
       this.router.navigate(['']);
       return false;
     }

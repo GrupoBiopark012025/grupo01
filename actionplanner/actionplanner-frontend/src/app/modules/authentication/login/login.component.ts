@@ -22,7 +22,7 @@ import { AuthenticationService } from "@core/services/authentication/authenticat
   templateUrl: './login.component.html'
 })
 export class LoginComponent implements OnInit {
-  private _returnUrl = signal<string | null>(null);
+  private _returnUrl = signal<string | undefined>(undefined);
 
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
@@ -44,12 +44,15 @@ export class LoginComponent implements OnInit {
     const { email, password } = this.form.getRawValue();
 
     this.authenticationService
-      .login(email, password)
+      .login(email, password, this._returnUrl())
       .pipe(
         take(1),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
+        next: () => {
+          toast.success('Bem-vindo(a), usuário.')
+        },
         error: (e) => {
           toast.error(e.error.message || 'Acesso temporariamente indisponível.');
         }

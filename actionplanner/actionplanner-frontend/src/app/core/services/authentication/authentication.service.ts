@@ -5,6 +5,7 @@ import { LocalStorageService } from "@core/services/local-storage/local-storage.
 import { JwtService } from "@core/services/jwt/jwt.service";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { WINDOW } from "@core/injection-tokens/injection-tokens";
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ import { WINDOW } from "@core/injection-tokens/injection-tokens";
 export class AuthenticationService {
 
   private readonly window = inject(WINDOW);
+  private readonly router = inject(Router);
   private readonly authenticationService = inject(AuthenticationDataService);
   private readonly jwtService = inject(JwtService);
   private readonly jwtHelperService = inject(JwtHelperService);
@@ -32,6 +34,7 @@ export class AuthenticationService {
 
           const { token } = response;
           this.registraNovoToken(token);
+          this.navigateAfterLogin();
           return token;
         })
       )
@@ -52,6 +55,10 @@ export class AuthenticationService {
 
   isTokenExpired(): Promise<boolean> {
     return Promise.resolve(this.jwtHelperService.isTokenExpired());
+  }
+
+  private navigateAfterLogin(returnUrl?: string): void {
+    this.router.navigate([returnUrl ?? '']);
   }
 
   private registraNovoToken(newToken: string): void {

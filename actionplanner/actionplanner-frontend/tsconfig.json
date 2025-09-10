@@ -19,7 +19,7 @@
         "environments/environment"
       ],
       "@shared/*": [
-        "src/app/shared/*"
+        "app/shared/*"
       ],
       "@core/*": [
         "app/core/*"

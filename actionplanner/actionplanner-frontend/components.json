@@ -6,8 +6,8 @@
     "cssVariables": true
   },
   "aliases": {
-    "components": "src/app/shared/components",
-    "utils": "src/app/shared/utils"
+    "components": "src/app/shared/components/zardui",
+    "utils": "src/app/shared/utils/zardui"
   },
   "theme": "zinc"
 }

@@ -17,7 +17,7 @@ import { removeNullQueryParamInterceptor } from "@core/interceptors/remove-null-
 import {
   parseDateQueryParamInterceptor
 } from "@core/interceptors/parse-date-query-param/parse-date-query-param.interceptor";
-import { API_BASE_URL } from "@core/injection-tokens/injection-tokens";
+import { API_BASE_URL, WINDOW } from "@core/injection-tokens/injection-tokens";
 import { makeBaseUrlInterceptor } from "@core/interceptors/make-base-url/make-base-url.interceptor";
 
 export const appConfig: ApplicationConfig = {
@@ -25,6 +25,7 @@ export const appConfig: ApplicationConfig = {
     { provide: LOCALE_ID, useValue: 'pt' },
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'BRL' },
     { provide: API_BASE_URL, useValue: environment.apiUrl },
+    { provide: WINDOW, useValue: window },
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes), provideClientHydration(withEventReplay()),

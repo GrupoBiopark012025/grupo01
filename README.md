@@ -14,7 +14,7 @@ O sistema visa **gerenciar planos de ação** de forma simples, intuitiva e efic
 O desenvolvimento seguirá **boas práticas de versionamento, organização e padronização de commits** para garantir qualidade e rastreabilidade do código.  
 
 ## 🛠️ Tecnologias Utilizadas
-- **Linguagem/Framework:** No Front-End React + Vite + TS. No Back-End NodeJS + ExpressJS
+- **Linguagem/Framework:** No Front-End Angular + TS. No Back-End NodeJS + ExpressJS
 - **Controle de versão:** Git + GitHub
 - **Metodologia:** Kanban, Stories, T-Shirt Size, Definition of Done e Status Report
 - **Padrão de commits:** [Conventional Commits](https://www.conventionalcommits.org/)
@@ -31,10 +31,12 @@ Exemplos de commits:
 
 O desenvolvimento será organizado no modelo **Kanban**, com as seguintes colunas:
 
-1. **Backlog** – Lista de tarefas e demandas a serem desenvolvidas.
-2. **In Progress** – Tarefas atualmente em desenvolvimento.
-3. **Code Review** – Tarefas concluídas e aguardando revisão de código.
-4. **Done** – Tarefas finalizadas e aprovadas.
+1. **Backlog** – Lista de tarefas e demandas pendentes de análise e pontuação.
+2. **Analysis** – Lista de tarefas e demandas a sendo analisadas e pontuadas.
+3. **To-Do** – Lista de tarefas e demandas a serem desenvolvidas.
+4. **In Progress** – Tarefas atualmente em desenvolvimento.
+5. **Code Review** – Tarefas concluídas e aguardando revisão de código.
+6. **Done** – Tarefas finalizadas e aprovadas.
 
 ## 🔄 Regras do Fluxo
 
@@ -51,9 +53,6 @@ Ao finalizar o desenvolvimento da tarefa:
 1. **Abrir um Merge Request (MR)** para a coluna **Code Review**.
 2. Caso **aprovado no Code Review**, o código será **mergeado** na branch `dev` (branch **default** do projeto).
 3. Apenas após a validação e testes, o código será encaminhado para produção.
-
-## 📂 Estrutura do Repositório
-*(Definir)*
 
 ## 👥 Equipe
 Isaac, João, Kelvin, Bernardo, Igor

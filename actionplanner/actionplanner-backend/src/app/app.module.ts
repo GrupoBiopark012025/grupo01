@@ -1,9 +1,19 @@
 import { Module } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { UserModule } from './user/user.module';
+import { UsersModule } from './users/users.module';
+import mikroOrmConfig from '../mikro-orm.config';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [MikroOrmModule.forRoot(), UserModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    MikroOrmModule.forRootAsync({
+      useFactory: () => mikroOrmConfig
+    }),
+    UsersModule
+  ],
   controllers: [],
   providers: [],
 })

@@ -1,15 +1,16 @@
-version: '3.8'
+version: '3.9'
 
 services:
   postgres:
-    container_name: action-planner-pg
-    image: postgres
-    ports:
-      - 5432:5432
+    container_name: actionplanner-pg
+    image: postgres:13
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: docker
-      POSTGRES_DB: action-planner
-      PGDATA: /data/postgres
+      POSTGRES_PASSWORD: moosess1234.
+      POSTGRES_DB: actionplanner_db
+      PGDATA: /data/postgresql
+    ports:
+      - "5433:5432"
     volumes:
-      - ./data/pg:/data/postgres
+      - ./data/pg:/data/postgresql
+    restart: unless-stopped

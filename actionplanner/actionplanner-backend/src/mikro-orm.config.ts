@@ -1,19 +1,25 @@
-import { Options } from '@mikro-orm/core';
-import * as path from 'path';
+import { defineConfig } from '@mikro-orm/core';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
+import 'dotenv/config'
 
-const mikroOrmConfig: Options = {
-  port: 5432,
-  user: 'postgres',
-  host: 'localhost',
+export default defineConfig({
   driver: PostgreSqlDriver,
-  dbName: 'action-planner',
-  password: 'docker',
+  host: process.env.DATABASE_HOST || 'localhost',
+  port: parseInt(process.env.DATABASE_PORT || '5432', 10),
+  user: process.env.DATABASE_USER || 'postgres',
+  password: process.env.DATABASE_PASSWORD,
+  dbName: process.env.DATABASE_NAME || 'actionplanner_db',
   entities: ['./dist/**/*.entity.js'],
   entitiesTs: ['./src/**/*.entity.ts'],
+  debug: process.env.NODE_ENV !== 'production',
   migrations: {
-    path: path.resolve(__dirname, './src/migrations')
+    path: './src/migrations',
+    pathTs: './src/migrations',
+    glob: '!(*.d).{js,ts}'
   },
-};
-
-export default mikroOrmConfig;
+  seeder: {
+    path: './src/seeders',
+    pathTs: './src/seeders',
+    glob: '!(*.d).{js,ts}',
+  }
+});

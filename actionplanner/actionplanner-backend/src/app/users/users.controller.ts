@@ -14,12 +14,12 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): Promise<User | null> {
     return this.usersService.findOne(id);
   }
 
@@ -32,7 +32,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  remove(@Param('id') id: string): Promise<string | null> {
+    return this.usersService.remove(id);
   }
 }

@@ -13,7 +13,7 @@ export class UsersService {
     private readonly userRepository: EntityRepository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     const { email, password, firstName, lastName } = createUserDto;
     const hashedPassword = await hash(password, 10);
 
@@ -29,8 +29,8 @@ export class UsersService {
     return user;
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll(): Promise<User[]> {
+    return this.userRepository.findAll({ orderBy: { createdAt: 'DESC' } });
   }
 
   async findOne(id: string): Promise<User | null> {
@@ -54,7 +54,18 @@ export class UsersService {
     return user;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    const user = await this.findOne(id);
+
+    if (!user) {
+      return null;
+    }
+
+    const em = this.userRepository.getEntityManager();
+
+    em.remove(user);
+    await em.flush();
+
+    return 'Usuário removido com sucesso!';
   }
 }

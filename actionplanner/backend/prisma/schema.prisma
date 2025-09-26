@@ -46,6 +46,7 @@ model Cliente {
   usuarios       User[]
   userClientes   UserCliente[]
   auditLogs      AuditLog[]
+  tasks          Task[]
 
   @@map("clientes")
 }
@@ -69,6 +70,8 @@ model User {
   cliente        Cliente       @relation(fields: [clienteId], references: [id])
   userClientes   UserCliente[]
   auditLogs      AuditLog[]
+  tasksResponsible Task[]      @relation("UserResponsibleTasks")
+  tasksCreated     Task[]      @relation("UserCreatedTasks")
 
   @@map("users")
 }
@@ -110,4 +113,59 @@ model AuditLog {
   cliente Cliente? @relation(fields: [clienteId], references: [id])
 
   @@map("audit_logs")
+}
+
+// Tabela de Projects, tarefa pode ter um projeto associado
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  description String?  @db.Text
+
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relacionamentos
+  tasks       Task[]
+
+  @@map("projects")
+}
+
+
+// Tabela de Tasks (Tarefas), tarefa terá um projeto associado, terá um cliente e tera um setor
+model Task {
+  id            Int      @id @default(autoincrement())
+  title         String   @db.VarChar(255)
+  description   String?  @db.Text
+  status        String   @db.VarChar(50)
+  priority      String   @db.VarChar(50)
+  dueDate       DateTime? @map("due_date")
+  projectId     Int?     @map("project_id")
+  clienteId     Int      @map("cliente_id")
+  sectorId      Int      @map("sector_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  userResponsibleId Int?    @map("user_responsible_id")
+  userCreatedId     Int      @map("user_created_id")
+
+  // Relacionamentos
+  project Project? @relation(fields: [projectId], references: [id])
+  cliente Cliente @relation(fields: [clienteId], references: [id])
+  sector   Sector   @relation(fields: [sectorId], references: [id])
+  userResponsible User? @relation("UserResponsibleTasks", fields: [userResponsibleId], references: [id])
+  userCreated     User  @relation("UserCreatedTasks", fields: [userCreatedId], references: [id])
+
+  @@map("tasks")
+}
+
+model Sector {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relacionamentos
+  tasks     Task[]
+
+  @@map("sectors")
 }

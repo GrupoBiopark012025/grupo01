@@ -168,4 +168,4 @@ model Sector {
   tasks     Task[]
 
   @@map("sectors")
-}
+} 

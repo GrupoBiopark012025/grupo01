@@ -6,7 +6,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalPipes(new ValidationPipe());
+
+  const apiPath = 'api';
+  app.setGlobalPrefix(apiPath);
 
   const mikroOrm = app.get(MikroORM);
   await mikroOrm.getMigrator().up();
@@ -18,7 +20,7 @@ async function bootstrap() {
     .addTag('actionplanner')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup(`${apiPath}/docs`, app, documentFactory);
 
   app.useGlobalPipes(
     new ValidationPipe({

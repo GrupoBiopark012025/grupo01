@@ -3,6 +3,7 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { UsersModule } from './users/users.module';
 import mikroOrmConfig from '../mikro-orm.config';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { ConfigModule } from '@nestjs/config';
     MikroOrmModule.forRootAsync({
       useFactory: () => mikroOrmConfig
     }),
-    UsersModule
+    UsersModule,
+    AuthModule
   ],
   controllers: [],
   providers: [],

@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { User } from './entities/user.entity';
 import { EntityRepository } from '@mikro-orm/core';
@@ -37,10 +37,10 @@ export class UsersService {
     return this.userRepository.findOne(id);
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
     if (!user) {
-      return null;
+      throw new NotFoundException();
     }
 
     const { email, password, firstName, lastName } = updateUserDto;
@@ -54,11 +54,11 @@ export class UsersService {
     return user;
   }
 
-  async remove(id: string) {
+  async remove(id: string): Promise<string> {
     const user = await this.findOne(id);
 
     if (!user) {
-      return null;
+      throw new NotFoundException();
     }
 
     const em = this.userRepository.getEntityManager();
@@ -67,5 +67,19 @@ export class UsersService {
     await em.flush();
 
     return 'Usuário removido com sucesso!';
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return this.userRepository.findOne({ email });
+  }
+
+  async findById(id: string): Promise<User> {
+    const user = await this.userRepository.findOne(id);
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return user;
   }
 }

@@ -1,8 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
 import { User } from './entities/user.entity';
+import { ApiNotFoundResponse } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
@@ -19,20 +20,23 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<User | null> {
-    return this.usersService.findOne(id);
+  @ApiNotFoundResponse({ description: 'Not Found' })
+  findOne(@Param('id') id: string): Promise<User> {
+    return this.usersService.findById(id);
   }
 
   @Patch(':id')
+  @ApiNotFoundResponse({ description: 'Not Found' })
   async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto
-  ): Promise<User | null> {
+  ): Promise<User> {
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<string | null> {
+  @ApiNotFoundResponse({ description: 'Not Found' })
+  remove(@Param('id') id: string): Promise<string> {
     return this.usersService.remove(id);
   }
 }

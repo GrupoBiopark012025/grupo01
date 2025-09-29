@@ -10,14 +10,14 @@ export class User {
   @Unique()
   email: string;
 
-  @Property()
+  @Property({ hidden: true })
   password: string;
 
-  @Property({ nullable: true })
-  firstName?: string & Opt;
+  @Property()
+  firstName: string & Opt = '';
 
-  @Property({ nullable: true })
-  lastName?: string & Opt;
+  @Property()
+  lastName: string & Opt = '';
 
   @Property({ default: true })
   isActive: boolean & Opt = true;

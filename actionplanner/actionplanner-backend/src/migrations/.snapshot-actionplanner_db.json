@@ -42,8 +42,9 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": true,
+          "nullable": false,
           "length": 255,
+          "default": "''",
           "mappedType": "string"
         },
         "last_name": {
@@ -52,8 +53,9 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": true,
+          "nullable": false,
           "length": 255,
+          "default": "''",
           "mappedType": "string"
         },
         "is_active": {

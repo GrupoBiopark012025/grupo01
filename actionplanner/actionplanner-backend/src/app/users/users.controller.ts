@@ -13,7 +13,7 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { User } from './entities/user.entity';
 import { ApiBearerAuth, ApiNotFoundResponse } from '@nestjs/swagger';
-import { AuthGuard } from '../auth/guards/auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
 export class UsersController {
@@ -25,14 +25,14 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiNotFoundResponse({ description: 'Not Found' })
   findOne(@Param('id') id: string): Promise<User> {
@@ -40,7 +40,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiNotFoundResponse({ description: 'Not Found' })
   async update(
@@ -51,7 +51,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiNotFoundResponse({ description: 'Not Found' })
   remove(@Param('id') id: string): Promise<string> {

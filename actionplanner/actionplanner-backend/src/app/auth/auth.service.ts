@@ -4,6 +4,7 @@ import { LoginRequestDto } from './dtos/login-request.dto';
 import { LoginResponseDto } from './dtos/login-response.dto';
 import { compareSync } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { TokenPayloadDto } from './dtos/token-payload.dto';
 
 type SignInData = { userId: string, email: string }
 
@@ -39,7 +40,7 @@ export class AuthService {
   }
 
   async signIn(input: SignInData): Promise<LoginResponseDto> {
-    const tokenPayload = {
+    const tokenPayload: TokenPayloadDto = {
       sub: input.userId,
       email: input.email
     };

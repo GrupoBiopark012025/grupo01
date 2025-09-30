@@ -1,4 +1,5 @@
 import { UserService } from '../services/userService.js';
+import hateoas from '../middlewares/hateoas.js';
 
 export const showUser = async (req, res, next) => {
   /*

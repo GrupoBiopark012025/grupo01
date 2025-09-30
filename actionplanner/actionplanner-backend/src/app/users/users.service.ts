@@ -5,6 +5,9 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { User } from './entities/user.entity';
 import { EntityRepository } from '@mikro-orm/core';
 import { hash } from 'bcryptjs';
+import { UserDto } from './dtos/user.dto';
+import { GetUserDto } from './dtos/get-user.dto';
+import { PaginationResponseDto } from '@shared/dtos/pagination-response.dto';
 
 @Injectable()
 export class UsersService {
@@ -13,7 +16,7 @@ export class UsersService {
     private readonly userRepository: EntityRepository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<UserDto> {
     const { email, password, firstName, lastName } = createUserDto;
     const hashedPassword = await hash(password, 10);
 
@@ -26,19 +29,18 @@ export class UsersService {
 
     await this.userRepository.getEntityManager().persistAndFlush(user);
 
-    return user;
+    return {
+      userId: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      isActive: user.isActive,
+      createdAt: user.createdAt
+    };
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userRepository.findAll({ orderBy: { createdAt: 'DESC' } });
-  }
-
-  async findOne(id: string): Promise<User | null> {
-    return this.userRepository.findOne(id);
-  }
-
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.findOne(id);
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<UserDto> {
+    const user = await this.userRepository.findOne(id);
     if (!user) {
       throw new NotFoundException();
     }
@@ -51,11 +53,19 @@ export class UsersService {
     if (lastName) user.lastName = lastName;
 
     await this.userRepository.getEntityManager().flush();
-    return user;
+
+    return {
+      userId: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      isActive: user.isActive,
+      createdAt: user.createdAt
+    };
   }
 
   async remove(id: string): Promise<string> {
-    const user = await this.findOne(id);
+    const user = await this.userRepository.findOne(id);
 
     if (!user) {
       throw new NotFoundException();
@@ -73,13 +83,45 @@ export class UsersService {
     return this.userRepository.findOne({ email });
   }
 
-  async findById(id: string): Promise<User> {
+  async findById(id: string): Promise<UserDto> {
     const user = await this.userRepository.findOne(id);
 
     if (!user) {
       throw new NotFoundException();
     }
 
-    return user;
+    return {
+      userId: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      isActive: user.isActive,
+      createdAt: user.createdAt
+    };
+  }
+
+  async findAll(getUserDto: GetUserDto): Promise<PaginationResponseDto<UserDto>> {
+    const { page, pageSize } = getUserDto;
+
+    const users = await this.userRepository.findAll({
+      orderBy: { createdAt: 'DESC' },
+      offset: (page - 1) * pageSize,
+      limit: getUserDto.pageSize
+    });
+
+    const recordsTotal = await this.userRepository.count();
+
+    return {
+      pageSize,
+      recordsTotal,
+      list: users.map(user => ({
+        userId: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        isActive: user.isActive,
+        createdAt: user.createdAt
+      }))
+    };
   }
 }

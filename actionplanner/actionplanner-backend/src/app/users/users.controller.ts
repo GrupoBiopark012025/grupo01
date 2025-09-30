@@ -32,12 +32,16 @@ export class UsersController {
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiNotFoundResponse({ description: 'Not Found' })
   findOne(@Param('id') id: string): Promise<User> {
     return this.usersService.findById(id);
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiNotFoundResponse({ description: 'Not Found' })
   async update(
     @Param('id') id: string,
@@ -47,6 +51,8 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiNotFoundResponse({ description: 'Not Found' })
   remove(@Param('id') id: string): Promise<string> {
     return this.usersService.remove(id);

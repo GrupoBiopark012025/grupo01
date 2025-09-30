@@ -1,7 +1,9 @@
 <div class="flex h-screen flex-col overflow-hidden">
   <app-header></app-header>
-  <div class="flex w-full justify-start overflow-hidden">
-    <app-sidebar></app-sidebar>
+  <div class="flex w-full justify-start overflow-hidden h-full">
+    <div class="flex-shrink-0">
+      <app-sidebar></app-sidebar>
+    </div>
     <div class="flex grow h-full overflow-auto">
       <router-outlet />
     </div>

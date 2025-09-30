@@ -18,7 +18,7 @@ export class AuthService {
     const user = await this.validateUser(input);
 
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Credentials do not match.');
     }
 
     return this.signIn(user);
@@ -28,7 +28,7 @@ export class AuthService {
     const user = await this.usersService.findByEmail(input.email);
 
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException('User not found.');
     }
 
     if (compareSync(input.password, user.password)) {

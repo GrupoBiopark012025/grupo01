@@ -18,6 +18,7 @@ async function bootstrap() {
     .setDescription('The Action Planner API description')
     .setVersion('1.0')
     .addTag('ActionPlanner')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(`${apiPath}/docs`, app, documentFactory);

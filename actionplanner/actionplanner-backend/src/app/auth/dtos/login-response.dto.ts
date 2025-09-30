@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 export class LoginResponseDto {
   @IsString()
   @IsNotEmpty()
-  token: string;
+  accessToken: string;
 
   @IsUUID()
   @IsNotEmpty()

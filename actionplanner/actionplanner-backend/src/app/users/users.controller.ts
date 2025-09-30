@@ -1,9 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { User } from './entities/user.entity';
-import { ApiNotFoundResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiNotFoundResponse } from '@nestjs/swagger';
+import { AuthGuard } from '../auth/guards/auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -15,6 +25,8 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }

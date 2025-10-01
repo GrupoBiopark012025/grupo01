@@ -6,14 +6,8 @@ import { authenticationGuard } from "@core/guards/authentication/authentication.
 export const routes: Routes = [
   {
     path: 'login',
-    title: 'ActionPlanner - Login',
+    title: 'Login - ActionPlanner',
     component: LoginComponent,
-    canActivate: [authenticationGuard]
-  },
-  {
-    path: 'homePage',
-    title: 'ActionPlanner - Home',
-    component: HomeComponent,
     canActivate: [authenticationGuard]
   },
   {

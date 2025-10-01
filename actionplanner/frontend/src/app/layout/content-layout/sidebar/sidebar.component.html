@@ -3,7 +3,7 @@
     <!-- Navigation Menu -->
     <nav class="space-y-2">
       <!-- Home -->
-      <a href="/homePage" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 hover:border hover:border-gray-200 active:bg-gray-200 focus:bg-gray-200 transition-all border border-transparent">
+      <a href="/" class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 hover:border hover:border-gray-200 active:bg-gray-200 focus:bg-gray-200 transition-all border border-transparent">
         <span class="text-sm font-medium">Home</span>
       </a>
       
@@ -136,7 +136,7 @@
          (click)="toggleUserMenu()">
       <!-- Avatar ZardUI -->
       <z-avatar 
-        [fallback]="currentUser.name?.charAt(0)?.toUpperCase() || 'U'"
+        [fallback]="currentUser.name.charAt(0).toUpperCase() || 'U'"
         zSize="default"
         zShape="rounded"
         zVariant="custom">

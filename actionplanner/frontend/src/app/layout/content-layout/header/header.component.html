@@ -29,7 +29,7 @@
 
       <!-- Avatar do usuário -->
       <z-avatar 
-        [fallback]="currentUser.name?.charAt(0)?.toUpperCase() || 'U'"
+        [fallback]="currentUser.name.charAt(0).toUpperCase() || 'U'"
         zSize="default"
         zShape="rounded"
         zVariant="custom"

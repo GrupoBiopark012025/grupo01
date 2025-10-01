@@ -46,7 +46,7 @@ export class AuthenticationService {
 
     if (!redirect) { return; }
 
-    this.window.location.href = '/login'; // TODO: validar
+    this.window.location.href = 'login';
   }
 
   isLoggedIn(): boolean {
@@ -76,7 +76,7 @@ export class AuthenticationService {
   }
 
   private navigateAfterLogin(returnUrl?: string): void {
-    this.router.navigate([returnUrl ?? '']);
+    this.router.navigate([returnUrl ?? 'home']);
   }
 
   private registraNovoToken(newToken: string): void {

@@ -43,7 +43,7 @@ export const appConfig: ApplicationConfig = {
         config: {
           headerName: 'Authorization',
           authScheme: 'Bearer ',
-          tokenGetter: () => JSON.parse(localStorage.getItem('egAccessToken') ?? 'null'),
+          tokenGetter: () => JSON.parse(localStorage.getItem('ap_access_token') ?? 'null'),
           allowedDomains: [environment.webApiDomain],
           disallowedRoutes: [environment.apiUrl + '/auth']
         }

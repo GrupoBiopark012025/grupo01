@@ -21,20 +21,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -53,20 +39,6 @@
         "parameters": [
           {
             "name": "_page",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
             "in": "query",
             "schema": {
               "type": "string"
@@ -198,20 +170,6 @@
             }
           },
           {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "authorization",
             "in": "header",
             "schema": {
@@ -313,20 +271,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -350,20 +294,6 @@
         "parameters": [
           {
             "name": "_page",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
             "in": "query",
             "schema": {
               "type": "string"
@@ -470,23 +400,12 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "201": {
             "description": "Usuário criado com sucesso",
             "content": {
@@ -539,20 +458,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -594,13 +499,6 @@
             }
           },
           {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "page",
             "in": "query",
             "description": "Número da página",
@@ -617,7 +515,7 @@
             }
           },
           {
-            "name": "_order",
+            "name": "orderBy",
             "in": "query",
             "description": "Campo para ordenação",
             "schema": {
@@ -854,23 +752,12 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "201": {
             "description": "Usuário criado com sucesso",
             "content": {
@@ -931,20 +818,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -989,20 +862,6 @@
           },
           {
             "name": "_page",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
             "in": "query",
             "schema": {
               "type": "string"
@@ -1068,23 +927,12 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "204": {
             "description": "Usuário excluído"
           },
@@ -1097,223 +945,6 @@
             "bearerAuth": []
           }
         ]
-      }
-    },
-    "/api/tasks/": {
-      "get": {
-        "tags": [
-          "Tasks"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "_page",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "description": "Número da página",
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "description": "Tamanho da página",
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "description": "Campo para ordenação",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "title",
-            "in": "query",
-            "description": "Filtrar por título",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "description": "Filtrar por status",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "priority",
-            "in": "query",
-            "description": "Filtrar por prioridade",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "dueDate",
-            "in": "query",
-            "description": "Filtrar por data de vencimento",
-            "format": "date",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_size",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filters",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "_page",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          }
-        }
-      }
-    },
-    "/api/tasks/{id}": {
-      "get": {
-        "tags": [
-          "Tasks"
-        ],
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_page",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        }
-      },
-      "delete": {
-        "description": "",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_page",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
       }
     }
   },
@@ -1583,21 +1214,18 @@
         }
       }
     },
-  "UserProfile": {
-    "type": "object",
-    "properties": {
-      "id": { "type": "number", "example": 1 },
-      "nome": { "type": "string", "example": "Hermes" },
-      "email": { "type": "string", "example": "hermes@actionplan.com.br" },
-      "clienteId": { "type": "number", "example": 1 },
-      "isAdmin": { "type": "boolean", "example": true },
-      "accessLevel": { "type": "string", "example": "ADMIN" },
-      "onlyAttachedTasks": { "type": "boolean", "example": false },
-      "status": { "type": "string", "example": "ATIVO" },
-      "createdAt": { "type": "string", "example": "2025-01-15T10:30:00.000Z" },
-      "updatedAt": { "type": "string", "example": "2025-01-15T10:30:00.000Z" }
-    }
-  },
+    "UserProfile": {
+      "id": 1,
+      "nome": "Hermes",
+      "email": "hermes@actionplan.com.br",
+      "clienteId": 1,
+      "isAdmin": true,
+      "accessLevel": "ADMIN",
+      "onlyAttachedTasks": false,
+      "status": "ATIVO",
+      "createdAt": "2025-01-15T10:30:00.000Z",
+      "updatedAt": "2025-01-15T10:30:00.000Z"
+    },
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",

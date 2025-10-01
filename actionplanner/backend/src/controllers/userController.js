@@ -42,7 +42,7 @@ export const listUsers = async (req, res, next) => {
     description: 'Tamanho da página',
     type: 'integer'
   }
-  #swagger.parameters['_order'] = {
+  #swagger.parameters['orderBy'] = {
     in: 'query',
     description: 'Campo para ordenação',
     type: 'string'
@@ -85,11 +85,11 @@ export const listUsers = async (req, res, next) => {
   }
   */
   try {
-    const { _page, _size, _order, ...filters } = req.query;
+    const { page, size, orderBy, ...filters } = req.query;
     const pagination = {
-      page: parseInt(_page) || 1,
-      size: parseInt(_size) || 10,
-      _order
+      page: parseInt(page) || 1,
+      size: parseInt(size) || 10,
+      orderBy
     };
 
     const result = await UserService.findMany(filters, pagination);

@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { map, Observable, shareReplay, switchMap } from "rxjs";
+import { Observable, shareReplay, switchMap } from "rxjs";
 import { GetUserDto, GetUserQuery } from "@data/user/dtos";
 import { UserDataService } from "@data/user/user-data.service";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";

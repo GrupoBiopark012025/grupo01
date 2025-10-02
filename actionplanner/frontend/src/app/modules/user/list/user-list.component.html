@@ -1,8 +1,43 @@
+<app-list-header title="Usuários" actionTitle="Novo Usuário" />
+
 @if (users$ | async; as users) {
   @if (users.data.length) {
-    @for (user of users.data; track user.id) {
-      <p>{{ user.nome }}</p>
-    }
+    <table z-table class="w-full">
+      <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Acesso</th>
+        <th>Status</th>
+        <th>Data Registro</th>
+        <th>Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (user of users.data; track user.id) {
+          <tr>
+            <td class="font-medium">{{ user.nome }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ descricaoUserAccessLevelEnum[user.accessLevel] }}</td>
+            <td>
+              <z-badge>
+                {{ descricaoUserStatusEnum[user.status] }}
+              </z-badge>
+            </td>
+            <td>
+              {{ user.createdAt | date: 'shortDate' }}
+            </td>
+            <td>
+              <div class="flex items-center gap-2">
+                <z-button zType="ghost" zSize="icon" title="Ver detalhes">
+                  <i-lucide [img]="icons.view" class="my-icon"></i-lucide>
+                </z-button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
   } @else {
     Sem usuários na base.
   }

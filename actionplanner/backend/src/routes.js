@@ -21,7 +21,7 @@ routes.get('/health', (req, res) => {
   });
 });
 
-routes.use("/auth", AuthRouter);
+routes.use("/api/auth", AuthRouter);
 routes.use("/api/users", UserRouter);
 
 export default routes;

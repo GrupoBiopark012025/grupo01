@@ -1,6 +1,6 @@
 import {
   ApplicationConfig,
-  DEFAULT_CURRENCY_CODE,
+  DEFAULT_CURRENCY_CODE, ErrorHandler,
   importProvidersFrom,
   LOCALE_ID,
   provideBrowserGlobalErrorListeners,
@@ -19,11 +19,14 @@ import {
 } from "@core/interceptors/parse-date-query-param/parse-date-query-param.interceptor";
 import { API_BASE_URL, WINDOW } from "@core/injection-tokens/injection-tokens";
 import { makeBaseUrlInterceptor } from "@core/interceptors/make-base-url/make-base-url.interceptor";
+import { GlobalErrorHandler } from "@core/error-handlers/global-error-handler/global.error-handler";
+import { errorInterceptor } from "@core/interceptors/error-interceptor/error.interceptor";
 
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: LOCALE_ID, useValue: 'pt' },
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'BRL' },
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
     { provide: API_BASE_URL, useValue: environment.apiUrl },
     { provide: WINDOW, useValue: window },
     provideBrowserGlobalErrorListeners(),
@@ -35,7 +38,8 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([
         makeBaseUrlInterceptor,
         removeNullQueryParamInterceptor,
-        parseDateQueryParamInterceptor
+        parseDateQueryParamInterceptor,
+        errorInterceptor
       ])
     ),
     importProvidersFrom([

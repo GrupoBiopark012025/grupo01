@@ -9,20 +9,20 @@ export const contentLayoutRoutes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () => import('@modules/home/home.routes').then(m => m.HomeRoutes),
+        title: 'Página Inicial - ActionPlanner',
         data: {
-          title: 'Página Inicial - ActionPlanner',
           description: 'Página inicial da aplicação.'
         },
+        loadChildren: () => import('@modules/home/home.routes').then(m => m.HomeRoutes),
         canActivate: [authenticationGuard]
       },
       {
         path: 'users',
-        loadChildren: () => import('@modules/user/user.routes').then(m => m.UserRoutes),
+        title: 'Usuários - ActionPlanner',
         data: {
-          title: 'Usuários - ActionPlanner',
           description: 'Gestão dos Usuários registrados.'
         },
+        loadChildren: () => import('@modules/user/user.routes').then(m => m.UserRoutes),
         canActivate: [authenticationGuard]
       }
     ]

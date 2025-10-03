@@ -8,10 +8,8 @@ export const UserRoutes: Routes = [
     children: [
       {
         path: '',
+        title: 'Usuários - ActionPlanner',
         loadComponent: () => import('./list/user-list.component').then((c) => c.UserListComponent),
-        data: {
-          title: 'Usuários - ActionPlanner'
-        }
       }
     ]
   }

@@ -31,7 +31,8 @@ export const appConfig: ApplicationConfig = {
     { provide: WINDOW, useValue: window },
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes), provideClientHydration(withEventReplay()),
+    provideRouter(routes),
+    provideClientHydration(withEventReplay()),
     provideHttpClient(
       withInterceptorsFromDi(),
       withJsonpSupport(),

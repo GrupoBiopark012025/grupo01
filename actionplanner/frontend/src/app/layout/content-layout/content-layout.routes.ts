@@ -8,7 +8,7 @@ export const contentLayoutRoutes: Routes = [
     canActivate: [authenticationGuard],
     children: [
       {
-        path: '',
+        path: 'home',
         title: 'Página Inicial - ActionPlanner',
         data: {
           description: 'Página inicial da aplicação.'
@@ -24,6 +24,11 @@ export const contentLayoutRoutes: Routes = [
         },
         loadChildren: () => import('@modules/user/user.routes').then(m => m.UserRoutes),
         canActivate: [authenticationGuard]
+      },
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full'
       }
     ]
   }

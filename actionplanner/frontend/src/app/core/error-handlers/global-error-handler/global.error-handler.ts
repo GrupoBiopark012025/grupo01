@@ -41,7 +41,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     this.zone.run(() => toast.error(errorMessage));
   }
 
-  handleRoutingError(e: NavigationError){
+  handleRoutingError(e: NavigationError) {
     this.hasNavigationErrorOccurred = true;
     this.router.navigate(
       [ 'error', 'no-connection' ],

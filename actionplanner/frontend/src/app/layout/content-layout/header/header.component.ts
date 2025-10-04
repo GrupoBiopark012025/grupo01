@@ -1,7 +1,5 @@
-import { Component, computed, inject, input } from '@angular/core';
-import { ZardBreadcrumbComponent, ZardBreadcrumbItemComponent, ZardBreadcrumbSeparatorComponent } from '@shared/components/zardui/breadcrumb/breadcrumb.component';
+import { Component, computed, inject } from '@angular/core';
 import { ZardAvatarComponent } from '@shared/components/zardui/avatar/avatar.component';
-import { GetUserDataDto } from "@data/user/dtos";
 import { Bell, LucideAngularModule } from "lucide-angular";
 import { NgOptimizedImage } from "@angular/common";
 import { UserSessionService } from "@core/services/user-session/user-session.service";
@@ -9,9 +7,6 @@ import { UserSessionService } from "@core/services/user-session/user-session.ser
 @Component({
   selector: 'app-header',
   imports: [
-    ZardBreadcrumbComponent,
-    ZardBreadcrumbItemComponent,
-    ZardBreadcrumbSeparatorComponent,
     ZardAvatarComponent,
     LucideAngularModule,
     NgOptimizedImage

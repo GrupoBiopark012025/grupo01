@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { ApiPaginatedList } from "@data/common/dtos";
-import { GetUserDto, GetUserQuery } from "@data/user/dtos";
+import { GetUserDataDto, GetUserDto, GetUserQuery } from "@data/user/dtos";
 
 @Injectable({
   providedIn: 'root'
@@ -14,5 +14,9 @@ export class UserDataService {
 
   getUsers(query: GetUserQuery) {
     return this.http.get<ApiPaginatedList<GetUserDto>>(this.path, { params: { ...query } });
+  }
+
+  getUserData() {
+    return this.http.get<GetUserDataDto>(`${this.path}/profile`);
   }
 }

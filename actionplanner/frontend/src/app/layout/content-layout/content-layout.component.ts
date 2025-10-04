@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { RouterOutlet } from "@angular/router";
 import { HeaderComponent } from "@layout/content-layout/header/header.component";
 import { SidebarComponent } from "@layout/content-layout/sidebar/sidebar.component";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { ContentLayoutService } from "@layout/content-layout/content-layout.service";
 
 @Component({
   selector: 'app-content-layout',
@@ -13,5 +15,12 @@ import { SidebarComponent } from "@layout/content-layout/sidebar/sidebar.compone
   templateUrl: './content-layout.component.html'
 })
 export class ContentLayoutComponent {
+  private readonly dataService = inject(ContentLayoutService);
+  private readonly destoyRef = inject(DestroyRef);
 
+  constructor() {
+    this.dataService.getSessionData()
+      .pipe(takeUntilDestroyed(this.destoyRef))
+      .subscribe();
+  }
 }

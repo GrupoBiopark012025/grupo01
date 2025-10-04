@@ -48,5 +48,6 @@ export class LocalStorageService {
 }
 
 export enum LocalStorageKey {
-  AccessToken = 'access_token'
+  AccessToken = 'access_token',
+  SessionData = 'session_data'
 }

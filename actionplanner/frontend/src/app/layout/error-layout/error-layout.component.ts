@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
+import { RouterOutlet } from "@angular/router";
 
 @Component({
   selector: 'app-error-layout',
-  imports: [],
-  templateUrl: './error-layout.component.html'
+  imports: [
+    RouterOutlet
+  ],
+  template: `
+    <router-outlet />
+  `
 })
-export class ErrorLayoutComponent {
-
-}
+export class ErrorLayoutComponent {}

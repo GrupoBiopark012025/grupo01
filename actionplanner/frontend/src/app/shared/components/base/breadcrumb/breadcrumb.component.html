@@ -1,0 +1,19 @@
+@if (data() || breadcrumbs(); as items) {
+  <div class="flex py-1">
+    <z-breadcrumb>
+      <z-breadcrumb-list zWrap="wrap" zAlign="start">
+        @for (item of items; track item.label; let isLast = $last) {
+          @if (isLast) {
+            <z-breadcrumb-page>{{ item.label }}</z-breadcrumb-page>
+          } @else {
+            <z-breadcrumb-item>
+              <z-breadcrumb-link [zLink]="item.url">{{ item.label }}</z-breadcrumb-link>
+            </z-breadcrumb-item>
+
+            <z-breadcrumb-separator />
+          }
+        }
+      </z-breadcrumb-list>
+    </z-breadcrumb>
+  </div>
+}

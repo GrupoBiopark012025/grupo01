@@ -93,6 +93,19 @@ const doc = {
         message: "Operação realizada com sucesso"
       }
     },
+
+    UserProfile: {
+      id: 1,
+      nome: "Hermes",
+      email: "hermes@actionplan.com.br",
+      clienteId: 1,
+      isAdmin: true,
+      accessLevel: "ADMIN",
+      onlyAttachedTasks: false,
+      status: "ATIVO",
+      createdAt: "2025-01-15T10:30:00.000Z",
+      updatedAt: "2025-01-15T10:30:00.000Z"
+    },
     
     securitySchemes: {
       bearerAuth: {

@@ -48,6 +48,9 @@ export class AuthService {
       onlyAttachedTasks: user.onlyAttachedTasks
     };
 
+    console.log('Generating token with payload:', payload);
+    console.log('Using JWT secret:', process.env.JWT_SECRET);
+
     return jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN || '24h'
     });
@@ -57,6 +60,7 @@ export class AuthService {
     try {
       return jwt.verify(token, process.env.JWT_SECRET);
     } catch (error) {
+      console.log('Token verification error:', error);
       throw new Error('Token inválido');
     }
   }
@@ -64,20 +68,17 @@ export class AuthService {
   static async verifyAuth(req, res, next) {
     try {
       const authHeader = req.headers.authorization;
-      
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ error: 'Token não fornecido' });
       }
-
       const token = authHeader.substring(7);
-      const decoded = this.verifyToken(token);
+
+      const decoded = AuthService.verifyToken(token);
 
       const user = await UserService.findById(decoded.id);
-      
       if (!user || user.status === 'INATIVO') {
         return res.status(401).json({ error: 'Usuário inválido ou inativo' });
       }
-
       req.user = user;
       next();
     } catch (error) {

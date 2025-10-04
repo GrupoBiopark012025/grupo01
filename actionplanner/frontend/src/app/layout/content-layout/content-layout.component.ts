@@ -15,7 +15,7 @@ import { ContentLayoutService } from "@layout/content-layout/content-layout.serv
   templateUrl: './content-layout.component.html'
 })
 export class ContentLayoutComponent {
-  private readonly dataService = inject(ContentLayoutService);
+  readonly dataService = inject(ContentLayoutService);
   private readonly destoyRef = inject(DestroyRef);
 
   constructor() {

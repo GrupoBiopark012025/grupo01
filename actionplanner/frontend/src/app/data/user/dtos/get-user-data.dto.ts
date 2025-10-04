@@ -11,8 +11,5 @@ export interface GetUserDataDto {
   accessLevel: UserAccessLevelEnum;
   onlyAttachedTasks: boolean;
   status: UserStatusEnum;
-  lastLogin: string;
-  createdAt: string;
-  updatedAt: string;
   cliente: UserClient;
 }

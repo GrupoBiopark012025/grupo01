@@ -15,6 +15,11 @@ export const contentLayoutRoutes: Routes = [
           description: 'Página inicial da aplicação.'
         },
         canActivate: [authenticationGuard]
+      },
+      {
+        path: 'setores',
+        loadChildren: () => import('@modules/Setor/setor.routes').then(m => m.SetorRoutes),
+        canActivate: [authenticationGuard]
       }
     ]
   }

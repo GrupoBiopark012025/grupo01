@@ -15,8 +15,17 @@
       </thead>
       <tbody>
         @for (user of users.data; track user.id) {
+          @let isLoggerUser = loggedUser()?.id === user.id;
           <tr>
-            <td class="font-medium">{{ user.nome }}</td>
+            <td class="font-medium">
+              <div class="flex flex-row items-center gap-2">
+                <span>{{ user.nome }}</span>
+
+                @if (isLoggerUser) {
+                  <z-badge zType="secondary" class="bg-amber-200">Você</z-badge>
+                }
+              </div>
+            </td>
             <td>{{ user.email }}</td>
             <td>{{ descricaoUserAccessLevelEnum[user.accessLevel] }}</td>
             <td>
@@ -30,7 +39,7 @@
             <td>
               <div class="flex items-center gap-2">
                 <z-button zType="ghost" zSize="icon" title="Ver detalhes">
-                  <i-lucide [img]="icons.view" class="my-icon"></i-lucide>
+                  <i-lucide [img]="icons.view"></i-lucide>
                 </z-button>
               </div>
             </td>

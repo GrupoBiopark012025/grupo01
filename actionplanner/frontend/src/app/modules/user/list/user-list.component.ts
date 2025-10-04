@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { Observable, shareReplay, switchMap } from "rxjs";
 import { descricaoUserAccessLevelEnum, descricaoUserStatusEnum, GetUserDto, GetUserQuery } from "@data/user/dtos";
 import { UserDataService } from "@data/user/user-data.service";
@@ -10,6 +10,7 @@ import { ZardBadgeComponent } from "@shared/components/zardui/badge/badge.compon
 import { ZardButtonComponent } from "@shared/components/zardui/button/button.component";
 import { EyeIcon, LucideAngularModule } from "lucide-angular";
 import { ListHeaderComponent } from "@shared/components/base/list-header/list-header.component";
+import { UserSessionService } from "@core/services/user-session/user-session.service";
 
 @Component({
   selector: 'app-user-list',
@@ -30,7 +31,10 @@ export class UserListComponent {
   private _query = signal<GetUserQuery>(new GetUserQuery());
 
   private readonly userDataService = inject(UserDataService);
+  private readonly userSessionService = inject(UserSessionService);
   private readonly destroyRef = inject(DestroyRef);
+
+  loggedUser = computed(() => this.userSessionService.user());
 
   users$: Observable<ApiPaginatedList<GetUserDto>> = toObservable(this._query)
     .pipe(

@@ -7,7 +7,7 @@ import { RouterOutlet } from "@angular/router";
     RouterOutlet
   ],
   template: `
-    <div class="py-3">
+    <div>
       <router-outlet />
     </div>
   `

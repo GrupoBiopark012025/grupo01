@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { map, of, switchMap, tap } from "rxjs";
+import { of, switchMap, tap } from "rxjs";
 import { LocalStorageKey, LocalStorageService } from "@core/services/local-storage/local-storage.service";
 import { UserDataService } from "@data/user/user-data.service";
 import { GetUserDataDto, UserAccessLevelEnum } from "@data/user/dtos";

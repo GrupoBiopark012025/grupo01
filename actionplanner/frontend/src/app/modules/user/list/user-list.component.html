@@ -60,8 +60,10 @@
       (onPageChange)="changeQuery({ page: $event })"
     />
   } @else {
-    Sem usuários na base.
+    <app-no-list-content
+      text="Nenhum usuário encontrado."
+    />
   }
 } @else {
-  Loading?
+  <app-table-skeleton />
 }

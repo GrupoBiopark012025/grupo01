@@ -13,6 +13,8 @@ import { ListHeaderComponent } from "@shared/components/base/list-header/list-he
 import { UserSessionService } from "@core/services/user-session/user-session.service";
 import { PaginationComponent } from "@shared/components/base/pagination/pagination.component";
 import { UserStatusBadgeComponent } from "@modules/user/status-badge/user-status-badge.component";
+import { TableSkeletonComponent } from "@shared/components/base/skeletons/table-skeleton/table-skeleton.component";
+import { NoListContentComponent } from "@shared/components/base/no-list-content/no-list-content.component";
 
 @Component({
   selector: 'app-user-list',
@@ -25,7 +27,9 @@ import { UserStatusBadgeComponent } from "@modules/user/status-badge/user-status
     LucideAngularModule,
     ListHeaderComponent,
     PaginationComponent,
-    UserStatusBadgeComponent
+    UserStatusBadgeComponent,
+    TableSkeletonComponent,
+    NoListContentComponent
   ],
   templateUrl: './user-list.component.html'
 })

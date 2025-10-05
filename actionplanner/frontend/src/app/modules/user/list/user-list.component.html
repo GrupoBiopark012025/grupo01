@@ -1,7 +1,7 @@
 <app-list-header title="Usuários" actionTitle="Novo Usuário" />
 
 @if (users$ | async; as users) {
-  @if (users.data.length) {
+  @if (users.data.length; as recordsInView) {
     <table z-table class="w-full">
       <thead>
       <tr>
@@ -22,7 +22,12 @@
                 <span>{{ user.nome }}</span>
 
                 @if (isLoggerUser) {
-                  <z-badge zType="secondary" class="bg-amber-200">Você</z-badge>
+                  <z-badge
+                    zType="secondary"
+                    class="bg-amber-200 hover:bg-amber-100 transition-colors"
+                  >
+                    Você
+                  </z-badge>
                 }
               </div>
             </td>
@@ -47,6 +52,15 @@
         }
       </tbody>
     </table>
+
+    <app-pagination
+      [currentPage]="query().page"
+      [pageSize]="query().size"
+      [recordsInView]="recordsInView"
+      [totalPages]="users.totalPages"
+      [collectionSize]="users.totalData"
+      (onPageChange)="changeQuery({ page: $event })"
+    />
   } @else {
     Sem usuários na base.
   }

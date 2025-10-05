@@ -11,6 +11,7 @@ import { ZardButtonComponent } from "@shared/components/zardui/button/button.com
 import { EyeIcon, LucideAngularModule } from "lucide-angular";
 import { ListHeaderComponent } from "@shared/components/base/list-header/list-header.component";
 import { UserSessionService } from "@core/services/user-session/user-session.service";
+import { PaginationComponent } from "@shared/components/base/pagination/pagination.component";
 
 @Component({
   selector: 'app-user-list',
@@ -21,19 +22,21 @@ import { UserSessionService } from "@core/services/user-session/user-session.ser
     DatePipe,
     ZardButtonComponent,
     LucideAngularModule,
-    ListHeaderComponent
+    ListHeaderComponent,
+    PaginationComponent
   ],
   templateUrl: './user-list.component.html'
 })
 export class UserListComponent {
   icons = ICONS;
 
-  private _query = signal<GetUserQuery>(new GetUserQuery());
-
   private readonly userDataService = inject(UserDataService);
   private readonly userSessionService = inject(UserSessionService);
   private readonly destroyRef = inject(DestroyRef);
 
+  private _query = signal<GetUserQuery>(new GetUserQuery());
+
+  query = this._query.asReadonly();
   loggedUser = computed(() => this.userSessionService.user());
 
   users$: Observable<ApiPaginatedList<GetUserDto>> = toObservable(this._query)
@@ -43,7 +46,7 @@ export class UserListComponent {
       takeUntilDestroyed(this.destroyRef)
     );
 
-  alterarQuery(changes: Partial<UserDataService> = {}): void {
+  changeQuery(changes: Partial<GetUserQuery> = {}): void {
     this._query.update((prev) => ({ ...prev!, ...changes }));
   }
 

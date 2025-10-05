@@ -1,0 +1,19 @@
+@if (isComponentShowing()) {
+  <div class="flex items-center">
+    <div class="flex grow ps-2">
+      @if (shouldDisplayQuantities()) {
+        <small class="text-muted-foreground">
+          {{ showingMessage() }}
+        </small>
+      }
+    </div>
+
+    <div class="flex items-center justify-end">
+      <z-pagination
+        [zPageIndex]="currentPage()"
+        [zTotal]="totalPages()"
+        (zPageIndexChange)="onPageChange.emit($event)"
+      />
+    </div>
+  </div>
+}

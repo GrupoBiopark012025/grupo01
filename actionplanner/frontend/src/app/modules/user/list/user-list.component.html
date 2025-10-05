@@ -23,8 +23,8 @@
 
                 @if (isLoggerUser) {
                   <z-badge
-                    zType="secondary"
-                    class="bg-amber-200 hover:bg-amber-100 transition-colors"
+                    zType="outline"
+                    class="text-amber-400 border-amber-400 hover:text-amber-300 hover:border-amber-300 transition-colors"
                   >
                     Você
                   </z-badge>
@@ -34,9 +34,7 @@
             <td>{{ user.email }}</td>
             <td>{{ descricaoUserAccessLevelEnum[user.accessLevel] }}</td>
             <td>
-              <z-badge>
-                {{ descricaoUserStatusEnum[user.status] }}
-              </z-badge>
+              <app-user-status-badge [status]="user.status" />
             </td>
             <td>
               {{ user.createdAt | date: 'shortDate' }}

@@ -1,6 +1,6 @@
 import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { Observable, shareReplay, switchMap } from "rxjs";
-import { descricaoUserAccessLevelEnum, descricaoUserStatusEnum, GetUserDto, GetUserQuery } from "@data/user/dtos";
+import { descricaoUserAccessLevelEnum, GetUserDto, GetUserQuery } from "@data/user/dtos";
 import { UserDataService } from "@data/user/user-data.service";
 import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { AsyncPipe, DatePipe } from "@angular/common";
@@ -12,6 +12,7 @@ import { EyeIcon, LucideAngularModule } from "lucide-angular";
 import { ListHeaderComponent } from "@shared/components/base/list-header/list-header.component";
 import { UserSessionService } from "@core/services/user-session/user-session.service";
 import { PaginationComponent } from "@shared/components/base/pagination/pagination.component";
+import { UserStatusBadgeComponent } from "@modules/user/status-badge/user-status-badge.component";
 
 @Component({
   selector: 'app-user-list',
@@ -23,7 +24,8 @@ import { PaginationComponent } from "@shared/components/base/pagination/paginati
     ZardButtonComponent,
     LucideAngularModule,
     ListHeaderComponent,
-    PaginationComponent
+    PaginationComponent,
+    UserStatusBadgeComponent
   ],
   templateUrl: './user-list.component.html'
 })
@@ -51,7 +53,6 @@ export class UserListComponent {
   }
 
   protected readonly descricaoUserAccessLevelEnum = descricaoUserAccessLevelEnum;
-  protected readonly descricaoUserStatusEnum = descricaoUserStatusEnum;
 }
 
 const ICONS = {

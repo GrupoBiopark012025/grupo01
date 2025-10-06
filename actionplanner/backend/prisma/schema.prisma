@@ -39,6 +39,8 @@ model Cliente {
   email     String?  @db.VarChar(255)
   telefone  String?  @db.VarChar(20)
   endereco  String?  @db.Text
+  sectorId  Int?     @map("sector_id")
+  sector    Sector?  @relation(fields: [sectorId], references: [id])
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

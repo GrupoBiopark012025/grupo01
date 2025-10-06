@@ -30,7 +30,7 @@
         }
       }
     },
-    "/auth/login": {
+    "/api/auth/login": {
       "post": {
         "tags": [
           "Auth"
@@ -155,7 +155,7 @@
         }
       }
     },
-    "/auth/refresh": {
+    "/api/auth/refresh": {
       "post": {
         "tags": [
           "Auth"
@@ -258,7 +258,7 @@
         ]
       }
     },
-    "/auth/logout": {
+    "/api/auth/logout": {
       "post": {
         "tags": [
           "Auth"
@@ -285,7 +285,7 @@
         ]
       }
     },
-    "/auth/validate": {
+    "/api/auth/validate": {
       "get": {
         "tags": [
           "Auth"
@@ -946,6 +946,313 @@
           }
         ]
       }
+    },
+    "/api/clients/": {
+      "get": {
+        "tags": [
+          "Clients"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Tamanho da página",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "Campo para ordenação",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "nome",
+            "in": "query",
+            "description": "Filtrar por nome",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cnpj",
+            "in": "query",
+            "description": "Filtrar por CNPJ",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sectorId",
+            "in": "query",
+            "description": "Filtrar por setor",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "schema",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de clientes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientListResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientListResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Clients"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Cliente criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "409": {
+            "description": "CNPJ já existe"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClient"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/clients/{id}": {
+      "get": {
+        "tags": [
+          "Clients"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cliente não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Clients"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente atualizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cliente não encontrado"
+          },
+          "409": {
+            "description": "CNPJ já existe"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClient"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Clients"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Cliente excluído"
+          },
+          "404": {
+            "description": "Cliente não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -1211,6 +1518,143 @@
         },
         "xml": {
           "name": "Success"
+        }
+      },
+      "Client": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "nome": {
+            "type": "string",
+            "example": "ActionPlan"
+          },
+          "cnpj": {
+            "type": "string",
+            "example": "12.345.678/0001-90"
+          },
+          "email": {
+            "type": "string",
+            "example": "contato@actionplan.com.br"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "(11) 99999-9999"
+          },
+          "endereco": {
+            "type": "string",
+            "example": "Rua da Inovação, 123 - São Paulo, SP"
+          },
+          "sectorId": {
+            "type": "number",
+            "example": 2
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2025-01-15T10:30:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2025-01-15T10:30:00.000Z"
+          }
+        },
+        "xml": {
+          "name": "Client"
+        }
+      },
+      "CreateClient": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "example": "ActionPlan"
+          },
+          "cnpj": {
+            "type": "string",
+            "example": "12.345.678/0001-90"
+          },
+          "email": {
+            "type": "string",
+            "example": "contato@actionplan.com.br"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "(11) 99999-9999"
+          },
+          "endereco": {
+            "type": "string",
+            "example": "Rua da Inovação, 123 - São Paulo, SP"
+          },
+          "sectorId": {
+            "type": "number",
+            "example": 2
+          }
+        },
+        "xml": {
+          "name": "CreateClient"
+        }
+      },
+      "UpdateClient": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "example": "ActionPlan LTDA"
+          },
+          "email": {
+            "type": "string",
+            "example": "contato@actionplan.com.br"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "(11) 98888-8888"
+          },
+          "endereco": {
+            "type": "string",
+            "example": "Rua Nova, 456 - São Paulo, SP"
+          },
+          "sectorId": {
+            "type": "number",
+            "example": 3
+          }
+        },
+        "xml": {
+          "name": "UpdateClient"
+        }
+      },
+      "ClientListResponse": {
+        "type": "object",
+        "properties": {
+          "totalData": {
+            "type": "number",
+            "example": 2
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 1
+          },
+          "currentPage": {
+            "type": "number",
+            "example": 1
+          },
+          "size": {
+            "type": "number",
+            "example": 10
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "xml": {
+                "name": "client"
+              },
+              "$ref": "#/components/schemas/Client"
+            }
+          }
+        },
+        "xml": {
+          "name": "ClientListResponse"
         }
       }
     },

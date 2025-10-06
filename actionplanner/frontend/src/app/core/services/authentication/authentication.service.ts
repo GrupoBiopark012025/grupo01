@@ -34,7 +34,7 @@ export class AuthenticationService {
 
           const { token } = response;
           this.registraNovoToken(token);
-          this.navigateAfterLogin();
+          this.navigateAfterLogin(returnUrl);
           return token;
         })
       )
@@ -46,7 +46,7 @@ export class AuthenticationService {
 
     if (!redirect) { return; }
 
-    this.window.location.href = '/login'; // TODO: validar
+    this.window.location.href = 'login';
   }
 
   isLoggedIn(): boolean {
@@ -57,26 +57,8 @@ export class AuthenticationService {
     return Promise.resolve(this.jwtHelperService.isTokenExpired());
   }
 
-  getCurrentUser(): { name?: string; email?: string } | null {
-    const token = this.jwtService.getToken();
-    if (!token) {
-      return null;
-    }
-
-    try {
-      const decodedToken = this.jwtHelperService.decodeToken(token);
-      return {
-        name: decodedToken?.name || decodedToken?.sub || 'Usuário',
-        email: decodedToken?.email
-      };
-    } catch (error) {
-      console.error('Erro ao decodificar token:', error);
-      return null;
-    }
-  }
-
   private navigateAfterLogin(returnUrl?: string): void {
-    this.router.navigate([returnUrl ?? '']);
+    this.router.navigate([returnUrl ?? 'home']);
   }
 
   private registraNovoToken(newToken: string): void {

@@ -56,18 +56,18 @@ export class UserService {
 
   // Listar usuários com filtros e paginação
   static async findMany(filters = {}, pagination = {}) {
-    const { page = 1, size = 10, _order = 'id' } = pagination;
+    const { page = 1, size = 10, orderBy = 'id' } = pagination;
     const { nome, email, clienteId, status, accessLevel, ...otherFilters } = filters;
-    
+
     const skip = (page - 1) * size;
-    
+
     const where = {};
     if (nome) where.nome = { contains: nome, mode: 'insensitive' };
     if (email) where.email = { contains: email, mode: 'insensitive' };
     if (clienteId) where.clienteId = parseInt(clienteId);
     if (status) where.status = status;
     if (accessLevel) where.accessLevel = accessLevel;
-    
+
     Object.assign(where, otherFilters);
 
     const [users, totalData] = await Promise.all([
@@ -75,7 +75,7 @@ export class UserService {
         where,
         skip,
         take: size,
-        orderBy: { [_order.replace('-', '')]: _order.startsWith('-') ? 'desc' : 'asc' },
+        orderBy: { [orderBy.replace('-', '')]: orderBy.startsWith('-') ? 'desc' : 'asc' },
         include: {
           cliente: true,
           userClientes: {

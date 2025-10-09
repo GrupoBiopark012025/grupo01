@@ -11,3 +11,10 @@ export const descricaoUserAccessLevelEnum: Record<UserAccessLevelEnum, string> =
   [UserAccessLevelEnum.GestorCliente]: 'Gestor',
   [UserAccessLevelEnum.ColaboradorCliente]: 'Colaborador'
 };
+
+export const userAccessLevelByString: Record<string, UserAccessLevelEnum> = {
+  'ADMIN': UserAccessLevelEnum.Admin,
+  'CONSULTOR': UserAccessLevelEnum.Consultor,
+  'GESTOR_CLIENTE': UserAccessLevelEnum.GestorCliente,
+  'COLABORADOR_CLIENTE': UserAccessLevelEnum.ColaboradorCliente
+};

@@ -9,7 +9,12 @@ export const UserRoutes: Routes = [
       {
         path: '',
         title: 'Usuários - ActionPlanner',
-        loadComponent: () => import('./list/user-list.component').then((c) => c.UserListComponent),
+        loadComponent: () => import('./list/user-list.component').then((c) => c.UserListComponent)
+      },
+      {
+        path: 'register',
+        title: 'Novo Usuário - ActionPlanner',
+        loadComponent: () => import('./registrer/user-registrer.component').then((c) => c.UserRegistrerComponent)
       }
     ]
   }

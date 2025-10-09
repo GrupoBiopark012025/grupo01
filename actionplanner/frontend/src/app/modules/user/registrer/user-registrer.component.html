@@ -1,0 +1,64 @@
+<app-page-header title="Cadastro de Novo Usuário">
+  <button z-button zType="outline" [backOrNavigateTo]="['users']">
+    Voltar
+  </button>
+</app-page-header>
+
+<form
+  class="grid grid-cols-2 gap-4"
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="col-span-2">
+    <z-form-field>
+      <label z-form-label zRequired for="nome">Nome</label>
+      <z-form-control [errorMessage]="isFieldInvalid('nome') ? 'Nome é obrigatório' : ''">
+        <input z-input id="nome" type="text" placeholder="Informe..." formControlName="nome" />
+      </z-form-control>
+    </z-form-field>
+  </div>
+  <div>
+    <z-form-field>
+      <label z-form-label zRequired for="email">Email</label>
+      <z-form-control [errorMessage]="isFieldInvalid('email') ? getEmailError() : ''">
+        <input z-input id="email" type="email" placeholder="john.doe@example.com" formControlName="email" />
+      </z-form-control>
+    </z-form-field>
+  </div>
+  <div>
+    <z-form-field>
+      <label z-form-label zRequired for="password">Senha</label>
+      <z-form-control [errorMessage]="isFieldInvalid('password') ? 'Senha é obrigatória' : ''">
+        <input z-input id="password" type="password" placeholder="Insira uma senha..." formControlName="password" />
+      </z-form-control>
+    </z-form-field>
+  </div>
+  <div>
+    Select do Cliente Principal
+  </div>
+  <div>
+    <z-form-field>
+      <label z-form-label zRequired for="accessLevel">Nível de Acesso</label>
+      <z-form-control [errorMessage]="isFieldInvalid('accessLevel') ? 'Nível de Acesso é obrigatório' : ''">
+        <z-select zPlaceholder="Selecione..." formControlName="accessLevel" (zSelectionChange)="onAccessLevelChange($event)">
+          <z-select-item [zValue]="UserAccessLevelEnum.Admin">Admin</z-select-item>
+          <z-select-item [zValue]="UserAccessLevelEnum.ColaboradorCliente">Colaborador</z-select-item>
+          <z-select-item [zValue]="UserAccessLevelEnum.GestorCliente">Gestor</z-select-item>
+          <z-select-item [zValue]="UserAccessLevelEnum.Consultor">Consultor</z-select-item>
+        </z-select>
+      </z-form-control>
+    </z-form-field>
+  </div>
+  @if (!isAdminBehindTheScenes() && accessLevel()) {
+    <div>
+      <z-form-field>
+        <z-form-control class="flex flex-col">
+          <div class="flex items-center space-x-2">
+            <z-checkbox id="onlyAttachedTasks" formControlName="onlyAttachedTasks" />
+            <label z-form-label class="!mb-0" zRequired for="onlyAttachedTasks">Visualiza apenas tasks assinadas</label>
+          </div>
+        </z-form-control>
+      </z-form-field>
+    </div>
+  }
+</form>

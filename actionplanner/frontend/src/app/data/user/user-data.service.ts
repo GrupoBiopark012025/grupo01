@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { ApiPaginatedList } from "@data/common/dtos";
-import { GetUserDataDto, GetUserDto, GetUserQuery } from "@data/user/dtos";
+import { GetUserDataDto, GetUserDto, GetUserQuery, PostCreateUserDto } from "@data/user/dtos";
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +18,9 @@ export class UserDataService {
 
   getUserData() {
     return this.http.get<GetUserDataDto>(`${this.path}/profile`);
+  }
+
+  createUser(params: PostCreateUserDto) {
+    return this.http.post<GetUserDataDto>(this.path, params);
   }
 }

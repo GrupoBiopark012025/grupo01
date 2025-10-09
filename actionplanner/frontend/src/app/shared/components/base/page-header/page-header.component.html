@@ -5,9 +5,7 @@
 
   <div class="flex-shrink-0">
     <div class="flex gap-2">
-      <button z-button (click)="onActionClicked.emit()">
-        {{ actionTitle() }}
-      </button>
+      <ng-content></ng-content>
     </div>
   </div>
 </div>

@@ -21,6 +21,7 @@ import { API_BASE_URL, WINDOW } from "@core/injection-tokens/injection-tokens";
 import { makeBaseUrlInterceptor } from "@core/interceptors/make-base-url/make-base-url.interceptor";
 import { GlobalErrorHandler } from "@core/error-handlers/global-error-handler/global.error-handler";
 import { errorInterceptor } from "@core/interceptors/error-interceptor/error.interceptor";
+import { provideEnvironmentNgxMask } from "ngx-mask";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -53,6 +54,11 @@ export const appConfig: ApplicationConfig = {
           disallowedRoutes: [environment.apiUrl + '/auth']
         }
       })
-    ])
+    ]),
+    provideEnvironmentNgxMask({
+      thousandSeparator: '.',
+      decimalMarker: ',',
+      allowNegativeNumbers: false
+    })
   ]
 };

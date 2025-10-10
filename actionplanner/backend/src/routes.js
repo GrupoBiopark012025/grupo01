@@ -7,6 +7,7 @@ import handler from "./middlewares/handlers.js";
 import AuthRouter from "./routes/authRouter.js";
 import UserRouter from "./routes/userRouter.js";
 import ClientRouter from "./routes/clientRouter.js";
+import SectorRouter from "./routes/sectorRouter.js";
 
 const routes = Router();
 
@@ -25,5 +26,6 @@ routes.get('/health', (req, res) => {
 routes.use("/api/auth", AuthRouter);
 routes.use("/api/users", UserRouter);
 routes.use("/api/clients", ClientRouter);
+routes.use("/api/sectors", SectorRouter);
 
 export default routes;

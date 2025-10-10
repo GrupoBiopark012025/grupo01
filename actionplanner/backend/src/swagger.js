@@ -79,6 +79,34 @@ const doc = {
         endereco: "Rua da Inovação, 123 - São Paulo, SP"
       },
 
+      // Sector
+      Sector: {
+        id: 1,
+        name: "Tecnologia da Informação",
+        acronym: "TI",
+        description: "Setor responsável pela infraestrutura de TI",
+        status: "ativo",
+        color: "#3B82F6",
+        createdAt: "2025-01-15T10:30:00.000Z",
+        updatedAt: "2025-01-15T10:30:00.000Z"
+      },
+
+      CreateSector: {
+        name: "Recursos Humanos",
+        acronym: "RH",
+        description: "Setor de gestão de pessoas",
+        color: "#10B981",
+        status: "ativo"
+      },
+
+      UpdateSector: {
+        name: "Recursos Humanos Atualizado",
+        acronym: "RH",
+        description: "Descrição atualizada do setor",
+        status: "ativo",
+        color: "#059669"
+      },
+
       // Responses
       ValidationError: {
         error: "Dados inválidos",

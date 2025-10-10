@@ -45,7 +45,6 @@ export class ClientService {
         take: size,
         orderBy: { [orderBy.replace('-', '')]: orderBy.startsWith('-') ? 'desc' : 'asc' },
         include: {
-          usuarios: true,
           tasks: true,
           auditLogs: true
         }
@@ -56,7 +55,7 @@ export class ClientService {
     const totalPages = Math.ceil(totalData / size)
 
     return {
-      usuarios,
+      clients,
       totalData,
       totalPages,
       currentPage: page,

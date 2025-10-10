@@ -11,7 +11,7 @@ export const createClientValidator = yup
 
     cnpj: yup
       .string()
-      .matches(/^\d{14}$/, "CNPJ inválido")
+      .matches(/^\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}$/, "CNPJ inválido")
       .required("CNPJ é obrigatório"),
 
     endereco: yup

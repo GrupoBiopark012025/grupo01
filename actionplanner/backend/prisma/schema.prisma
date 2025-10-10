@@ -168,6 +168,7 @@ model Sector {
 
   // Relacionamentos
   tasks     Task[]
+  clientes Cliente[]
 
   @@map("sectors")
-} 
+}

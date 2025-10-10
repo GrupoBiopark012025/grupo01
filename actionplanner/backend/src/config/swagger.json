@@ -970,43 +970,11 @@
             }
           },
           {
-            "name": "size",
-            "in": "query",
-            "description": "Tamanho da página",
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "name": "orderBy",
-            "in": "query",
-            "description": "Campo para ordenação",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "nome",
             "in": "query",
             "description": "Filtrar por nome",
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "cnpj",
-            "in": "query",
-            "description": "Filtrar por CNPJ",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sectorId",
-            "in": "query",
-            "description": "Filtrar por setor",
-            "schema": {
-              "type": "integer"
             }
           },
           {

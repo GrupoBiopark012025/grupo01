@@ -7,7 +7,7 @@ export class ClientService {
     return await prisma.cliente.create({
       data: clientData,
       include: {
-        users: true,
+        usuarios: true,
         tasks: true,
         auditLogs: true
       }
@@ -18,7 +18,7 @@ export class ClientService {
     return await prisma.cliente.findUnique({
       where: { id: parseInt(id) },
       include: {
-        users: true,
+        usuarios: true,
         tasks: true,
         auditLogs: true
       }
@@ -45,7 +45,7 @@ export class ClientService {
         take: size,
         orderBy: { [orderBy.replace('-', '')]: orderBy.startsWith('-') ? 'desc' : 'asc' },
         include: {
-          users: true,
+          usuarios: true,
           tasks: true,
           auditLogs: true
         }
@@ -56,7 +56,7 @@ export class ClientService {
     const totalPages = Math.ceil(totalData / size)
 
     return {
-      clients,
+      usuarios,
       totalData,
       totalPages,
       currentPage: page,
@@ -69,7 +69,7 @@ export class ClientService {
       where: { id: parseInt(id) },
       data: clientData,
       include: {
-        users: true,
+        usuarios: true,
         tasks: true,
         auditLogs: true
       }

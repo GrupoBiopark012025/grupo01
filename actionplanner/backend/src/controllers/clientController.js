@@ -25,11 +25,7 @@ export const listClients = async (req, res, next) => {
   #swagger.tags = ["Clients"]
   #swagger.security = [{"bearerAuth": []}]
   #swagger.parameters['page'] = { in: 'query', type: 'integer', description: 'Número da página' }
-  #swagger.parameters['size'] = { in: 'query', type: 'integer', description: 'Tamanho da página' }
-  #swagger.parameters['orderBy'] = { in: 'query', type: 'string', description: 'Campo para ordenação' }
   #swagger.parameters['nome'] = { in: 'query', type: 'string', description: 'Filtrar por nome' }
-  #swagger.parameters['cnpj'] = { in: 'query', type: 'string', description: 'Filtrar por CNPJ' }
-  #swagger.parameters['sectorId'] = { in: 'query', type: 'integer', description: 'Filtrar por setor' }
   #swagger.responses[200] = {
     description: "Lista de clientes",
     schema: { $ref: "#/components/schemas/ClientListResponse" }

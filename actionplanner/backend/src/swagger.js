@@ -18,13 +18,13 @@ const doc = {
         code: "",
         message: "",
       },
-      
+
       // Auth
       LoginRequest: {
         email: "hermes@actionplan.com.br",
         password: "123456"
       },
-      
+
       LoginResponse: {
         message: "Login realizado com sucesso",
         user: {
@@ -119,6 +119,42 @@ const doc = {
 
       Success: {
         message: "Operação realizada com sucesso"
+      },
+
+      Client: {
+        id: 1,
+        nome: "ActionPlan",
+        cnpj: "12.345.678/0001-90",
+        email: "contato@actionplan.com.br",
+        telefone: "(11) 99999-9999",
+        endereco: "Rua da Inovação, 123 - São Paulo, SP",
+        sectorId: 2,
+        createdAt: "2025-01-15T10:30:00.000Z",
+        updatedAt: "2025-01-15T10:30:00.000Z"
+      },
+      CreateClient: {
+        nome: "ActionPlan",
+        cnpj: "12.345.678/0001-90",
+        email: "contato@actionplan.com.br",
+        telefone: "(11) 99999-9999",
+        endereco: "Rua da Inovação, 123 - São Paulo, SP",
+        sectorId: 2
+      },
+      UpdateClient: {
+        nome: "ActionPlan LTDA",
+        email: "contato@actionplan.com.br",
+        telefone: "(11) 98888-8888",
+        endereco: "Rua Nova, 456 - São Paulo, SP",
+        sectorId: 3
+      },
+      ClientListResponse: {
+        totalData: 2,
+        totalPages: 1,
+        currentPage: 1,
+        size: 10,
+        data: [
+          { $ref: "#/components/schemas/Client" }
+        ]
       }
     },
 

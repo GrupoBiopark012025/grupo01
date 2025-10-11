@@ -41,7 +41,7 @@ model Cliente {
   endereco  String?  @db.Text
   sectorId  Int?     @map("sector_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   // Relacionamentos
   usuarios       User[]
@@ -66,7 +66,7 @@ model User {
   status           UserStatus @default(ATIVO)
   lastLogin        DateTime?  @map("last_login")
   createdAt        DateTime   @default(now()) @map("created_at")
-  updatedAt        DateTime   @updatedAt @map("updated_at")
+  updatedAt        DateTime?   @updatedAt @map("updated_at")
 
   // Relacionamentos
   cliente        Cliente       @relation(fields: [clienteId], references: [id])
@@ -84,7 +84,7 @@ model UserCliente {
   userId    Int      @map("user_id")
   clienteId Int      @map("cliente_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   // Relacionamentos
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)

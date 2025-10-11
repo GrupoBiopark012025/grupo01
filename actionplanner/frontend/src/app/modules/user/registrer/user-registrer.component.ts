@@ -12,12 +12,12 @@ import {
   ZardFormFieldComponent,
   ZardFormLabelComponent
 } from "@shared/components/zardui/form/form.component";
-import { ZardInputDirective } from "@shared/components/zardui/input/input.directive";
 import { PageHeaderComponent } from "@shared/components/base/page-header/page-header.component";
 import { ZardButtonComponent } from "@shared/components/zardui/button/button.component";
 import { BackOrNavigateToDirective } from "@shared/directives/back-or-navigate-to/back-or-navigate-to.directive";
 import { ZardSelectComponent } from "@shared/components/zardui/select/select.component";
 import { ZardSelectItemComponent } from "@shared/components/zardui/select/select-item.component";
+import { TextInputComponent } from "@shared/components/base/form-components/text-input/text-input.component";
 import { ZardCheckboxComponent } from "@shared/components/zardui/checkbox/checkbox.component";
 
 @Component({
@@ -27,12 +27,12 @@ import { ZardCheckboxComponent } from "@shared/components/zardui/checkbox/checkb
     ZardFormFieldComponent,
     ZardFormControlComponent,
     ZardFormLabelComponent,
-    ZardInputDirective,
     PageHeaderComponent,
     ZardButtonComponent,
     BackOrNavigateToDirective,
     ZardSelectComponent,
     ZardSelectItemComponent,
+    TextInputComponent,
     ZardCheckboxComponent
   ],
   templateUrl: './user-registrer.component.html'

@@ -10,28 +10,27 @@
   (ngSubmit)="onSubmit()"
 >
   <div class="col-span-2">
-    <z-form-field>
-      <label z-form-label zRequired for="nome">Nome</label>
-      <z-form-control [errorMessage]="isFieldInvalid('nome') ? 'Nome é obrigatório' : ''">
-        <input z-input id="nome" type="text" placeholder="Informe..." formControlName="nome" />
-      </z-form-control>
-    </z-form-field>
+    <app-text-input
+      id="nome"
+      label="Nome"
+      formControlName="nome"
+    />
   </div>
   <div>
-    <z-form-field>
-      <label z-form-label zRequired for="email">Email</label>
-      <z-form-control [errorMessage]="isFieldInvalid('email') ? getEmailError() : ''">
-        <input z-input id="email" type="email" placeholder="john.doe@example.com" formControlName="email" />
-      </z-form-control>
-    </z-form-field>
+    <app-text-input
+      id="email"
+      label="email"
+      type="email"
+      formControlName="email"
+    />
   </div>
   <div>
-    <z-form-field>
-      <label z-form-label zRequired for="password">Senha</label>
-      <z-form-control [errorMessage]="isFieldInvalid('password') ? 'Senha é obrigatória' : ''">
-        <input z-input id="password" type="password" placeholder="Insira uma senha..." formControlName="password" />
-      </z-form-control>
-    </z-form-field>
+    <app-text-input
+      id="password"
+      label="Senha"
+      type="password"
+      formControlName="pasword"
+    />
   </div>
   <div>
     Select do Cliente Principal

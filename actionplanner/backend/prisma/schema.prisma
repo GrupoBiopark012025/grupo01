@@ -39,12 +39,14 @@ model Cliente {
   email     String?  @db.VarChar(255)
   telefone  String?  @db.VarChar(20)
   endereco  String?  @db.Text
+  sectorId  Int?     @map("sector_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   // Relacionamentos
   usuarios       User[]
   userClientes   UserCliente[]
+  sector          Sector[]
   auditLogs      AuditLog[]
   tasks          Task[]
 
@@ -64,7 +66,7 @@ model User {
   status           UserStatus @default(ATIVO)
   lastLogin        DateTime?  @map("last_login")
   createdAt        DateTime   @default(now()) @map("created_at")
-  updatedAt        DateTime   @updatedAt @map("updated_at")
+  updatedAt        DateTime?   @updatedAt @map("updated_at")
 
   // Relacionamentos
   cliente        Cliente       @relation(fields: [clienteId], references: [id])
@@ -82,7 +84,7 @@ model UserCliente {
   userId    Int      @map("user_id")
   clienteId Int      @map("cliente_id")
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   // Relacionamentos
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -161,11 +163,14 @@ model Task {
 model Sector {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(255)
+  acronym     String   @db.VarChar(5)
+  description String?  @db.VarChar(160)
+  status      String   @default("ativo") @db.VarChar(10)
+  color       String   @db.VarChar(7)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
-  // Relacionamentos
   tasks     Task[]
+  clientes Cliente[]
 
   @@map("sectors")
-} 
+}

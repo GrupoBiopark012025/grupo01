@@ -48,9 +48,6 @@ export class AuthService {
       onlyAttachedTasks: user.onlyAttachedTasks
     };
 
-    console.log('Generating token with payload:', payload);
-    console.log('Using JWT secret:', process.env.JWT_SECRET);
-
     return jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN || '24h'
     });
@@ -60,7 +57,6 @@ export class AuthService {
     try {
       return jwt.verify(token, process.env.JWT_SECRET);
     } catch (error) {
-      console.log('Token verification error:', error);
       throw new Error('Token inválido');
     }
   }

@@ -1846,6 +1846,506 @@
           }
         }
       }
+    },
+    "/api/tasks/": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Tamanho da página",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "_order",
+            "in": "query",
+            "description": "Campo para ordenação (ex: title, -createdAt)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "title",
+            "in": "query",
+            "description": "Filtrar por título",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filtrar por status",
+            "enum": [
+              "PENDENTE",
+              "EM_ANDAMENTO",
+              "CONCLUIDA",
+              "CANCELADA"
+            ],
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "priority",
+            "in": "query",
+            "description": "Filtrar por prioridade",
+            "enum": [
+              "BAIXA",
+              "MEDIA",
+              "ALTA",
+              "URGENTE"
+            ],
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "dueDate",
+            "in": "query",
+            "description": "Filtrar por data de vencimento",
+            "format": "date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "description": "Filtrar por ID do projeto",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "clienteId",
+            "in": "query",
+            "description": "Filtrar por ID do cliente",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sectorId",
+            "in": "query",
+            "description": "Filtrar por ID do setor",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "userResponsibleId",
+            "in": "query",
+            "description": "Filtrar por ID do usuário responsável",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "userCreatedId",
+            "in": "query",
+            "description": "Filtrar por ID do usuário criador",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "schema",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "totalPages",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currentPage",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "tasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "array"
+                            },
+                            "items": {
+                              "$ref": "#/components/schemas/Task"
+                            }
+                          }
+                        },
+                        "totalData": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "totalPages": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "currentPage": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "tasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "array"
+                            },
+                            "items": {
+                              "$ref": "#/components/schemas/Task"
+                            }
+                          }
+                        },
+                        "totalData": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "totalPages": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "currentPage": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Tasks"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Task criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTask"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tasks/{id}": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task não encontrada"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Tasks"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task atualizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task não encontrada"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTask"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Tasks"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Task excluída com sucesso"
+          },
+          "404": {
+            "description": "Task não encontrada"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -2067,100 +2567,217 @@
           "name": "Cliente"
         }
       },
-      "Sector": {
+      "Task": {
         "type": "object",
         "properties": {
           "id": {
             "type": "number",
             "example": 1
           },
-          "name": {
+          "title": {
             "type": "string",
-            "example": "Tecnologia da Informação"
-          },
-          "acronym": {
-            "type": "string",
-            "example": "TI"
+            "example": "Implementar nova funcionalidade"
           },
           "description": {
             "type": "string",
-            "example": "Setor responsável pela infraestrutura de TI"
+            "example": "Desenvolver módulo de relatórios personalizados"
           },
           "status": {
             "type": "string",
-            "example": "ativo"
+            "example": "EM_ANDAMENTO"
           },
-          "color": {
+          "priority": {
             "type": "string",
-            "example": "#3B82F6"
+            "example": "ALTA"
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2025-10-20T23:59:59.000Z"
+          },
+          "projectId": {
+            "type": "number",
+            "example": 1
+          },
+          "clienteId": {
+            "type": "number",
+            "example": 1
+          },
+          "sectorId": {
+            "type": "number",
+            "example": 2
+          },
+          "userResponsibleId": {
+            "type": "number",
+            "example": 3
+          },
+          "userCreatedId": {
+            "type": "number",
+            "example": 1
           },
           "createdAt": {
             "type": "string",
-            "example": "2025-01-15T10:30:00.000Z"
+            "example": "2025-10-10T10:30:00.000Z"
           },
           "updatedAt": {
             "type": "string",
-            "example": "2025-01-15T10:30:00.000Z"
+            "example": "2025-10-10T10:30:00.000Z"
+          },
+          "project": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "nome": {
+                "type": "string",
+                "example": "Projeto Alpha"
+              }
+            }
+          },
+          "cliente": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "nome": {
+                "type": "string",
+                "example": "ActionPlan"
+              }
+            }
+          },
+          "sector": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 2
+              },
+              "nome": {
+                "type": "string",
+                "example": "Desenvolvimento"
+              }
+            }
+          },
+          "userResponsible": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 3
+              },
+              "nome": {
+                "type": "string",
+                "example": "João Silva"
+              },
+              "email": {
+                "type": "string",
+                "example": "joao@empresa.com.br"
+              }
+            }
+          },
+          "userCreated": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "nome": {
+                "type": "string",
+                "example": "Hermes"
+              },
+              "email": {
+                "type": "string",
+                "example": "hermes@actionplan.com.br"
+              }
+            }
           }
         },
         "xml": {
-          "name": "Sector"
+          "name": "Task"
         }
       },
-      "CreateSector": {
+      "CreateTask": {
         "type": "object",
         "properties": {
-          "name": {
+          "title": {
             "type": "string",
-            "example": "Recursos Humanos"
-          },
-          "acronym": {
-            "type": "string",
-            "example": "RH"
+            "example": "Implementar nova funcionalidade"
           },
           "description": {
             "type": "string",
-            "example": "Setor de gestão de pessoas"
-          },
-          "color": {
-            "type": "string",
-            "example": "#10B981"
+            "example": "Desenvolver módulo de relatórios personalizados"
           },
           "status": {
             "type": "string",
-            "example": "ativo"
+            "example": "PENDENTE"
+          },
+          "priority": {
+            "type": "string",
+            "example": "ALTA"
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2025-10-20T23:59:59.000Z"
+          },
+          "projectId": {
+            "type": "number",
+            "example": 1
+          },
+          "clienteId": {
+            "type": "number",
+            "example": 1
+          },
+          "sectorId": {
+            "type": "number",
+            "example": 2
+          },
+          "userResponsibleId": {
+            "type": "number",
+            "example": 3
+          },
+          "userCreatedId": {
+            "type": "number",
+            "example": 1
           }
         },
         "xml": {
-          "name": "CreateSector"
+          "name": "CreateTask"
         }
       },
-      "UpdateSector": {
+      "UpdateTask": {
         "type": "object",
         "properties": {
-          "name": {
+          "title": {
             "type": "string",
-            "example": "Recursos Humanos Atualizado"
-          },
-          "acronym": {
-            "type": "string",
-            "example": "RH"
+            "example": "Implementar nova funcionalidade - Atualizado"
           },
           "description": {
             "type": "string",
-            "example": "Descrição atualizada do setor"
+            "example": "Desenvolver módulo de relatórios personalizados com gráficos"
           },
           "status": {
             "type": "string",
-            "example": "ativo"
+            "example": "EM_ANDAMENTO"
           },
-          "color": {
+          "priority": {
             "type": "string",
-            "example": "#059669"
+            "example": "URGENTE"
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2025-10-25T23:59:59.000Z"
+          },
+          "userResponsibleId": {
+            "type": "number",
+            "example": 5
           }
         },
         "xml": {
-          "name": "UpdateSector"
+          "name": "UpdateTask"
         }
       },
       "ValidationError": {

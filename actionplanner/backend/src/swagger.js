@@ -79,32 +79,65 @@ const doc = {
         endereco: "Rua da Inovação, 123 - São Paulo, SP"
       },
 
-      // Sector
-      Sector: {
+      // Task
+      Task: {
         id: 1,
-        name: "Tecnologia da Informação",
-        acronym: "TI",
-        description: "Setor responsável pela infraestrutura de TI",
-        status: "ativo",
-        color: "#3B82F6",
-        createdAt: "2025-01-15T10:30:00.000Z",
-        updatedAt: "2025-01-15T10:30:00.000Z"
+        title: "Implementar nova funcionalidade",
+        description: "Desenvolver módulo de relatórios personalizados",
+        status: "EM_ANDAMENTO",
+        priority: "ALTA",
+        dueDate: "2025-10-20T23:59:59.000Z",
+        projectId: 1,
+        clienteId: 1,
+        sectorId: 2,
+        userResponsibleId: 3,
+        userCreatedId: 1,
+        createdAt: "2025-10-10T10:30:00.000Z",
+        updatedAt: "2025-10-10T10:30:00.000Z",
+        project: {
+          id: 1,
+          nome: "Projeto Alpha"
+        },
+        cliente: {
+          id: 1,
+          nome: "ActionPlan"
+        },
+        sector: {
+          id: 2,
+          nome: "Desenvolvimento"
+        },
+        userResponsible: {
+          id: 3,
+          nome: "João Silva",
+          email: "joao@empresa.com.br"
+        },
+        userCreated: {
+          id: 1,
+          nome: "Hermes",
+          email: "hermes@actionplan.com.br"
+        }
       },
 
-      CreateSector: {
-        name: "Recursos Humanos",
-        acronym: "RH",
-        description: "Setor de gestão de pessoas",
-        color: "#10B981",
-        status: "ativo"
+      CreateTask: {
+        title: "Implementar nova funcionalidade",
+        description: "Desenvolver módulo de relatórios personalizados",
+        status: "PENDENTE",
+        priority: "ALTA",
+        dueDate: "2025-10-20T23:59:59.000Z",
+        projectId: 1,
+        clienteId: 1,
+        sectorId: 2,
+        userResponsibleId: 3,
+        userCreatedId: 1
       },
 
-      UpdateSector: {
-        name: "Recursos Humanos Atualizado",
-        acronym: "RH",
-        description: "Descrição atualizada do setor",
-        status: "ativo",
-        color: "#059669"
+      UpdateTask: {
+        title: "Implementar nova funcionalidade - Atualizado",
+        description: "Desenvolver módulo de relatórios personalizados com gráficos",
+        status: "EM_ANDAMENTO",
+        priority: "URGENTE",
+        dueDate: "2025-10-25T23:59:59.000Z",
+        userResponsibleId: 5
       },
 
       // Responses

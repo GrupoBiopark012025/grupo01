@@ -18,7 +18,7 @@ import { BackOrNavigateToDirective } from "@shared/directives/back-or-navigate-t
 import { ZardSelectComponent } from "@shared/components/zardui/select/select.component";
 import { ZardSelectItemComponent } from "@shared/components/zardui/select/select-item.component";
 import { TextInputComponent } from "@shared/components/base/form-components/text-input/text-input.component";
-import { ZardCheckboxComponent } from "@shared/components/zardui/checkbox/checkbox.component";
+import { CheckboxComponent } from "@shared/components/base/form-components/checkbox/checkbox.component";
 
 @Component({
   selector: 'app-user-registrer',
@@ -33,7 +33,7 @@ import { ZardCheckboxComponent } from "@shared/components/zardui/checkbox/checkb
     ZardSelectComponent,
     ZardSelectItemComponent,
     TextInputComponent,
-    ZardCheckboxComponent
+    CheckboxComponent
   ],
   templateUrl: './user-registrer.component.html'
 })

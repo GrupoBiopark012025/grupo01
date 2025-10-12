@@ -50,14 +50,10 @@
   </div>
   @if (!isAdminBehindTheScenes() && accessLevel()) {
     <div>
-      <z-form-field>
-        <z-form-control class="flex flex-col">
-          <div class="flex items-center space-x-2">
-            <z-checkbox id="onlyAttachedTasks" formControlName="onlyAttachedTasks" />
-            <label z-form-label class="!mb-0" zRequired for="onlyAttachedTasks">Visualiza apenas tasks assinadas</label>
-          </div>
-        </z-form-control>
-      </z-form-field>
+      <app-checkbox
+        label="Visualiza apenas tasks assinadas"
+        formControlName="onlyAttachedTasks"
+      />
     </div>
   }
 </form>

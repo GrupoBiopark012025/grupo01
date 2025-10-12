@@ -1,10 +1,10 @@
-import { Component, computed, inject, input, output, signal } from '@angular/core';
+import { Component, computed, inject, input, OnInit, output, signal } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, FormControl, NgControl } from "@angular/forms";
 import { generateValidHtmlId } from "@shared/utils/base/form/form-components.utils";
 import { FormControlService } from "@shared/services/form-control/form-control.service";
 
 @Component({ template: '' })
-export class BaseTextInputComponent implements ControlValueAccessor {
+export class BaseTextInputComponent implements OnInit, ControlValueAccessor {
   label = input<string>('');
   placeholder = input<string>('Informe...');
   readOnly = input<boolean>(false);
@@ -17,11 +17,11 @@ export class BaseTextInputComponent implements ControlValueAccessor {
   private readonly _hasRequiredValidator = signal(false);
   private readonly _minLength = signal<number | null>(null);
   private readonly _maxLength = signal<number | null>(null);
-  readonly formControl = signal<FormControl | undefined>(undefined);
+  private readonly _formControl = signal<FormControl | undefined>(undefined);
   readonly value = signal('');
 
+  readonly formControl = this._formControl.asReadonly();
   readonly disabled = this._disabled.asReadonly();
-  readonly hasRequiredValidator = this._hasRequiredValidator.asReadonly();
   readonly minLength = this._minLength.asReadonly();
   readonly maxLength = this._maxLength.asReadonly();
 
@@ -38,7 +38,7 @@ export class BaseTextInputComponent implements ControlValueAccessor {
   ngOnInit(): void {
     const control = this.controlDir.control;
     this.readValidators(control);
-    this.formControl.set(control as FormControl);
+    this._formControl.set(control as FormControl);
   }
 
   private onChange: (value: any) => void = () => {};

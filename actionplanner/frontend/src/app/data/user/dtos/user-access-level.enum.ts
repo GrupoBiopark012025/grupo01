@@ -18,3 +18,10 @@ export const userAccessLevelByString: Record<string, UserAccessLevelEnum> = {
   'GESTOR_CLIENTE': UserAccessLevelEnum.GestorCliente,
   'COLABORADOR_CLIENTE': UserAccessLevelEnum.ColaboradorCliente
 };
+
+export const userAccessLevelOptions = Object
+  .entries(descricaoUserAccessLevelEnum)
+  .map(([key, label]) => ({
+    label: label,
+    value: key as UserAccessLevelEnum
+  }));

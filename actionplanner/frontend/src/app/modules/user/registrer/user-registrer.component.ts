@@ -1,5 +1,5 @@
 import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { userAccessLevelByString, UserAccessLevelEnum, userAccessLevelOptions, UserStatusEnum } from "@data/user/dtos";
 import { UserDataService } from "@data/user/user-data.service";
 import { take } from "rxjs";
@@ -37,15 +37,15 @@ export class UserRegistrerComponent {
   private _accessLevel = signal<UserAccessLevelEnum | null>(null);
   accessLevel = this._accessLevel.asReadonly();
 
-  form = this.fb.nonNullable.group<FormData>({
-    nome: this.fb.nonNullable.control<string>('', [Validators.required]),
-    email: this.fb.nonNullable.control<string>('', [Validators.required, Validators.email]),
-    password: this.fb.nonNullable.control<string>('', [Validators.required]),
+  form = this.fb.nonNullable.group({
+    nome: this.fb.nonNullable.control('', [Validators.required]),
+    email: this.fb.nonNullable.control('', [Validators.required, Validators.email]),
+    password: this.fb.nonNullable.control('', [Validators.required]),
     clienteId: this.fb.control<number | null>(null, [Validators.required]),
     accessLevel: this.fb.control<UserAccessLevelEnum | null>(null, [Validators.required]),
-    isAdmin: this.fb.nonNullable.control<boolean>(false, [Validators.required]),
-    onlyAttachedTasks: this.fb.nonNullable.control<boolean>(false, [Validators.required]),
-    status: this.fb.nonNullable.control<UserStatusEnum>(UserStatusEnum.Ativo, [Validators.required])
+    isAdmin: this.fb.nonNullable.control(false, [Validators.required]),
+    onlyAttachedTasks: this.fb.nonNullable.control(false, [Validators.required]),
+    status: this.fb.nonNullable.control(UserStatusEnum.Ativo, [Validators.required])
   });
 
   isAdminBehindTheScenes = computed(() => {
@@ -81,17 +81,5 @@ export class UserRegistrerComponent {
     this._accessLevel.set(accessLevel);
   }
 
-  protected readonly UserAccessLevelEnum = UserAccessLevelEnum;
   protected readonly userAccessLevelOptions = userAccessLevelOptions;
-}
-
-interface FormData {
-  nome: FormControl<string>,
-  email: FormControl<string>,
-  password: FormControl<string>,
-  clienteId: FormControl<number | null>,
-  accessLevel: FormControl<UserAccessLevelEnum | null>,
-  isAdmin: FormControl<boolean>,
-  onlyAttachedTasks: FormControl<boolean>,
-  status: FormControl<UserStatusEnum>
 }

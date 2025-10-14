@@ -36,17 +36,11 @@
     Select do Cliente Principal
   </div>
   <div>
-    <z-form-field>
-      <label z-form-label zRequired for="accessLevel">Nível de Acesso</label>
-      <z-form-control [errorMessage]="isFieldInvalid('accessLevel') ? 'Nível de Acesso é obrigatório' : ''">
-        <z-select zPlaceholder="Selecione..." formControlName="accessLevel" (zSelectionChange)="onAccessLevelChange($event)">
-          <z-select-item [zValue]="UserAccessLevelEnum.Admin">Admin</z-select-item>
-          <z-select-item [zValue]="UserAccessLevelEnum.ColaboradorCliente">Colaborador</z-select-item>
-          <z-select-item [zValue]="UserAccessLevelEnum.GestorCliente">Gestor</z-select-item>
-          <z-select-item [zValue]="UserAccessLevelEnum.Consultor">Consultor</z-select-item>
-        </z-select>
-      </z-form-control>
-    </z-form-field>
+    <app-select
+      label="Nível de Acesso"
+      [options]="userAccessLevelOptions"
+      (onSelectionChange)="onAccessLevelChange($event)"
+    />
   </div>
   @if (!isAdminBehindTheScenes() && accessLevel()) {
     <div>

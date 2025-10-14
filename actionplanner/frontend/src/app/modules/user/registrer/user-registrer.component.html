@@ -5,49 +5,57 @@
 </app-page-header>
 
 <form
-  class="grid grid-cols-2 gap-4"
+  class="flex flex-col gap-6"
   [formGroup]="form"
   (ngSubmit)="onSubmit()"
 >
-  <div class="col-span-2">
-    <app-text-input
-      id="nome"
-      label="Nome"
-      formControlName="nome"
-    />
-  </div>
-  <div>
-    <app-text-input
-      id="email"
-      label="Email"
-      type="email"
-      formControlName="email"
-    />
-  </div>
-  <div>
-    <app-text-input
-      id="password"
-      label="Senha"
-      type="password"
-      formControlName="password"
-    />
-  </div>
-  <div>
-    Select do Cliente Principal
-  </div>
-  <div>
-    <app-select
-      label="Nível de Acesso"
-      [options]="userAccessLevelOptions"
-      (onSelectionChange)="onAccessLevelChange($event)"
-    />
-  </div>
-  @if (!isAdminBehindTheScenes() && accessLevel()) {
-    <div>
-      <app-checkbox
-        label="Visualiza apenas tasks assinadas"
-        formControlName="onlyAttachedTasks"
+  <div class="grid grid-cols-2 gap-4">
+    <div class="col-span-2">
+      <app-text-input
+        id="nome"
+        label="Nome"
+        formControlName="nome"
       />
     </div>
-  }
+    <div>
+      <app-text-input
+        id="email"
+        label="Email"
+        type="email"
+        formControlName="email"
+      />
+    </div>
+    <div>
+      <app-text-input
+        id="password"
+        label="Senha"
+        type="password"
+        formControlName="password"
+      />
+    </div>
+    <div>
+      Select do Cliente Principal
+    </div>
+    <div>
+      <app-select
+        label="Nível de Acesso"
+        formControlName="accessLevel"
+        [options]="userAccessLevelOptions"
+        (onSelectionChange)="onAccessLevelChange($event)"
+      />
+    </div>
+    @if (!isAdminBehindTheScenes() && accessLevel()) {
+      <div>
+        <app-checkbox
+          label="Visualiza apenas tasks assinadas"
+          formControlName="onlyAttachedTasks"
+        />
+      </div>
+    }
+  </div>
+
+  <div class="flex grow items-center justify-end gap-2">
+    <button z-button zType="outline" type="button">Cancelar</button>
+    <button z-button type="submit">Salvar</button>
+  </div>
 </form>

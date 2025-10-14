@@ -44,7 +44,7 @@ export class UserRegistrerComponent {
     clienteId: this.fb.control<number | null>(null, [Validators.required]),
     accessLevel: this.fb.control<UserAccessLevelEnum | null>(null, [Validators.required]),
     isAdmin: this.fb.nonNullable.control(false, [Validators.required]),
-    onlyAttachedTasks: this.fb.nonNullable.control(false, [Validators.required]),
+    onlyAttachedTasks: this.fb.nonNullable.control(false),
     status: this.fb.nonNullable.control(UserStatusEnum.Ativo, [Validators.required])
   });
 

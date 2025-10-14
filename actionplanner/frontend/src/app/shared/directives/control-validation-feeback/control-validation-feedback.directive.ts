@@ -14,7 +14,7 @@ export class ControlValidationFeedbackDirective {
   get errorMessage() {
     const control = this.controlValidationFeedback();
 
-    if (!control || !control.errors || !(control.dirty || control.touched)) { return ''; }
+    if (!control || !control.errors) { return ''; }
 
     for (const propertyName in control.errors) {
       if (!control.errors.hasOwnProperty(propertyName)) { continue; }

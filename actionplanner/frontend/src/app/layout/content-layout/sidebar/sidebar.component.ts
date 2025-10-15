@@ -4,13 +4,15 @@ import { AuthenticationService } from '@core/services/authentication/authenticat
 import { ZardAvatarComponent } from '@shared/components/zardui/avatar/avatar.component';
 import { RouterLink } from "@angular/router";
 import { UserSessionService } from "@core/services/user-session/user-session.service";
+import { Building2, LucideAngularModule } from "lucide-angular";
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, ZardAvatarComponent, RouterLink],
+  imports: [CommonModule, ZardAvatarComponent, RouterLink, LucideAngularModule],
   templateUrl: './sidebar.component.html'
 })
 export class SidebarComponent {
+  icons = ICONS;
 
   private readonly authService = inject(AuthenticationService);
   private readonly userSessionService = inject(UserSessionService);
@@ -53,4 +55,8 @@ export class SidebarComponent {
       this.closeUserMenu();
     }
   }
+}
+
+const ICONS = {
+  building: Building2
 }

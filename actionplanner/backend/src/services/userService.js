@@ -6,13 +6,18 @@ const prisma = new PrismaClient();
 export class UserService {
   
   static async create(userData) {
-    const { password, ...rest } = userData;
+    const { password, userClienteIds, ...rest } = userData;
     const hashedPassword = await bcrypt.hash(password, 10);
     
     return await prisma.user.create({
       data: {
         ...rest,
         password: hashedPassword,
+        userClientes: {
+          create: userClienteIds.map((clienteId) => ({
+            cliente: { connect: { id: clienteId } },
+          })),
+        },
       },
       include: {
         cliente: true,
@@ -161,6 +166,7 @@ export class UserService {
     });
 
     if (user?.isAdmin) {
+      console.log('oi')
       return await prisma.cliente.findMany();
     }
 
@@ -179,5 +185,12 @@ export class UserService {
     if (user?.isAdmin) return true;
 
     return user?.userClientes.some(uc => uc.clienteId === parseInt(clienteId)) || false;
+  }
+
+  static async userHasAccessToClient(userId, clienteId) {
+    const count = await prisma.userCliente.count({
+      where: { userId, clienteId }
+    });
+    return count > 0;
   }
 }

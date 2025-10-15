@@ -387,6 +387,125 @@
         ]
       }
     },
+    "/api/auth/change-environment": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ambiente alterado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "cliente": {
+                          "$ref": "#/components/schemas/Cliente"
+                        },
+                        "token": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "cliente": {
+                          "$ref": "#/components/schemas/Cliente"
+                        },
+                        "token": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas ou usuário inativo"
+          },
+          "403": {
+            "description": "Usuário não possui acesso a este cliente"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "clienteId"
+                ],
+                "properties": {
+                  "clienteId": {
+                    "type": "integer",
+                    "example": 2
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/users/init": {
       "post": {
         "tags": [
@@ -2505,6 +2624,16 @@
           "status": {
             "type": "string",
             "example": "ATIVO"
+          },
+          "userClienteIds": {
+            "type": "array",
+            "example": [
+              1,
+              2
+            ],
+            "items": {
+              "type": "number"
+            }
           }
         },
         "xml": {

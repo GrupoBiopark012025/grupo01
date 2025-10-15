@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { UserService } from './userService.js';
+import { ClientService } from "./clientService.js";
 
 export class AuthService {
   
@@ -72,10 +73,16 @@ export class AuthService {
       const decoded = AuthService.verifyToken(token);
 
       const user = await UserService.findById(decoded.id);
+      const cliente = await ClientService.findById(decoded.clienteId, false, false, false);
+
       if (!user || user.status === 'INATIVO') {
         return res.status(401).json({ error: 'Usuário inválido ou inativo' });
       }
-      req.user = user;
+
+      req.user = {
+        ...user,
+        clienteId: cliente.id
+      };
       next();
     } catch (error) {
       return res.status(401).json({ error: 'Token inválido' });
@@ -124,6 +131,39 @@ export class AuthService {
       return this.generateToken(user);
     } catch (error) {
       throw new Error('Não foi possível renovar o token');
+    }
+  }
+
+  static async changeEnvironment(userId, clienteId) {
+    const user = await UserService.findById(userId);
+
+    if (!user) {
+      throw new Error('Usuário não encontrado');
+    }
+
+    // Verifica se o cliente informado está entre os acessíveis
+    const hasAccess = user.userClientes.some(
+      (uc) => uc.cliente.id === parseInt(clienteId)
+    );
+
+    if (!hasAccess) {
+      throw new Error('Usuário não possui acesso a este cliente');
+    }
+
+    // Busca o cliente selecionado (já incluso no user.userClientes)
+    const cliente = user.userClientes.find(
+      (uc) => uc.cliente.id === parseInt(clienteId)
+    ).cliente;
+
+    // Gera novo token com clienteId atualizado
+    const token = AuthService.generateToken({
+      ...user,
+      clienteId: cliente.id,
+    });
+
+    return {
+      cliente,
+      token
     }
   }
 }

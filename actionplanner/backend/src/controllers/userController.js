@@ -1,5 +1,6 @@
 import { UserService } from '../services/userService.js';
 import hateoas from '../middlewares/hateoas.js';
+import { ClientService } from "../services/clientService.js";
 
 export const showUser = async (req, res, next) => {
   /*
@@ -221,14 +222,14 @@ export const getUserProfile = async (req, res, next) => {
   */
   try {
     const user = await UserService.findById(req.user.id);
-    const accessibleClients = await UserService.getUserAccessibleClients(req.user.id);
-    
+    const cliente = await ClientService.findById(req.user.clienteId, false, false, false);
+
     // Remover senha do retorno
     const { password, ...userWithoutPassword } = user;
     
     res.json({
       ...userWithoutPassword,
-      clientes: accessibleClients
+      cliente
     });
   } catch (err) {
     next(err);

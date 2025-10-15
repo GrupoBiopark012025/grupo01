@@ -14,13 +14,13 @@ export class ClientService {
     })
   }
 
-  static async findById(id) {
+  static async findById(id, withUsuarios = true, withTasks = true, withAuditLogs = true) {
     return await prisma.cliente.findUnique({
       where: { id: parseInt(id) },
       include: {
-        usuarios: true,
-        tasks: true,
-        auditLogs: true
+        usuarios: withUsuarios,
+        tasks: withTasks,
+        auditLogs: withAuditLogs
       }
     })
   }

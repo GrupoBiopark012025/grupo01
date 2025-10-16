@@ -31,7 +31,7 @@ export class AuthService {
     return {
       user: {
         ...userWithoutPassword,
-        clientes: accessibleClients
+        userClientes: accessibleClients
       },
       token
     };

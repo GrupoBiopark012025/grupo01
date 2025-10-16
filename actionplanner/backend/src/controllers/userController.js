@@ -223,12 +223,14 @@ export const getUserProfile = async (req, res, next) => {
   try {
     const user = await UserService.findById(req.user.id);
     const cliente = await ClientService.findById(req.user.clienteId, false, false, false);
+    const accessibleClients = await UserService.getUserAccessibleClients(req.user.id);
 
     // Remover senha do retorno
     const { password, ...userWithoutPassword } = user;
-    
+
     res.json({
       ...userWithoutPassword,
+      userClientes: accessibleClients,
       cliente
     });
   } catch (err) {

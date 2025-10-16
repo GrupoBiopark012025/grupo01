@@ -31,7 +31,7 @@ export class UserDataService {
     return this.http.post<GetUserDataDto>(this.path, params);
   }
 
-  getClients(query: GetUserClientsQuery) {
-    return this.http.get<ApiPaginatedList<UserClientDto>>(this.path, { params: { ...query } });
+  getClients(userId: number, query: GetUserClientsQuery) {
+    return this.http.get<ApiPaginatedList<UserClientDto>>(`${this.path}/${userId}/clients`, { params: { ...query } });
   }
 }

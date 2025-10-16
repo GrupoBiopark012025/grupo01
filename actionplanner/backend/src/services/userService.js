@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import { ClientService } from "./clientService.js";
 
 const prisma = new PrismaClient();
 
@@ -175,6 +176,22 @@ export class UserService {
     }
 
     return user?.userClientes.map(uc => uc.cliente) || [];
+  }
+
+  static async getPaginatedUserAccessibleClients(userId, pagination) {
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(userId) }
+    });
+
+    if (!user) {
+      throw new Error('Usuário não encontrado');
+    }
+
+    if (user?.isAdmin) {
+      return await ClientService.findMany({}, pagination);
+    }
+
+    return await ClientService.findManyAccessibleByUser(userId, pagination);
   }
 
   // Verificar se usuário tem acesso a um cliente específico

@@ -63,6 +63,45 @@ export class ClientService {
     }
   }
 
+  static async findManyAccessibleByUser(userId, pagination = {}) {
+    const { page = 1, size = 10, orderBy = 'id' } = pagination;
+    const skip = (page - 1) * size;
+
+    const [clients, totalData] = await Promise.all([
+      prisma.cliente.findMany({
+        where: {
+          userClientes: {
+            some: { userId: parseInt(userId) }
+          }
+        },
+        skip,
+        take: size,
+        orderBy: { [orderBy.replace('-', '')]: orderBy.startsWith('-') ? 'desc' : 'asc' },
+        include: {
+          tasks: false,
+          auditLogs: false
+        }
+      }),
+      prisma.cliente.count({
+        where: {
+          userClientes: {
+            some: { userId: parseInt(userId) }
+          }
+        }
+      })
+    ]);
+
+    const totalPages = Math.ceil(totalData / size);
+
+    return {
+      clients,
+      totalData,
+      totalPages,
+      currentPage: page,
+      size
+    };
+  }
+
   static async update(id, clientData) {
     return await prisma.cliente.update({
       where: { id: parseInt(id) },

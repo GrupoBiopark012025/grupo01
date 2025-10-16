@@ -237,3 +237,76 @@ export const getUserProfile = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getUserClients = async (req, res, next) => {
+  /*
+  #swagger.tags = ["Users"]
+  #swagger.security = [{"bearerAuth": []}]
+
+  #swagger.parameters['page'] = {
+    in: 'query',
+    description: 'Número da página',
+    required: false,
+    type: 'integer',
+    example: 1
+  }
+  #swagger.parameters['size'] = {
+    in: 'query',
+    description: 'Tamanho da página (quantidade de registros por página)',
+    required: false,
+    type: 'integer',
+    example: 10
+  }
+  #swagger.parameters['orderBy'] = {
+    in: 'query',
+    description: 'Campo para ordenação (use - para ordem decrescente, ex: -nome)',
+    required: false,
+    type: 'string',
+    example: 'nome'
+  }
+
+  #swagger.responses[200] = {
+    description: "Lista paginada de clientes acessíveis ao usuário",
+    schema: {
+      type: "object",
+      properties: {
+        clients: {
+          type: "array",
+          items: { $ref: "#/components/schemas/Cliente" }
+        },
+        totalData: { type: "integer", example: 45 },
+        totalPages: { type: "integer", example: 5 },
+        currentPage: { type: "integer", example: 1 },
+        size: { type: "integer", example: 10 }
+      }
+    }
+  }
+
+  #swagger.responses[401] = {
+    description: "Usuário não autenticado ou token inválido"
+  }
+
+  #swagger.responses[404] = {
+    description: "Usuário não encontrado"
+  }
+  */
+
+  try {
+    const { page, size, orderBy } = req.query
+    const pagination = {
+      page: parseInt(page) || 1,
+      size: parseInt(size) || 10,
+      orderBy
+    }
+
+    const result = await UserService.getPaginatedUserAccessibleClients(req.params.id, pagination);
+
+    res.hateoas_list(result.clients, result.totalPages, {
+      totalData: result.totalData,
+      currentPage: result.currentPage,
+      size: result.size
+    });
+  } catch (err) {
+    next(err);
+  }
+}

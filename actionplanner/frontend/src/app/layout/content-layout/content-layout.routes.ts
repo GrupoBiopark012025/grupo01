@@ -5,7 +5,7 @@ export const contentLayoutRoutes: Routes = [
   {
     path: '',
     loadComponent: () => import('./content-layout.component').then(m => m.ContentLayoutComponent),
-    canActivate: [authenticationGuard],
+    // canActivate: [authenticationGuard],
     children: [
       {
         path: '',
@@ -14,12 +14,12 @@ export const contentLayoutRoutes: Routes = [
           title: 'ActionPlanner - Página Inicial',
           description: 'Página inicial da aplicação.'
         },
-        canActivate: [authenticationGuard]
+        // canActivate: [authenticationGuard]
       },
       {
         path: 'setores',
         loadChildren: () => import('@modules/Setor/setor.routes').then(m => m.SetorRoutes),
-        canActivate: [authenticationGuard]
+        // canActivate: [authenticationGuard]
       }
     ]
   }

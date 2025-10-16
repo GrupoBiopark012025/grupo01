@@ -1,4 +1,4 @@
-<div class="max-w-2xl mx-auto p-6">
+<div class="w-full max-w-4xl mx-auto">
   <z-card class="p-6">
     <!-- Cabeçalho -->
     <div class="mb-6">
@@ -23,11 +23,6 @@
             maxlength="50"
           />
         </z-form-control>
-        @if (!errors().nome && setor().nome) {
-          <z-form-message zType="success">
-            Nome válido ✓
-          </z-form-message>
-        }
       </z-form-field>
 
       <!-- Campo Sigla -->
@@ -139,7 +134,6 @@
       <!-- Preview do Setor -->
       @if (setor().nome || setor().sigla) {
         <div class="bg-gray-50 rounded-lg p-4 border">
-          <h3 class="text-sm font-medium text-gray-700 mb-3">Preview do Setor:</h3>
           <div class="flex items-center gap-3">
             <div 
               class="w-12 h-12 rounded-lg flex items-center justify-center text-white font-bold text-sm"
@@ -170,6 +164,7 @@
           type="submit"
           [disabled]="!isFormValid() || isLoading()"
           [zLoading]="isLoading()"
+          (click)="onSave()"
           zFull="true"
           class="flex-1"
         >
@@ -190,16 +185,6 @@
         </z-button>
       </div>
 
-      <!-- Debug Info (remover em produção) -->
-      @if (false) {
-        <div class="mt-6 p-4 bg-gray-100 rounded text-xs">
-          <strong>Debug:</strong>
-          <pre>{{ setor() | json }}</pre>
-          <pre>Errors: {{ errors() | json }}</pre>
-          <pre>Valid: {{ isFormValid() }}</pre>
-        </div>
-      }
-      
     </form>
   </z-card>
 </div>

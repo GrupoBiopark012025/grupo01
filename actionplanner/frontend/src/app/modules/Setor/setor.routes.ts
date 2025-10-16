@@ -1,6 +1,7 @@
 import { Routes } from "@angular/router";
 import { SetorListComponent } from "./setor-list/setor-list.component";
 import { SetorFormComponent } from "./setor-form/setor-form.component";
+import { SetorEditComponent } from "./setor-edit/setor-edit.component";
 
 export const SetorRoutes: Routes = [
   {
@@ -21,7 +22,7 @@ export const SetorRoutes: Routes = [
   },
   {
     path: 'editar/:id',
-    component: SetorFormComponent,
+    component: SetorEditComponent,
     data: {
       title: 'ActionPlanner - Editar Setor',
       description: 'Editar informações do setor.'

@@ -1,6 +1,8 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { JsonPipe } from '@angular/common';
+import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 import { ZardFormModule } from '@shared/components/zardui/form/form.module';
 import { ZardInputDirective } from '@shared/components/zardui/input/input.directive';
@@ -8,6 +10,7 @@ import { ZardButtonComponent } from '@shared/components/zardui/button/button.com
 import { ZardCardComponent } from '@shared/components/zardui/card/card.component';
 
 import { Setor } from '../setor.model';
+import { SetorDataService } from '../setor-data.service';
 
 @Component({
   selector: 'app-setor-form',
@@ -23,6 +26,10 @@ import { Setor } from '../setor.model';
   styleUrl: './setor-form.component.css'
 })
 export class SetorFormComponent {
+  // Injeção de dependências
+  private setorDataService = inject(SetorDataService);
+  private router = inject(Router);
+
   // Estado do formulário usando signals
   setor = signal<Partial<Setor>>({
     nome: '',
@@ -152,20 +159,56 @@ export class SetorFormComponent {
     this.isLoading.set(true);
     
     try {
-      // Simular chamada da API
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const setorData = this.setor();
       
-      console.log('Setor salvo:', this.setor());
+      // Console dos dados do formulário
+      console.log('📋 Dados do formulário sendo enviados:', {
+        nome: setorData.nome,
+        sigla: setorData.sigla,
+        descricao: setorData.descricao,
+        status: setorData.status,
+        cor: setorData.cor,
+        timestamp: new Date().toISOString()
+      });
       
-      // Reset do formulário após salvar
-      this.resetForm();
+      // Criar o setor via API
+      const setorCriado = await this.setorDataService.create({
+        nome: setorData.nome!,
+        sigla: setorData.sigla!,
+        descricao: setorData.descricao || '',
+        status: setorData.status!,
+        cor: setorData.cor!
+      });
       
-      // Aqui você pode adicionar notificação de sucesso
-      alert('Setor cadastrado com sucesso!');
+      console.log('Setor criado com sucesso:', setorCriado);
+      
+      // Navegar para a lista de setores após sucesso
+      this.router.navigate(['/setores']);
       
     } catch (error) {
       console.error('Erro ao salvar setor:', error);
-      alert('Erro ao cadastrar setor. Tente novamente.');
+      
+      // Tratar diferentes tipos de erro
+      let errorMessage = 'Erro ao cadastrar setor. Tente novamente.';
+      
+      if (error && typeof error === 'object' && 'error' in error) {
+        const apiError = error as any;
+        if (apiError.error?.message) {
+          errorMessage = apiError.error.message;
+        } else if (apiError.error?.errors) {
+          // Se houver erros de validação específicos
+          const validationErrors = apiError.error.errors;
+          if (validationErrors.nome) {
+            this.errors.update(current => ({ ...current, nome: validationErrors.nome }));
+          }
+          if (validationErrors.sigla) {
+            this.errors.update(current => ({ ...current, sigla: validationErrors.sigla }));
+          }
+          errorMessage = 'Verifique os campos destacados e tente novamente.';
+        }
+      }
+      
+      alert(errorMessage);
     } finally {
       this.isLoading.set(false);
     }
@@ -197,6 +240,6 @@ export class SetorFormComponent {
 
   // Método para cancelar
   onCancel() {
-    this.resetForm();
+    this.router.navigate(['/setores']);
   }
 }

@@ -8,17 +8,17 @@ export const routes: Routes = [
     path: 'login',
     title: 'ActionPlanner - Login',
     component: LoginComponent,
-    canActivate: [authenticationGuard]
+    // canActivate: [authenticationGuard]
   },
   {
     path: 'homePage',
     title: 'ActionPlanner - Home',
     component: HomeComponent,
-    canActivate: [authenticationGuard]
+    // canActivate: [authenticationGuard]
   },
   {
     path: '',
     loadChildren: () => import('@layout/content-layout/content-layout.routes').then(m => m.contentLayoutRoutes),
-    canActivate: [authenticationGuard]
+    // canActivate: [authenticationGuard]
   }
 ];

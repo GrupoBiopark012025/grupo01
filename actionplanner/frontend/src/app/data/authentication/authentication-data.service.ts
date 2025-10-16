@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { LoginRequestDto, LoginResponseDto } from "@data/authentication/dtos";
+import { PostChangeEnvironmentResponseDto, PostLoginRequestDto, PostLoginResponseDto } from "@data/authentication/dtos";
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,11 @@ export class AuthenticationDataService {
 
   private http = inject(HttpClient);
 
- login(params: LoginRequestDto) {
-   return this.http.post<LoginResponseDto>(`${this.path}/login`, params);
+ login(params: PostLoginRequestDto) {
+   return this.http.post<PostLoginResponseDto>(`${this.path}/login`, params);
+ }
+
+ changeEnvironment(clienteId: number) {
+   return this.http.post<PostChangeEnvironmentResponseDto>(`${this.path}/change-environment`, clienteId);
  }
 }

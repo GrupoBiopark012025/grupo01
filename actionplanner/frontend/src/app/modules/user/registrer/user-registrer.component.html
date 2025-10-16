@@ -17,6 +17,7 @@
         formControlName="nome"
       />
     </div>
+
     <div>
       <app-text-input
         id="email"
@@ -25,6 +26,7 @@
         formControlName="email"
       />
     </div>
+
     <div>
       <app-text-input
         id="password"
@@ -33,9 +35,11 @@
         formControlName="password"
       />
     </div>
+
     <div>
       Select do Cliente Principal
     </div>
+
     <div>
       <app-select
         label="Nível de Acesso"
@@ -44,6 +48,7 @@
         (onSelectionChange)="onAccessLevelChange($event)"
       />
     </div>
+
     @if (!isAdminBehindTheScenes() && accessLevel()) {
       <div>
         <app-checkbox
@@ -52,8 +57,13 @@
         />
       </div>
     }
-  </div>
 
+    <div class="col-span-2">
+      <z-card class="w-full" zTitle="Empresas com Acesso">
+
+      </z-card>
+    </div>
+  </div>
   <div class="flex grow items-center justify-end gap-2">
     <button z-button zType="outline" type="button">Cancelar</button>
     <button z-button type="submit">Salvar</button>

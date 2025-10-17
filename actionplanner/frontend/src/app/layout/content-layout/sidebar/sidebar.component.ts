@@ -5,6 +5,10 @@ import { ZardAvatarComponent } from '@shared/components/zardui/avatar/avatar.com
 import { RouterLink } from "@angular/router";
 import { UserSessionService } from "@core/services/user-session/user-session.service";
 import { Building2, LucideAngularModule } from "lucide-angular";
+import { ZardDialogService } from "@shared/components/zardui/dialog/dialog.service";
+import {
+  ChangeEnvironmentDialogComponent
+} from "@shared/components/base/dialogs/change-environment-dialog/change-environment-dialog.component";
 
 @Component({
   selector: 'app-sidebar',
@@ -16,6 +20,7 @@ export class SidebarComponent {
 
   private readonly authService = inject(AuthenticationService);
   private readonly userSessionService = inject(UserSessionService);
+  private readonly dialogService = inject(ZardDialogService);
 
   private _isUserMenuOpen = signal<boolean>(false);
 
@@ -44,6 +49,15 @@ export class SidebarComponent {
   logout() {
     this.authService.logout(true);
     this.closeUserMenu();
+  }
+
+  changeEnvironment() {
+    this.closeUserMenu();
+
+    this.dialogService.create({
+      zTitle: 'Mudar Ambiente',
+      zContent: ChangeEnvironmentDialogComponent
+    })
   }
 
   @HostListener('document:click', ['$event'])

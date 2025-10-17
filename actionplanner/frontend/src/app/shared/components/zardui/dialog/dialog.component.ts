@@ -19,7 +19,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
-import { mergeClasses } from '@shared/utils/merge-classes';
+import { mergeClasses } from '@shared/utils/zardui/merge-classes';
 import { ZardButtonComponent } from '../button/button.component';
 import { ZardDialogRef } from './dialog-ref';
 import { ZardDialogService } from './dialog.service';

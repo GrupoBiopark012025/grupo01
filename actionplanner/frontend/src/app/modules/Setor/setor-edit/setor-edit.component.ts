@@ -36,11 +36,11 @@ export class SetorEditComponent implements OnInit {
 
   // Estado do formulário usando signals
   setor = signal<Partial<Setor>>({
-    nome: '',
-    sigla: '',
-    descricao: '',
-    status: 'ATIVO',
-    cor: '#3B82F6'
+    name: '',
+    acronym: '',
+    description: '',
+    status: 'ativo',
+    color: '#3B82F6'
   });
 
   // Estado de carregamento
@@ -49,9 +49,9 @@ export class SetorEditComponent implements OnInit {
   
   // Estado de validação
   errors = signal({
-    nome: '',
-    sigla: '',
-    descricao: ''
+    name: '',
+    acronym: '',
+    description: ''
   });
 
   // Computed para verificar se o formulário é válido
@@ -60,18 +60,18 @@ export class SetorEditComponent implements OnInit {
     const currentErrors = this.errors();
     
     return (
-      currentSetor.nome?.trim() !== '' &&
-      currentSetor.sigla?.trim() !== '' &&
-      currentErrors.nome === '' &&
-      currentErrors.sigla === '' &&
-      currentErrors.descricao === ''
+      currentSetor.name?.trim() !== '' &&
+      currentSetor.acronym?.trim() !== '' &&
+      currentErrors.name === '' &&
+      currentErrors.acronym === '' &&
+      currentErrors.description === ''
     );
   });
 
   // Opções de status
   statusOptions = [
-    { value: 'ATIVO', label: 'Ativo' },
-    { value: 'INATIVO', label: 'Inativo' }
+    { value: 'ativo', label: 'Ativo' },
+    { value: 'inativo', label: 'Inativo' }
   ] as const;
 
   // Cores predefinidas
@@ -112,11 +112,11 @@ export class SetorEditComponent implements OnInit {
       
       // Preencher formulário com dados do setor
       this.setor.set({
-        nome: setorData.nome,
-        sigla: setorData.sigla,
-        descricao: setorData.descricao,
+        name: setorData.name,
+        acronym: setorData.acronym,
+        description: setorData.description,
         status: setorData.status,
-        cor: setorData.cor
+        color: setorData.color
       });
       
     } catch (error) {
@@ -129,71 +129,71 @@ export class SetorEditComponent implements OnInit {
   }
 
   // Métodos para atualizar o setor
-  updateNome(nome: string) {
-    this.setor.update(current => ({ ...current, nome }));
-    this.validateNome();
+  updateName(name: string) {
+    this.setor.update(current => ({ ...current, name }));
+    this.validateName();
   }
 
-  updateSigla(sigla: string) {
+  updateAcronym(acronym: string) {
     // Converter para maiúsculo e limitar a 10 caracteres
-    const siglaFormatted = sigla.toUpperCase().slice(0, 10);
-    this.setor.update(current => ({ ...current, sigla: siglaFormatted }));
-    this.validateSigla();
+    const acronymFormatted = acronym.toUpperCase().slice(0, 10);
+    this.setor.update(current => ({ ...current, acronym: acronymFormatted }));
+    this.validateAcronym();
   }
 
-  updateDescricao(descricao: string) {
-    this.setor.update(current => ({ ...current, descricao }));
-    this.validateDescricao();
+  updateDescription(description: string) {
+    this.setor.update(current => ({ ...current, description }));
+    this.validateDescription();
   }
 
-  updateStatus(status: 'ATIVO' | 'INATIVO') {
+  updateStatus(status: 'ativo' | 'inativo') {
     this.setor.update(current => ({ ...current, status }));
   }
 
-  updateCor(cor: string) {
-    this.setor.update(current => ({ ...current, cor }));
+  updateColor(color: string) {
+    this.setor.update(current => ({ ...current, color }));
   }
 
   // Validações
-  validateNome() {
-    const nome = this.setor().nome?.trim() || '';
+  validateName() {
+    const name = this.setor().name?.trim() || '';
     let error = '';
     
-    if (!nome) {
+    if (!name) {
       error = 'Nome é obrigatório';
-    } else if (nome.length < 2) {
+    } else if (name.length < 2) {
       error = 'Nome deve ter pelo menos 2 caracteres';
-    } else if (nome.length > 50) {
+    } else if (name.length > 50) {
       error = 'Nome deve ter no máximo 50 caracteres';
     }
     
-    this.errors.update(current => ({ ...current, nome: error }));
+    this.errors.update(current => ({ ...current, name: error }));
   }
 
-  validateSigla() {
-    const sigla = this.setor().sigla?.trim() || '';
+  validateAcronym() {
+    const acronym = this.setor().acronym?.trim() || '';
     let error = '';
     
-    if (!sigla) {
+    if (!acronym) {
       error = 'Sigla é obrigatória';
-    } else if (sigla.length < 2) {
+    } else if (acronym.length < 2) {
       error = 'Sigla deve ter pelo menos 2 caracteres';
-    } else if (sigla.length > 5) {
+    } else if (acronym.length > 5) {
       error = 'Sigla deve ter no máximo 5 caracteres';
     }
     
-    this.errors.update(current => ({ ...current, sigla: error }));
+    this.errors.update(current => ({ ...current, acronym: error }));
   }
 
-  validateDescricao() {
-    const descricao = this.setor().descricao?.trim() || '';
+  validateDescription() {
+    const description = this.setor().description?.trim() || '';
     let error = '';
     
-    if (descricao.length > 160) {
+    if (description.length > 160) {
       error = 'Descrição deve ter no máximo 160 caracteres';
     }
     
-    this.errors.update(current => ({ ...current, descricao: error }));
+    this.errors.update(current => ({ ...current, description: error }));
   }
 
   // Método para salvar (atualizar)
@@ -216,11 +216,11 @@ export class SetorEditComponent implements OnInit {
       // Console dos dados do formulário
       console.log('📋 Dados do formulário sendo enviados:', {
         id: this.setorId,
-        nome: setorData.nome,
-        sigla: setorData.sigla,
-        descricao: setorData.descricao,
+        name: setorData.name,
+        acronym: setorData.acronym,
+        description: setorData.description,
         status: setorData.status,
-        cor: setorData.cor,
+        color: setorData.color,
         timestamp: new Date().toISOString()
       });
       
@@ -234,11 +234,11 @@ export class SetorEditComponent implements OnInit {
       
       // Atualizar o setor via API
       const setorAtualizado = await this.setorDataService.update(this.setorId, {
-        nome: setorData.nome!,
-        sigla: setorData.sigla!,
-        descricao: setorData.descricao || '',
+        name: setorData.name!,
+        acronym: setorData.acronym!,
+        description: setorData.description || '',
         status: setorData.status!,
-        cor: setorData.cor!
+        color: setorData.color!
       });
       
       console.log('Setor atualizado com sucesso:', setorAtualizado);
@@ -259,11 +259,11 @@ export class SetorEditComponent implements OnInit {
         } else if (apiError.error?.errors) {
           // Se houver erros de validação específicos
           const validationErrors = apiError.error.errors;
-          if (validationErrors.nome) {
-            this.errors.update(current => ({ ...current, nome: validationErrors.nome }));
+          if (validationErrors.name) {
+            this.errors.update(current => ({ ...current, name: validationErrors.name }));
           }
-          if (validationErrors.sigla) {
-            this.errors.update(current => ({ ...current, sigla: validationErrors.sigla }));
+          if (validationErrors.acronym) {
+            this.errors.update(current => ({ ...current, acronym: validationErrors.acronym }));
           }
           errorMessage = 'Verifique os campos destacados e tente novamente.';
         }
@@ -277,9 +277,9 @@ export class SetorEditComponent implements OnInit {
 
   // Validar todos os campos
   validateAllFields() {
-    this.validateNome();
-    this.validateSigla();
-    this.validateDescricao();
+    this.validateName();
+    this.validateAcronym();
+    this.validateDescription();
   }
 
   // Método para cancelar

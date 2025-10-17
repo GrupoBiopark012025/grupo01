@@ -1,8 +1,18 @@
 export interface Setor {
   id: number;
-  nome: string;
-  sigla: string;
-  descricao: string;
-  status: 'ATIVO' | 'INATIVO';
-  cor: string;
+  name: string;
+  acronym: string;
+  description: string;
+  status: 'ativo' | 'inativo';
+  color: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SetorApiResponse {
+  sectors: Setor[];
+  totalData: number;
+  totalPages: number;
+  currentPage: number;
+  size: number;
 }

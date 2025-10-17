@@ -42,7 +42,7 @@ export class SetorListComponent implements OnInit {
   
   // Filtros de busca
   searchTerm = signal('');
-  statusFilter = signal<'TODOS' | 'ATIVO' | 'INATIVO'>('TODOS');
+  statusFilter = signal<'TODOS' | 'ativo' | 'inativo'>('TODOS');
 
   ngOnInit() {
     this.loadSetores();
@@ -68,7 +68,7 @@ export class SetorListComponent implements OnInit {
     try {
       const setores = await firstValueFrom(this.setorDataService.search({
         search: this.searchTerm(),
-        status: this.statusFilter() !== 'TODOS' ? this.statusFilter() as 'ATIVO' | 'INATIVO' : undefined
+        status: this.statusFilter() !== 'TODOS' ? this.statusFilter() as 'ativo' | 'inativo' : undefined
       }));
       
       this.setores.set(setores || []);
@@ -87,7 +87,7 @@ export class SetorListComponent implements OnInit {
   }
 
   // Atualizar filtro de status
-  updateStatusFilter(status: 'TODOS' | 'ATIVO' | 'INATIVO') {
+  updateStatusFilter(status: 'TODOS' | 'ativo' | 'inativo') {
     this.statusFilter.set(status);
     this.searchSetores();
   }
@@ -118,9 +118,9 @@ export class SetorListComponent implements OnInit {
   // Obter variante do badge baseado no status
   getStatusVariant(status: string): 'default' | 'secondary' | 'destructive' | 'outline' {
     switch (status) {
-      case 'ATIVO':
+      case 'ativo':
         return 'default';
-      case 'INATIVO':
+      case 'inativo':
         return 'secondary';
       default:
         return 'outline';

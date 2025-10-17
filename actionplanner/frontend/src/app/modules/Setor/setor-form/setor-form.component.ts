@@ -32,11 +32,11 @@ export class SetorFormComponent {
 
   // Estado do formulário usando signals
   setor = signal<Partial<Setor>>({
-    nome: '',
-    sigla: '',
-    descricao: '',
-    status: 'ATIVO',
-    cor: '#3B82F6'
+    name: '',
+    acronym: '',
+    description: '',
+    status: 'ativo',
+    color: '#3B82F6'
   });
 
   // Estado de carregamento
@@ -44,9 +44,9 @@ export class SetorFormComponent {
   
   // Estado de validação
   errors = signal({
-    nome: '',
-    sigla: '',
-    descricao: ''
+    name: '',
+    acronym: '',
+    description: ''
   });
 
   // Computed para verificar se o formulário é válido
@@ -55,18 +55,18 @@ export class SetorFormComponent {
     const currentErrors = this.errors();
     
     return (
-      currentSetor.nome?.trim() !== '' &&
-      currentSetor.sigla?.trim() !== '' &&
-      currentErrors.nome === '' &&
-      currentErrors.sigla === '' &&
-      currentErrors.descricao === ''
+      currentSetor.name?.trim() !== '' &&
+      currentSetor.acronym?.trim() !== '' &&
+      currentErrors.name === '' &&
+      currentErrors.acronym === '' &&
+      currentErrors.description === ''
     );
   });
 
   // Opções de status
   statusOptions = [
-    { value: 'ATIVO', label: 'Ativo' },
-    { value: 'INATIVO', label: 'Inativo' }
+    { value: 'ativo', label: 'Ativo' },
+    { value: 'inativo', label: 'Inativo' }
   ] as const;
 
   // Cores predefinidas
@@ -82,71 +82,71 @@ export class SetorFormComponent {
   ];
 
   // Métodos para atualizar o setor
-  updateNome(nome: string) {
-    this.setor.update(current => ({ ...current, nome }));
-    this.validateNome();
+  updateName(name: string) {
+    this.setor.update(current => ({ ...current, name }));
+    this.validateName();
   }
 
-  updateSigla(sigla: string) {
+  updateAcronym(acronym: string) {
     // Converter para maiúsculo e limitar a 10 caracteres
-    const siglaFormatted = sigla.toUpperCase().slice(0, 10);
-    this.setor.update(current => ({ ...current, sigla: siglaFormatted }));
-    this.validateSigla();
+    const acronymFormatted = acronym.toUpperCase().slice(0, 10);
+    this.setor.update(current => ({ ...current, acronym: acronymFormatted }));
+    this.validateAcronym();
   }
 
-  updateDescricao(descricao: string) {
-    this.setor.update(current => ({ ...current, descricao }));
-    this.validateDescricao();
+  updateDescription(description: string) {
+    this.setor.update(current => ({ ...current, description }));
+    this.validateDescription();
   }
 
-  updateStatus(status: 'ATIVO' | 'INATIVO') {
+  updateStatus(status: 'ativo' | 'inativo') {
     this.setor.update(current => ({ ...current, status }));
   }
 
-  updateCor(cor: string) {
-    this.setor.update(current => ({ ...current, cor }));
+  updateColor(color: string) {
+    this.setor.update(current => ({ ...current, color }));
   }
 
   // Validações
-  validateNome() {
-    const nome = this.setor().nome?.trim() || '';
+  validateName() {
+    const name = this.setor().name?.trim() || '';
     let error = '';
     
-    if (!nome) {
+    if (!name) {
       error = 'Nome é obrigatório';
-    } else if (nome.length < 2) {
+    } else if (name.length < 2) {
       error = 'Nome deve ter pelo menos 2 caracteres';
-    } else if (nome.length > 50) {
+    } else if (name.length > 50) {
       error = 'Nome deve ter no máximo 50 caracteres';
     }
     
-    this.errors.update(current => ({ ...current, nome: error }));
+    this.errors.update(current => ({ ...current, name: error }));
   }
 
-  validateSigla() {
-    const sigla = this.setor().sigla?.trim() || '';
+  validateAcronym() {
+    const acronym = this.setor().acronym?.trim() || '';
     let error = '';
     
-    if (!sigla) {
+    if (!acronym) {
       error = 'Sigla é obrigatória';
-    } else if (sigla.length < 2) {
+    } else if (acronym.length < 2) {
       error = 'Sigla deve ter pelo menos 2 caracteres';
-    } else if (sigla.length > 5) {
+    } else if (acronym.length > 5) {
       error = 'Sigla deve ter no máximo 5 caracteres';
     }
     
-    this.errors.update(current => ({ ...current, sigla: error }));
+    this.errors.update(current => ({ ...current, acronym: error }));
   }
 
-  validateDescricao() {
-    const descricao = this.setor().descricao?.trim() || '';
+  validateDescription() {
+    const description = this.setor().description?.trim() || '';
     let error = '';
     
-    if (descricao.length > 160) {
+    if (description.length > 160) {
       error = 'Descrição deve ter no máximo 160 caracteres';
     }
     
-    this.errors.update(current => ({ ...current, descricao: error }));
+    this.errors.update(current => ({ ...current, description: error }));
   }
 
   // Método para salvar
@@ -163,21 +163,21 @@ export class SetorFormComponent {
       
       // Console dos dados do formulário
       console.log('📋 Dados do formulário sendo enviados:', {
-        nome: setorData.nome,
-        sigla: setorData.sigla,
-        descricao: setorData.descricao,
+        name: setorData.name,
+        acronym: setorData.acronym,
+        description: setorData.description,
         status: setorData.status,
-        cor: setorData.cor,
+        color: setorData.color,
         timestamp: new Date().toISOString()
       });
       
       // Criar o setor via API
       const setorCriado = await this.setorDataService.create({
-        nome: setorData.nome!,
-        sigla: setorData.sigla!,
-        descricao: setorData.descricao || '',
+        name: setorData.name!,
+        acronym: setorData.acronym!,
+        description: setorData.description || '',
         status: setorData.status!,
-        cor: setorData.cor!
+        color: setorData.color!
       });
       
       console.log('Setor criado com sucesso:', setorCriado);
@@ -198,11 +198,11 @@ export class SetorFormComponent {
         } else if (apiError.error?.errors) {
           // Se houver erros de validação específicos
           const validationErrors = apiError.error.errors;
-          if (validationErrors.nome) {
-            this.errors.update(current => ({ ...current, nome: validationErrors.nome }));
+          if (validationErrors.name) {
+            this.errors.update(current => ({ ...current, name: validationErrors.name }));
           }
-          if (validationErrors.sigla) {
-            this.errors.update(current => ({ ...current, sigla: validationErrors.sigla }));
+          if (validationErrors.acronym) {
+            this.errors.update(current => ({ ...current, acronym: validationErrors.acronym }));
           }
           errorMessage = 'Verifique os campos destacados e tente novamente.';
         }
@@ -216,25 +216,25 @@ export class SetorFormComponent {
 
   // Validar todos os campos
   validateAllFields() {
-    this.validateNome();
-    this.validateSigla();
-    this.validateDescricao();
+    this.validateName();
+    this.validateAcronym();
+    this.validateDescription();
   }
 
   // Reset do formulário
   resetForm() {
     this.setor.set({
-      nome: '',
-      sigla: '',
-      descricao: '',
-      status: 'ATIVO',
-      cor: '#3B82F6'
+      name: '',
+      acronym: '',
+      description: '',
+      status: 'ativo',
+      color: '#3B82F6'
     });
     
     this.errors.set({
-      nome: '',
-      sigla: '',
-      descricao: ''
+      name: '',
+      acronym: '',
+      description: ''
     });
   }
 

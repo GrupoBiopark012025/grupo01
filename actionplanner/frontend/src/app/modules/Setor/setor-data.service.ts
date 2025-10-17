@@ -1,22 +1,24 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Setor } from './setor.model';
+import { Observable, map } from 'rxjs';
+import { Setor, SetorApiResponse } from './setor.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SetorDataService {
-  readonly path = '/setor';
+  readonly path = 'api/sectors';
 
   private http = inject(HttpClient);
 
-  create(setor: Omit<Setor, 'id'>): Observable<Setor> {
+  create(setor: Omit<Setor, 'id' | 'createdAt' | 'updatedAt'>): Observable<Setor> {
     return this.http.post<Setor>(`${this.path}`, setor);
   }
 
   findAll(): Observable<Setor[]> {
-    return this.http.get<Setor[]>(`${this.path}`);
+    return this.http.get<SetorApiResponse>(`${this.path}`).pipe(
+      map(response => response.sectors)
+    );
   }
 
   findById(id: number): Observable<Setor> {
@@ -29,7 +31,7 @@ export class SetorDataService {
 
   search(filters: {
     search?: string;
-    status?: 'ATIVO' | 'INATIVO';
+    status?: 'ativo' | 'inativo';
     page?: number;
     limit?: number;
   }): Observable<Setor[]> {
@@ -51,6 +53,8 @@ export class SetorDataService {
     const queryString = params.toString();
     const url = queryString ? `${this.path}?${queryString}` : this.path;
     
-    return this.http.get<Setor[]>(url);
+    return this.http.get<SetorApiResponse>(url).pipe(
+      map(response => response.sectors)
+    );
   }
 }

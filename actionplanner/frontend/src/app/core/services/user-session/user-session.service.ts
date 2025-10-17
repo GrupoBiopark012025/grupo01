@@ -35,7 +35,7 @@ export class UserSessionService {
   reloadSessionData() {
     this.localStorageService.remove(LocalStorageKey.SessionData);
 
-    this.getSessionData();
+    return this.getSessionData();
   }
 
   private handleUserInitials() {

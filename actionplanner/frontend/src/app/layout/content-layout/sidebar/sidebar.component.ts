@@ -1,14 +1,17 @@
-import { Component, inject, HostListener, computed, signal } from '@angular/core';
+import { Component, inject, HostListener, computed, signal, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthenticationService } from '@core/services/authentication/authentication.service';
 import { ZardAvatarComponent } from '@shared/components/zardui/avatar/avatar.component';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { UserSessionService } from "@core/services/user-session/user-session.service";
 import { Building2, LucideAngularModule } from "lucide-angular";
 import { ZardDialogService } from "@shared/components/zardui/dialog/dialog.service";
 import {
   ChangeEnvironmentDialogComponent
 } from "@shared/components/base/dialogs/change-environment-dialog/change-environment-dialog.component";
+import { take } from "rxjs";
+import { toast } from "ngx-sonner";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-sidebar',
@@ -21,6 +24,8 @@ export class SidebarComponent {
   private readonly authService = inject(AuthenticationService);
   private readonly userSessionService = inject(UserSessionService);
   private readonly dialogService = inject(ZardDialogService);
+  private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
 
   private _isUserMenuOpen = signal<boolean>(false);
 
@@ -54,10 +59,23 @@ export class SidebarComponent {
   changeEnvironment() {
     this.closeUserMenu();
 
-    this.dialogService.create({
+    const dialogRef = this.dialogService.create({
       zTitle: 'Mudar Ambiente',
       zContent: ChangeEnvironmentDialogComponent
-    })
+    });
+
+    const dialog = dialogRef.componentInstance as ChangeEnvironmentDialogComponent;
+
+    dialog.onChangeEnvironment
+      .pipe(
+        take(1),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        toast.success('Troca de ambiente realizada com sucesso.');
+        dialogRef.close();
+        this.router.navigate(['home']);
+      });
   }
 
   @HostListener('document:click', ['$event'])

@@ -2,26 +2,17 @@
   @if (clients.data.length; as recordsInView) {
     <div class="flex flex-col gap-3 p-3">
       @for (client of clients.data; track client.id) {
-        <div
-          class="flex items-center justify-between rounded-xl border p-3 transition-all duration-150"
-          [class.cursor-pointer]="client.id !== loggedClientId"
-          [class.hover:bg-muted-foreground]="client.id !== loggedClientId"
-          [class.bg-muted]="client.id === loggedClientId"
-          [class.opacity-70]="client.id === loggedClientId"
-          [class.pointer-events-none]="client.id === loggedClientId"
-          (click)="client.id !== loggedClientId && changeEnvironmentToClient(client.id)"
+        <app-direct-select-clickable
+          [active]="client.id === loggedClientId()"
+          (onClick)="client.id !== loggedClientId() && changeEnvironmentToClient(client.id)"
         >
           <div class="flex grow flex-col">
             <span class="font-medium">{{ client.nome }}</span>
-            <span class="text-sm text-muted-foreground">{{ client.cnpj }}</span>
+            <span class="text-sm text-muted-foreground group-hover:text-accent-foreground">
+              {{ client.cnpj }}
+            </span>
           </div>
-
-          @if (client.id === loggedClientId) {
-            <i-lucide [img]="icons.check" class="text-success" />
-          } @else {
-            <i-lucide [img]="icons.chevronRight" />
-          }
-        </div>
+        </app-direct-select-clickable>
       }
     </div>
 
@@ -32,10 +23,13 @@
       [totalPages]="clients.totalPages"
       [collectionSize]="clients.totalData"
       (onPageChange)="changeQuery({ page: $event })"
+      [hiddenIfPossible]="true"
     />
   } @else {
     <app-no-list-content
       text="Nenhum cliente vinculado ao usuário."
     />
   }
+} @else {
+  <app-direct-select-skeleton />
 }

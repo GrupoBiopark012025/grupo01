@@ -98,17 +98,18 @@ export class SetorEditComponent implements OnInit {
 
   // Carregar dados do setor
   async loadSetorData() {
-    if (!this.setorId) return;
+    if (!this.setorId) {
+      return;
+    }
 
     this.isLoadingData.set(true);
     
     try {
       const setorData = await firstValueFrom(this.setorDataService.findById(this.setorId));
+      
       if (!setorData) {
         throw new Error('Setor não encontrado');
       }
-      
-      console.log('📋 Dados do setor carregados:', setorData);
       
       // Preencher formulário com dados do setor
       this.setor.set({
@@ -120,7 +121,7 @@ export class SetorEditComponent implements OnInit {
       });
       
     } catch (error) {
-      console.error('Erro ao carregar setor:', error);
+      console.error('❌ [SetorEdit] Erro ao carregar setor:', error);
       alert('Erro ao carregar dados do setor. Tente novamente.');
       this.router.navigate(['/setores']);
     } finally {
@@ -233,15 +234,15 @@ export class SetorEditComponent implements OnInit {
       });
       
       // Atualizar o setor via API
-      const setorAtualizado = await this.setorDataService.update(this.setorId, {
+      const dadosAtualizacao = {
         name: setorData.name!,
         acronym: setorData.acronym!,
         description: setorData.description || '',
         status: setorData.status!,
         color: setorData.color!
-      });
+      };
       
-      console.log('Setor atualizado com sucesso:', setorAtualizado);
+      await this.setorDataService.update(this.setorId, dadosAtualizacao);
       
       // Navegar para a lista de setores após sucesso
       this.router.navigate(['/setores']);

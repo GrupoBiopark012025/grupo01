@@ -5,14 +5,16 @@ export interface Setor {
   description: string;
   status: 'ativo' | 'inativo';
   color: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
+  timestamp?: string; // Campo adicional para compatibilidade
 }
 
 export interface SetorApiResponse {
-  sectors: Setor[];
+  data: Setor[];
   totalData: number;
   totalPages: number;
   currentPage: number;
   size: number;
+  page: number;
 }

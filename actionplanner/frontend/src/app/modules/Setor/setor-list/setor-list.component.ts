@@ -55,7 +55,7 @@ export class SetorListComponent implements OnInit {
       const setores = await firstValueFrom(this.setorDataService.findAll());
       this.setores.set(setores || []);
     } catch (error) {
-      console.error('Erro ao carregar setores:', error);
+      console.error('❌ [SetorList] Erro ao carregar setores:', error);
       alert('Erro ao carregar setores. Tente novamente.');
     } finally {
       this.isLoading.set(false);
@@ -66,14 +66,15 @@ export class SetorListComponent implements OnInit {
   async searchSetores() {
     this.isLoading.set(true);
     try {
-      const setores = await firstValueFrom(this.setorDataService.search({
+      const filtros = {
         search: this.searchTerm(),
         status: this.statusFilter() !== 'TODOS' ? this.statusFilter() as 'ativo' | 'inativo' : undefined
-      }));
+      };
       
+      const setores = await firstValueFrom(this.setorDataService.search(filtros));
       this.setores.set(setores || []);
     } catch (error) {
-      console.error('Erro ao buscar setores:', error);
+      console.error('❌ [SetorList] Erro ao buscar setores:', error);
       alert('Erro ao buscar setores. Tente novamente.');
     } finally {
       this.isLoading.set(false);

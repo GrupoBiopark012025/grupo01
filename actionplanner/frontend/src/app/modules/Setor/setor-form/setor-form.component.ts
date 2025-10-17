@@ -161,43 +161,35 @@ export class SetorFormComponent {
     try {
       const setorData = this.setor();
       
-      // Console dos dados do formulário
-      console.log('📋 Dados do formulário sendo enviados:', {
-        name: setorData.name,
-        acronym: setorData.acronym,
-        description: setorData.description,
-        status: setorData.status,
-        color: setorData.color,
-        timestamp: new Date().toISOString()
-      });
-      
       // Criar o setor via API
-      const setorCriado = await this.setorDataService.create({
+      const dadosCriacao = {
         name: setorData.name!,
         acronym: setorData.acronym!,
         description: setorData.description || '',
         status: setorData.status!,
         color: setorData.color!
-      });
+      };
       
-      console.log('Setor criado com sucesso:', setorCriado);
+      await this.setorDataService.create(dadosCriacao);
       
       // Navegar para a lista de setores após sucesso
       this.router.navigate(['/setores']);
       
     } catch (error) {
-      console.error('Erro ao salvar setor:', error);
+      console.error('❌ [SetorForm] Erro ao salvar setor:', error);
       
       // Tratar diferentes tipos de erro
       let errorMessage = 'Erro ao cadastrar setor. Tente novamente.';
       
       if (error && typeof error === 'object' && 'error' in error) {
         const apiError = error as any;
+        
         if (apiError.error?.message) {
           errorMessage = apiError.error.message;
         } else if (apiError.error?.errors) {
           // Se houver erros de validação específicos
           const validationErrors = apiError.error.errors;
+          
           if (validationErrors.name) {
             this.errors.update(current => ({ ...current, name: validationErrors.name }));
           }

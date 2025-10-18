@@ -140,6 +140,93 @@ const doc = {
         userResponsibleId: 5
       },
 
+      // Action Plan
+      ActionPlan: {
+        id: 1,
+        numero: "PA-001",
+        oQue: "Implementar sistema de gestão de tarefas",
+        como: "Desenvolver aplicação web com React e Node.js",
+        responsavel: "João Silva",
+        inicio: "2025-01-15T00:00:00.000Z",
+        fim: "2025-03-15T23:59:59.000Z",
+        dataProrrogada: null,
+        status: "EM_ANDAMENTO",
+        observacoes: "Plano de ação para modernização do sistema",
+        projectId: 1,
+        createdAt: "2025-01-15T10:30:00.000Z",
+        updatedAt: "2025-01-15T10:30:00.000Z",
+        project: {
+          id: 1,
+          name: "Projeto Alpha",
+          description: "Sistema de gestão empresarial"
+        },
+        tasks: [
+          {
+            id: 1,
+            title: "Criar interface de usuário",
+            description: "Desenvolver telas principais do sistema",
+            status: "EM_ANDAMENTO",
+            priority: "ALTA",
+            dueDate: "2025-02-15T23:59:59.000Z",
+            projectId: 1,
+            actionPlanId: 1,
+            clienteId: 1,
+            sectorId: 2,
+            userResponsibleId: 3,
+            userCreatedId: 1,
+            createdAt: "2025-01-15T10:30:00.000Z",
+            updatedAt: "2025-01-15T10:30:00.000Z",
+            cliente: {
+              id: 1,
+              nome: "ActionPlan"
+            },
+            sector: {
+              id: 2,
+              name: "Desenvolvimento"
+            },
+            userResponsible: {
+              id: 3,
+              nome: "João Silva",
+              email: "joao@empresa.com.br"
+            },
+            userCreated: {
+              id: 1,
+              nome: "Hermes",
+              email: "hermes@actionplan.com.br"
+            }
+          }
+        ],
+        totalTasks: 5,
+        completedTasks: 2,
+        progress: 40
+      },
+
+      CreateActionPlan: {
+        numero: "PA-001",
+        oQue: "Implementar sistema de gestão de tarefas",
+        como: "Desenvolver aplicação web com React e Node.js",
+        responsavel: "João Silva",
+        inicio: "2025-01-15T00:00:00.000Z",
+        fim: "2025-03-15T23:59:59.000Z",
+        dataProrrogada: null,
+        status: "EM_ANDAMENTO",
+        observacoes: "Plano de ação para modernização do sistema",
+        projectId: 1
+      },
+
+      UpdateActionPlan: {
+        numero: "PA-001",
+        oQue: "Implementar sistema de gestão de tarefas",
+        como: "Desenvolver aplicação web com React e Node.js",
+        responsavel: "João Silva",
+        inicio: "2025-01-15T00:00:00.000Z",
+        fim: "2025-03-15T23:59:59.000Z",
+        dataProrrogada: null,
+        status: "EM_ANDAMENTO",
+        observacoes: "Plano de ação para modernização do sistema",
+        projectId: 1
+      },
+
       // Responses
       ValidationError: {
         error: "Dados inválidos",

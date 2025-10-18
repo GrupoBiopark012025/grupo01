@@ -2346,6 +2346,501 @@
           }
         ]
       }
+    },
+    "/api/actionPlans/": {
+      "get": {
+        "tags": [
+          "Action Plans"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Tamanho da página",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "_order",
+            "in": "query",
+            "description": "Campo para ordenação (ex: numero, -inicio)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "description": "Filtrar por ID do projeto",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "numero",
+            "in": "query",
+            "description": "Filtrar por número do plano (Nº)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "oQue",
+            "in": "query",
+            "description": "Filtrar por O QUE?",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "como",
+            "in": "query",
+            "description": "Filtrar por COMO?",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "responsavel",
+            "in": "query",
+            "description": "Filtrar por RESPONSÁVEL",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filtrar por STATUS",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "inicio",
+            "in": "query",
+            "description": "Filtrar por INÍCIO (maior ou igual)",
+            "format": "date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fim",
+            "in": "query",
+            "description": "Filtrar por FIM (menor ou igual)",
+            "format": "date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "schema",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "totalPages",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currentPage",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de planos de ação",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "actionPlans": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "array"
+                            },
+                            "items": {
+                              "$ref": "#/components/schemas/ActionPlan"
+                            }
+                          }
+                        },
+                        "totalData": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "totalPages": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "currentPage": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "actionPlans": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "array"
+                            },
+                            "items": {
+                              "$ref": "#/components/schemas/ActionPlan"
+                            }
+                          }
+                        },
+                        "totalData": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "totalPages": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "currentPage": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Action Plans"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Plano de ação criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateActionPlan"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/actionPlans/{id}": {
+      "get": {
+        "tags": [
+          "Action Plans"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plano de ação encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Plano de ação não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Action Plans"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plano de ação atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "404": {
+            "description": "Plano de ação não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateActionPlan"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/actionPlans/{id}/inactive": {
+      "patch": {
+        "tags": [
+          "Action Plans"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plano de ação inativado com sucesso. Todas as tarefas relacionadas foram canceladas.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Plano de ação não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -2778,6 +3273,306 @@
         },
         "xml": {
           "name": "UpdateTask"
+        }
+      },
+      "ActionPlan": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "numero": {
+            "type": "string",
+            "example": "PA-001"
+          },
+          "oQue": {
+            "type": "string",
+            "example": "Implementar sistema de gestão de tarefas"
+          },
+          "como": {
+            "type": "string",
+            "example": "Desenvolver aplicação web com React e Node.js"
+          },
+          "responsavel": {
+            "type": "string",
+            "example": "João Silva"
+          },
+          "inicio": {
+            "type": "string",
+            "example": "2025-01-15T00:00:00.000Z"
+          },
+          "fim": {
+            "type": "string",
+            "example": "2025-03-15T23:59:59.000Z"
+          },
+          "dataProrrogada": {},
+          "status": {
+            "type": "string",
+            "example": "EM_ANDAMENTO"
+          },
+          "observacoes": {
+            "type": "string",
+            "example": "Plano de ação para modernização do sistema"
+          },
+          "projectId": {
+            "type": "number",
+            "example": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2025-01-15T10:30:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2025-01-15T10:30:00.000Z"
+          },
+          "project": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "name": {
+                "type": "string",
+                "example": "Projeto Alpha"
+              },
+              "description": {
+                "type": "string",
+                "example": "Sistema de gestão empresarial"
+              }
+            }
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "title": {
+                  "type": "string",
+                  "example": "Criar interface de usuário"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Desenvolver telas principais do sistema"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "EM_ANDAMENTO"
+                },
+                "priority": {
+                  "type": "string",
+                  "example": "ALTA"
+                },
+                "dueDate": {
+                  "type": "string",
+                  "example": "2025-02-15T23:59:59.000Z"
+                },
+                "projectId": {
+                  "type": "number",
+                  "example": 1
+                },
+                "actionPlanId": {
+                  "type": "number",
+                  "example": 1
+                },
+                "clienteId": {
+                  "type": "number",
+                  "example": 1
+                },
+                "sectorId": {
+                  "type": "number",
+                  "example": 2
+                },
+                "userResponsibleId": {
+                  "type": "number",
+                  "example": 3
+                },
+                "userCreatedId": {
+                  "type": "number",
+                  "example": 1
+                },
+                "createdAt": {
+                  "type": "string",
+                  "example": "2025-01-15T10:30:00.000Z"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "example": "2025-01-15T10:30:00.000Z"
+                },
+                "cliente": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "nome": {
+                      "type": "string",
+                      "example": "ActionPlan"
+                    }
+                  }
+                },
+                "sector": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 2
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Desenvolvimento"
+                    }
+                  }
+                },
+                "userResponsible": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 3
+                    },
+                    "nome": {
+                      "type": "string",
+                      "example": "João Silva"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "joao@empresa.com.br"
+                    }
+                  }
+                },
+                "userCreated": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "nome": {
+                      "type": "string",
+                      "example": "Hermes"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "hermes@actionplan.com.br"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "totalTasks": {
+            "type": "number",
+            "example": 5
+          },
+          "completedTasks": {
+            "type": "number",
+            "example": 2
+          },
+          "progress": {
+            "type": "number",
+            "example": 40
+          }
+        },
+        "xml": {
+          "name": "ActionPlan"
+        }
+      },
+      "CreateActionPlan": {
+        "type": "object",
+        "properties": {
+          "numero": {
+            "type": "string",
+            "example": "PA-001"
+          },
+          "oQue": {
+            "type": "string",
+            "example": "Implementar sistema de gestão de tarefas"
+          },
+          "como": {
+            "type": "string",
+            "example": "Desenvolver aplicação web com React e Node.js"
+          },
+          "responsavel": {
+            "type": "string",
+            "example": "João Silva"
+          },
+          "inicio": {
+            "type": "string",
+            "example": "2025-01-15T00:00:00.000Z"
+          },
+          "fim": {
+            "type": "string",
+            "example": "2025-03-15T23:59:59.000Z"
+          },
+          "dataProrrogada": {},
+          "status": {
+            "type": "string",
+            "example": "EM_ANDAMENTO"
+          },
+          "observacoes": {
+            "type": "string",
+            "example": "Plano de ação para modernização do sistema"
+          },
+          "projectId": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "xml": {
+          "name": "CreateActionPlan"
+        }
+      },
+      "UpdateActionPlan": {
+        "type": "object",
+        "properties": {
+          "numero": {
+            "type": "string",
+            "example": "PA-001"
+          },
+          "oQue": {
+            "type": "string",
+            "example": "Implementar sistema de gestão de tarefas"
+          },
+          "como": {
+            "type": "string",
+            "example": "Desenvolver aplicação web com React e Node.js"
+          },
+          "responsavel": {
+            "type": "string",
+            "example": "João Silva"
+          },
+          "inicio": {
+            "type": "string",
+            "example": "2025-01-15T00:00:00.000Z"
+          },
+          "fim": {
+            "type": "string",
+            "example": "2025-03-15T23:59:59.000Z"
+          },
+          "dataProrrogada": {},
+          "status": {
+            "type": "string",
+            "example": "EM_ANDAMENTO"
+          },
+          "observacoes": {
+            "type": "string",
+            "example": "Plano de ação para modernização do sistema"
+          },
+          "projectId": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "xml": {
+          "name": "UpdateActionPlan"
         }
       },
       "ValidationError": {

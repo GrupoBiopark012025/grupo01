@@ -9,6 +9,7 @@ import UserRouter from "./routes/userRouter.js";
 import ClientRouter from "./routes/clientRouter.js";
 import SectorRouter from "./routes/sectorRouter.js";
 import TasksRouter from "./routes/tasksRouter.js";
+import ActionPlanRouter from "./routes/actionPlanRouter.js";
 
 const routes = Router();
 
@@ -29,5 +30,5 @@ routes.use("/api/users", UserRouter);
 routes.use("/api/clients", ClientRouter);
 routes.use("/api/sectors", SectorRouter);
 routes.use("/api/tasks", TasksRouter);
-
+routes.use("/api/actionPlans", ActionPlanRouter);
 export default routes;

@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { ApiPaginatedList } from "@data/common/dtos";
 import {
-  GetUserClientsQuery,
+  GetUserClientQuery,
   GetUserDataDto,
   GetUserDto,
   GetUserQuery,
@@ -31,7 +31,7 @@ export class UserDataService {
     return this.http.post<GetUserDataDto>(this.path, params);
   }
 
-  getClients(userId: number, query: GetUserClientsQuery) {
+  getClients(userId: number, query: GetUserClientQuery) {
     return this.http.get<ApiPaginatedList<UserClientDto>>(`${this.path}/${userId}/clients`, { params: { ...query } });
   }
 }

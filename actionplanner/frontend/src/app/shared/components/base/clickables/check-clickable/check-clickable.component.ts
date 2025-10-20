@@ -1,4 +1,4 @@
-import { Component, input, model, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Check, LucideAngularModule, Star } from "lucide-angular";
 import { ZardCheckboxComponent } from "@shared/components/zardui/checkbox/checkbox.component";
 import { FormsModule } from "@angular/forms";

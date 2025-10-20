@@ -52,8 +52,8 @@ export class SidebarComponent {
   }
 
   logout() {
-    this.authService.logout(true);
     this.closeUserMenu();
+    this.authService.logout(true);
   }
 
   changeEnvironment() {

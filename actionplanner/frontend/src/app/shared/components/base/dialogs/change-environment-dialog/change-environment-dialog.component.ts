@@ -1,5 +1,5 @@
 import { Component, computed, DestroyRef, EventEmitter, inject, signal } from '@angular/core';
-import { GetUserClientsQuery, UserClientDto } from "@data/user/dtos";
+import { GetUserClientQuery, UserClientDto } from "@data/user/dtos";
 import { UserSessionService } from "@core/services/user-session/user-session.service";
 import { Observable, shareReplay, switchMap, take } from "rxjs";
 import { ApiPaginatedList } from "@data/common/dtos";
@@ -38,7 +38,7 @@ export class ChangeEnvironmentDialogComponent {
 
   onChangeEnvironment = new EventEmitter();
 
-  private _query = signal<GetUserClientsQuery>(new GetUserClientsQuery());
+  private _query = signal<GetUserClientQuery>(new GetUserClientQuery());
 
   query = this._query.asReadonly();
   loggedUser = computed(() => this.userSessionService.user());
@@ -52,7 +52,7 @@ export class ChangeEnvironmentDialogComponent {
       takeUntilDestroyed(this.destroyRef)
     );
 
-  changeQuery(changes: Partial<GetUserClientsQuery> = {}): void {
+  changeQuery(changes: Partial<GetUserClientQuery> = {}): void {
     this._query.update((prev) => ({ ...prev!, ...changes }));
   }
 

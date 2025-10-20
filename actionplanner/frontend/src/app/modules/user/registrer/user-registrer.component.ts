@@ -13,7 +13,10 @@ import { BackOrNavigateToDirective } from "@shared/directives/back-or-navigate-t
 import { TextInputComponent } from "@shared/components/base/form-components/text-input/text-input.component";
 import { CheckboxComponent } from "@shared/components/base/form-components/checkbox/checkbox.component";
 import { SelectComponent } from "@shared/components/base/form-components/select/select.component";
-import { ZardCardComponent } from "@shared/components/zardui/card/card.component";
+import { ZardDialogService } from "@shared/components/zardui/dialog/dialog.service";
+import {
+  SelectUserClientsDialogComponent
+} from "@modules/user/select-user-clients-dialog/select-user-clients-dialog.component";
 
 @Component({
   selector: 'app-user-registrer',
@@ -24,8 +27,7 @@ import { ZardCardComponent } from "@shared/components/zardui/card/card.component
     BackOrNavigateToDirective,
     TextInputComponent,
     CheckboxComponent,
-    SelectComponent,
-    ZardCardComponent
+    SelectComponent
   ],
   templateUrl: './user-registrer.component.html'
 })
@@ -35,8 +37,9 @@ export class UserRegistrerComponent {
   private readonly userDataService = inject(UserDataService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly validationService = inject(ValidationService);
+  private readonly dialogService = inject(ZardDialogService);
 
-  private _accessLevel = signal<UserAccessLevelEnum | null>(null);
+  private readonly _accessLevel = signal<UserAccessLevelEnum | null>(null);
   accessLevel = this._accessLevel.asReadonly();
 
   form = this.fb.nonNullable.group({
@@ -47,7 +50,8 @@ export class UserRegistrerComponent {
     accessLevel: this.fb.control<UserAccessLevelEnum | null>(null, [Validators.required]),
     isAdmin: this.fb.nonNullable.control(false, [Validators.required]),
     onlyAttachedTasks: this.fb.nonNullable.control(false),
-    status: this.fb.nonNullable.control(UserStatusEnum.Ativo, [Validators.required])
+    status: this.fb.nonNullable.control(UserStatusEnum.Ativo, [Validators.required]),
+    userClienteIds: this.fb.control<number[]>([], [Validators.required])
   });
 
   isAdminBehindTheScenes = computed(() => {
@@ -81,6 +85,13 @@ export class UserRegistrerComponent {
     const accessLevel = userAccessLevelByString[value];
 
     this._accessLevel.set(accessLevel);
+  }
+
+  openClientSelect() {
+    this.dialogService.create({
+      zTitle: 'Selecionar Clientes',
+      zContent: SelectUserClientsDialogComponent
+    });
   }
 
   protected readonly userAccessLevelOptions = userAccessLevelOptions;

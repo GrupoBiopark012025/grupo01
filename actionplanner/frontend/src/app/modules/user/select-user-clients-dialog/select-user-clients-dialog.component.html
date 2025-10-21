@@ -2,7 +2,7 @@
   @if (clients.data.length; as recordsInView) {
     <div class="flex flex-col gap-3 p-3">
       @for (client of clients.data; track client.id) {
-        <app-check-clickable
+        <app-check-star-clickable
           [checked]="selectedClientsIds().includes(client.id)"
           [stared]="primaryClient()?.id === client.id"
           (onCheck)="onCheck(client)"
@@ -14,7 +14,7 @@
               {{ client.cnpj }}
             </span>
           </div>
-        </app-check-clickable>
+        </app-check-star-clickable>
       }
     </div>
 

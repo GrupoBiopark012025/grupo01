@@ -1,9 +1,9 @@
-import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnDestroy, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { userAccessLevelByString, UserAccessLevelEnum, userAccessLevelOptions, UserStatusEnum } from "@data/user/dtos";
 import { UserDataService } from "@data/user/user-data.service";
-import { take } from "rxjs";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { take, tap } from "rxjs";
+import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
 import { ValidationService } from "@shared/services/validation/validation.service";
 import { Router } from "@angular/router";
 import { toast } from "ngx-sonner";
@@ -17,6 +17,9 @@ import { ZardDialogService } from "@shared/components/zardui/dialog/dialog.servi
 import {
   SelectUserClientsDialogComponent
 } from "@modules/user/select-user-clients-dialog/select-user-clients-dialog.component";
+import { GetClientDto } from "@data/client/dtos";
+import { ZardDialogRef } from "@shared/components/zardui/dialog/dialog-ref";
+import { JsonPipe } from "@angular/common";
 
 @Component({
   selector: 'app-user-registrer',
@@ -27,11 +30,12 @@ import {
     BackOrNavigateToDirective,
     TextInputComponent,
     CheckboxComponent,
-    SelectComponent
+    SelectComponent,
+    JsonPipe
   ],
   templateUrl: './user-registrer.component.html'
 })
-export class UserRegistrerComponent {
+export class UserRegistrerComponent implements OnDestroy {
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly userDataService = inject(UserDataService);
@@ -39,7 +43,12 @@ export class UserRegistrerComponent {
   private readonly validationService = inject(ValidationService);
   private readonly dialogService = inject(ZardDialogService);
 
+  private readonly _clientsModalRef = signal<ZardDialogRef<SelectUserClientsDialogComponent> | null>(null);
+
   private readonly _accessLevel = signal<UserAccessLevelEnum | null>(null);
+  private readonly _primaryClient = signal<GetClientDto | null>(null);
+  private readonly _selectedClients = signal<GetClientDto[]>([]);
+
   accessLevel = this._accessLevel.asReadonly();
 
   form = this.fb.nonNullable.group({
@@ -51,13 +60,22 @@ export class UserRegistrerComponent {
     isAdmin: this.fb.nonNullable.control(false, [Validators.required]),
     onlyAttachedTasks: this.fb.nonNullable.control(false),
     status: this.fb.nonNullable.control(UserStatusEnum.Ativo, [Validators.required]),
-    userClienteIds: this.fb.control<number[]>([], [Validators.required])
+    userClienteIds: this.fb.control<number[] | null>(null),
+    sectorIds: this.fb.control<number[] | null>(null)
   });
 
   isAdminBehindTheScenes = computed(() => {
     const accessLevel = this._accessLevel();
     return accessLevel ? ![UserAccessLevelEnum.ColaboradorCliente].includes(accessLevel) : false;
   });
+
+  constructor() {
+    this.listenAccessLevelChange();
+  }
+
+  ngOnDestroy() {
+    this._clientsModalRef()?.close();
+  }
 
   onSubmit() {
     if (this.form.invalid) {
@@ -87,11 +105,62 @@ export class UserRegistrerComponent {
     this._accessLevel.set(accessLevel);
   }
 
+  openSectorSelect() {}
+
   openClientSelect() {
-    this.dialogService.create({
+    const modalRef = this.dialogService.create({
       zTitle: 'Selecionar Clientes',
-      zContent: SelectUserClientsDialogComponent
+      zContent: SelectUserClientsDialogComponent,
+      zOnOk: (component) => this.onClientsSelected(component.primaryClient(), component.selectedClients())
     });
+
+    const component = modalRef.componentInstance;
+    component?.carregarDados({ primaryClient: this._primaryClient(), selectedClients: this._selectedClients() });
+
+    this._clientsModalRef.set(modalRef);
+  }
+
+  private onClientsSelected(primaryClient: GetClientDto | null, selectedClients: GetClientDto[]) {
+    this._primaryClient.set(primaryClient);
+    this._selectedClients.set(selectedClients);
+
+    this.form.controls.clienteId.setValue(primaryClient ? primaryClient.id : null);
+    this.form.controls.userClienteIds.setValue(
+      selectedClients.length
+        ? selectedClients.map((client) => client.id)
+        : null
+    );
+  }
+
+  private listenAccessLevelChange() {
+    toObservable(this._accessLevel)
+      .pipe(
+        tap((accessLevel) => {
+          const { userClienteIds, sectorIds } = this.form.controls;
+
+          sectorIds.clearValidators();
+          userClienteIds.clearValidators();
+
+          switch (accessLevel) {
+            case UserAccessLevelEnum.Consultor:
+              sectorIds.setValidators(Validators.required);
+              userClienteIds.setValidators(Validators.required);
+              break;
+
+            case UserAccessLevelEnum.GestorCliente:
+            case UserAccessLevelEnum.ColaboradorCliente:
+              userClienteIds.setValidators(Validators.required);
+              break;
+
+            case UserAccessLevelEnum.Admin:
+              break;
+          }
+
+          this.form.updateValueAndValidity();
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
   }
 
   protected readonly userAccessLevelOptions = userAccessLevelOptions;

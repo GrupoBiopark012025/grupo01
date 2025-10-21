@@ -4,15 +4,15 @@ import { ZardCheckboxComponent } from "@shared/components/zardui/checkbox/checkb
 import { FormsModule } from "@angular/forms";
 
 @Component({
-  selector: 'app-check-clickable',
+  selector: 'app-check-star-clickable',
   imports: [
     LucideAngularModule,
     ZardCheckboxComponent,
     FormsModule
   ],
-  templateUrl: './check-clickable.component.html'
+  templateUrl: './check-star-clickable.component.html'
 })
-export class CheckClickableComponent {
+export class CheckStarClickableComponent {
   icons = ICONS;
 
   checked = input<boolean>(false);
@@ -22,7 +22,10 @@ export class CheckClickableComponent {
   onCheck = output<void>();
   onStar = output<void>();
 
-  onCheckClick() {
+  onCheckClick($event?: boolean) {
+    // TODO: validar problema com checkbox
+    if ($event) { console.log('event', $event); }
+
     this.onCheck.emit();
   }
 

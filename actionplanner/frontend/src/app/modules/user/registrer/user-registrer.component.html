@@ -37,10 +37,6 @@
     </div>
 
     <div>
-      Select do Cliente Principal
-    </div>
-
-    <div>
       <app-select
         label="Nível de Acesso"
         formControlName="accessLevel"
@@ -49,19 +45,38 @@
       />
     </div>
 
+    <div></div>
+
     @if (!isAdminBehindTheScenes() && accessLevel()) {
       <div>
+        <div class="w-full block border p-6 rounded-lg">
+          <div class="flex justify-between items-center">
+            <div class="text-md font-semibold">Acesso a Setores</div>
+            <button z-button zType="outline" type="button" (click)="openSectorSelect()">Editar</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="w-full block border p-6 rounded-lg">
+          <div class="flex justify-between items-center">
+            <div class="text-md font-semibold">Acesso a Clientes</div>
+            <button z-button zType="outline" type="button" (click)="openClientSelect()">Editar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-span-2">
         <app-checkbox
           label="Visualiza apenas tasks assinadas"
           formControlName="onlyAttachedTasks"
         />
       </div>
     }
-
-    <div class="col-span-2">
-      <button z-button zType="outline" type="button" (click)="openClientSelect()">Abrir Modal</button>
-    </div>
   </div>
+
+  {{ form.value | json }}
+
   <div class="flex grow items-center justify-end gap-2">
     <button z-button zType="outline" type="button">Cancelar</button>
     <button z-button type="submit">Salvar</button>

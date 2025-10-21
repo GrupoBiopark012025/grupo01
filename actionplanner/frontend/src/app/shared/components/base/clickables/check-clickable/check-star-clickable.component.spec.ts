@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CheckClickableComponent } from './check-clickable.component';
+import { CheckStarClickableComponent } from './check-star-clickable.component';
 
 describe('CheckClickableComponent', () => {
-  let component: CheckClickableComponent;
-  let fixture: ComponentFixture<CheckClickableComponent>;
+  let component: CheckStarClickableComponent;
+  let fixture: ComponentFixture<CheckStarClickableComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CheckClickableComponent]
+      imports: [CheckStarClickableComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CheckClickableComponent);
+    fixture = TestBed.createComponent(CheckStarClickableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

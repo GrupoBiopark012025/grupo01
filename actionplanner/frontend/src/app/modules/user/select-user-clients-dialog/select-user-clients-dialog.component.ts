@@ -8,7 +8,7 @@ import { GetUserClientQuery } from "@data/user/dtos";
 import { AsyncPipe } from "@angular/common";
 import { PaginationComponent } from "@shared/components/base/pagination/pagination.component";
 import { NoListContentComponent } from "@shared/components/base/no-list-content/no-list-content.component";
-import { CheckClickableComponent } from "@shared/components/base/clickables/check-clickable/check-clickable.component";
+import { CheckStarClickableComponent } from "@shared/components/base/clickables/check-clickable/check-star-clickable.component";
 
 @Component({
   selector: 'app-select-user-clients-dialog',
@@ -16,7 +16,7 @@ import { CheckClickableComponent } from "@shared/components/base/clickables/chec
     AsyncPipe,
     PaginationComponent,
     NoListContentComponent,
-    CheckClickableComponent
+    CheckStarClickableComponent
   ],
   templateUrl: './select-user-clients-dialog.component.html'
 })
@@ -24,12 +24,13 @@ export class SelectUserClientsDialogComponent {
   private readonly clientDataService = inject(ClientDataService);
   private readonly destroyRef = inject(DestroyRef);
 
-  private _query = signal<GetClientQuery>(new GetClientQuery());
-  private _primaryClient = signal<GetClientDto | null>(null);
-  private _selectedClients = signal<GetClientDto[]>([]);
+  private readonly _query = signal<GetClientQuery>(new GetClientQuery());
+  private readonly _primaryClient = signal<GetClientDto | null>(null);
+  private readonly _selectedClients = signal<GetClientDto[]>([]);
 
   query = this._query.asReadonly();
   primaryClient = this._primaryClient.asReadonly();
+  selectedClients = this._selectedClients.asReadonly();
   selectedClientsIds = computed(() => this._selectedClients().map((client) => client.id));
 
   clients$: Observable<ApiPaginatedList<GetClientDto>> = toObservable(this._query)
@@ -39,6 +40,11 @@ export class SelectUserClientsDialogComponent {
       takeUntilDestroyed(this.destroyRef)
     );
 
+  carregarDados(input: SelectUserClientsInput) {
+    this._primaryClient.set(input.primaryClient);
+    this._selectedClients.set(input.selectedClients);
+  }
+
   changeQuery(changes: Partial<GetUserClientQuery> = {}): void {
     this._query.update((prev) => ({ ...prev!, ...changes }));
   }
@@ -46,6 +52,10 @@ export class SelectUserClientsDialogComponent {
   onCheck(client: GetClientDto) {
     if (this.selectedClientsIds().includes(client.id)) {
       this._selectedClients.update((prev) => prev.filter((c) => c.id !== client.id));
+
+      if (this._primaryClient()?.id === client.id) {
+        this._primaryClient.set(null);
+      }
     } else {
       this._selectedClients.update((prev) => [...prev, client]);
     }
@@ -60,4 +70,9 @@ export class SelectUserClientsDialogComponent {
       this._selectedClients.update((prev) => [...prev, client]);
     }
   }
+}
+
+interface SelectUserClientsInput {
+  primaryClient: GetClientDto | null;
+  selectedClients: GetClientDto[];
 }

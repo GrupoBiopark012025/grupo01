@@ -61,7 +61,8 @@ export class SidebarComponent {
 
     const dialogRef = this.dialogService.create({
       zTitle: 'Mudar Ambiente',
-      zContent: ChangeEnvironmentDialogComponent
+      zContent: ChangeEnvironmentDialogComponent,
+      zOkText: null
     });
 
     const dialog = dialogRef.componentInstance as ChangeEnvironmentDialogComponent;

@@ -22,13 +22,6 @@ export class CheckStarClickableComponent {
   onCheck = output<void>();
   onStar = output<void>();
 
-  onCheckClick($event?: boolean) {
-    // TODO: validar problema com checkbox
-    if ($event) { console.log('event', $event); }
-
-    this.onCheck.emit();
-  }
-
   onStarClick($event: Event) {
     $event.stopPropagation();
 

@@ -19,7 +19,8 @@ import {
 } from "@modules/user/select-user-clients-dialog/select-user-clients-dialog.component";
 import { GetClientDto } from "@data/client/dtos";
 import { ZardDialogRef } from "@shared/components/zardui/dialog/dialog-ref";
-import { JsonPipe } from "@angular/common";
+import { JsonPipe, NgClass } from "@angular/common";
+import { ZardBadgeComponent } from "@shared/components/zardui/badge/badge.component";
 
 @Component({
   selector: 'app-user-registrer',
@@ -31,7 +32,9 @@ import { JsonPipe } from "@angular/common";
     TextInputComponent,
     CheckboxComponent,
     SelectComponent,
-    JsonPipe
+    JsonPipe,
+    ZardBadgeComponent,
+    NgClass
   ],
   templateUrl: './user-registrer.component.html'
 })
@@ -50,6 +53,14 @@ export class UserRegistrerComponent implements OnDestroy {
   private readonly _selectedClients = signal<GetClientDto[]>([]);
 
   accessLevel = this._accessLevel.asReadonly();
+  clientsWithPrimaryFirst = computed(() => {
+    const primary = this._primaryClient();
+    const selected = this._selectedClients();
+
+    return selected
+      .map(client => ({ ...client, isPrimary: client.id === primary?.id }))
+      .sort((a, b) => (b.isPrimary ? 1 : 0) - (a.isPrimary ? 1 : 0));
+  });
 
   form = this.fb.nonNullable.group({
     nome: this.fb.nonNullable.control('', [Validators.required]),

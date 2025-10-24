@@ -5,13 +5,12 @@
   [class.bg-muted]="disabled()"
   [class.opacity-70]="disabled()"
   [class.pointer-events-none]="disabled()"
-  (click)="onCheckClick()"
+  (click)="onCheck.emit()"
 >
   <div class="flex items-center">
     <z-checkbox
       [ngModel]="checked()"
       [disabled]="disabled()"
-      (ngModelChange)="onCheckClick($event)"
     />
   </div>
 

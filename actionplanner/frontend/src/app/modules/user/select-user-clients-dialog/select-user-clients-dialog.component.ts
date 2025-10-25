@@ -8,7 +8,9 @@ import { GetUserClientQuery } from "@data/user/dtos";
 import { AsyncPipe } from "@angular/common";
 import { PaginationComponent } from "@shared/components/base/pagination/pagination.component";
 import { NoListContentComponent } from "@shared/components/base/no-list-content/no-list-content.component";
-import { CheckStarClickableComponent } from "@shared/components/base/clickables/check-clickable/check-star-clickable.component";
+import {
+  CheckStarClickableComponent
+} from "@shared/components/base/clickables/check-star-clickable/check-star-clickable.component";
 
 @Component({
   selector: 'app-select-user-clients-dialog',

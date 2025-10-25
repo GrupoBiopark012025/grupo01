@@ -21,6 +21,11 @@ import { GetClientDto } from "@data/client/dtos";
 import { ZardDialogRef } from "@shared/components/zardui/dialog/dialog-ref";
 import { JsonPipe, NgClass } from "@angular/common";
 import { ZardBadgeComponent } from "@shared/components/zardui/badge/badge.component";
+import { GetSectorDto } from "@data/sector/dtos";
+import {
+  SelectUserSectorsDialogComponent
+} from "@modules/user/select-user-sectors-dialog/select-user-sectors-dialog.component";
+import { ZardFormMessageComponent } from "@shared/components/zardui/form/form.component";
 
 @Component({
   selector: 'app-user-registrer',
@@ -34,7 +39,8 @@ import { ZardBadgeComponent } from "@shared/components/zardui/badge/badge.compon
     SelectComponent,
     JsonPipe,
     ZardBadgeComponent,
-    NgClass
+    NgClass,
+    ZardFormMessageComponent
   ],
   templateUrl: './user-registrer.component.html'
 })
@@ -47,12 +53,15 @@ export class UserRegistrerComponent implements OnDestroy {
   private readonly dialogService = inject(ZardDialogService);
 
   private readonly _clientsModalRef = signal<ZardDialogRef<SelectUserClientsDialogComponent> | null>(null);
+  private readonly _sectorsModalRef = signal<ZardDialogRef<SelectUserSectorsDialogComponent> | null>(null);
 
   private readonly _accessLevel = signal<UserAccessLevelEnum | null>(null);
   private readonly _primaryClient = signal<GetClientDto | null>(null);
   private readonly _selectedClients = signal<GetClientDto[]>([]);
+  private readonly _selectedSectors = signal<GetSectorDto[]>([]);
 
   accessLevel = this._accessLevel.asReadonly();
+  selectedSectors = this._selectedSectors.asReadonly();
   clientsWithPrimaryFirst = computed(() => {
     const primary = this._primaryClient();
     const selected = this._selectedClients();
@@ -93,6 +102,14 @@ export class UserRegistrerComponent implements OnDestroy {
       return;
     }
 
+    // WARN: Isso é carnissa, estou fazendo assim por uma limitação da lib (não ter select múltiplo)
+    if (
+      this.accessLevel() === UserAccessLevelEnum.ColaboradorCliente &&
+      (this.getSectorsError() || this.getClientsError())
+    ) {
+      return;
+    }
+
     const form = this.form.getRawValue();
 
     this.userDataService.createUser({
@@ -114,9 +131,24 @@ export class UserRegistrerComponent implements OnDestroy {
     const accessLevel = userAccessLevelByString[value];
 
     this._accessLevel.set(accessLevel);
+
+    if (!(accessLevel === UserAccessLevelEnum.ColaboradorCliente)) {
+      this.clearNotAdminFields();
+    }
   }
 
-  openSectorSelect() {}
+  openSectorSelect() {
+    const modalRef = this.dialogService.create({
+      zTitle: 'Selecionar Setores',
+      zContent: SelectUserSectorsDialogComponent,
+      zOnOk: (component) => this.onSectorsSelected(component.selectedSectors())
+    });
+
+    const component = modalRef.componentInstance;
+    component?.carregarDados({ selectedSectors: this._selectedSectors() });
+
+    this._sectorsModalRef.set(modalRef);
+  }
 
   openClientSelect() {
     const modalRef = this.dialogService.create({
@@ -129,6 +161,52 @@ export class UserRegistrerComponent implements OnDestroy {
     component?.carregarDados({ primaryClient: this._primaryClient(), selectedClients: this._selectedClients() });
 
     this._clientsModalRef.set(modalRef);
+  }
+
+  getClientsError(): string {
+    const primaryClient = this.form.controls.clienteId;
+    const selectedClients = this.form.controls.userClienteIds;
+
+    if (primaryClient?.hasError('required')) {
+      return 'É necessário informar um cliente principal.';
+    }
+
+    if (selectedClients?.hasError('required')) {
+      return 'É necessário informar ao menos um cliente para acesso.';
+    }
+
+    return '';
+  }
+
+  getSectorsError(): string {
+    const primaryClient = this.form.controls.sectorIds;
+
+    if (primaryClient?.hasError('required')) {
+      return 'É necessário informar ao menos um setor.'
+    }
+
+    return '';
+  }
+
+  private clearNotAdminFields() {
+    this._primaryClient.set(null);
+    this._selectedClients.set([]);
+    this._selectedSectors.set([]);
+
+    const formControls = this.form.controls;
+    formControls.sectorIds.reset();
+    formControls.userClienteIds.reset();
+    formControls.clienteId.reset();
+  }
+
+  private onSectorsSelected(selectedSectors: GetSectorDto[]) {
+    this._selectedSectors.set(selectedSectors);
+
+    this.form.controls.sectorIds.setValue(
+      selectedSectors.length
+        ? selectedSectors.map(sector => sector.id)
+        : null
+    )
   }
 
   private onClientsSelected(primaryClient: GetClientDto | null, selectedClients: GetClientDto[]) {

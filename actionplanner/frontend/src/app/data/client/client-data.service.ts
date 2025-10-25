@@ -11,7 +11,7 @@ export class ClientDataService {
   private path = 'clients';
   
   private http = inject(HttpClient);
-  
+
   getClients(query: GetClientQuery) {
     return this.http.get<ApiPaginatedList<GetClientDto>>(this.path, { params: { ...query } });
   }

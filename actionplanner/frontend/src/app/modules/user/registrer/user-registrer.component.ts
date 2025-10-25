@@ -132,8 +132,10 @@ export class UserRegistrerComponent implements OnDestroy {
 
     this._accessLevel.set(accessLevel);
 
-    if (!(accessLevel === UserAccessLevelEnum.ColaboradorCliente)) {
-      this.clearNotAdminFields();
+    if (accessLevel === UserAccessLevelEnum.ColaboradorCliente) {
+      this.addNotAdminFieldsValidators();
+    } else {
+      this.resetNotAdminFields();
     }
   }
 
@@ -167,11 +169,11 @@ export class UserRegistrerComponent implements OnDestroy {
     const primaryClient = this.form.controls.clienteId;
     const selectedClients = this.form.controls.userClienteIds;
 
-    if (primaryClient?.hasError('required')) {
+    if (primaryClient.hasError('required')) {
       return 'É necessário informar um cliente principal.';
     }
 
-    if (selectedClients?.hasError('required')) {
+    if (selectedClients.hasError('required')) {
       return 'É necessário informar ao menos um cliente para acesso.';
     }
 
@@ -179,16 +181,24 @@ export class UserRegistrerComponent implements OnDestroy {
   }
 
   getSectorsError(): string {
-    const primaryClient = this.form.controls.sectorIds;
+    const selectedSectors = this.form.controls.sectorIds;
 
-    if (primaryClient?.hasError('required')) {
+    if (selectedSectors.hasError('required')) {
       return 'É necessário informar ao menos um setor.'
     }
 
     return '';
   }
 
-  private clearNotAdminFields() {
+  private addNotAdminFieldsValidators() {
+    const formControls = this.form.controls;
+
+    formControls.userClienteIds.setValidators([Validators.required]);
+    formControls.sectorIds.setValidators([Validators.required]);
+    this.form.updateValueAndValidity();
+  }
+
+  private resetNotAdminFields() {
     this._primaryClient.set(null);
     this._selectedClients.set([]);
     this._selectedSectors.set([]);
@@ -197,6 +207,11 @@ export class UserRegistrerComponent implements OnDestroy {
     formControls.sectorIds.reset();
     formControls.userClienteIds.reset();
     formControls.clienteId.reset();
+
+    formControls.sectorIds.clearValidators();
+    formControls.userClienteIds.clearValidators();
+
+    this.form.updateValueAndValidity();
   }
 
   private onSectorsSelected(selectedSectors: GetSectorDto[]) {

@@ -49,20 +49,16 @@
           [style.max-height]="expandedMenus.tarefas ? '200px' : '0px'"
           [style.opacity]="expandedMenus.tarefas ? '1' : '0'"
         >
-          <div class="ml-4 space-y-1 border-l border-gray-200 pl-4">
-            <a href="#" class="block px-3 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 hover:text-gray-800 transition-colors">
-              Minhas Tarefas
-            </a>
-            <a href="#" class="block px-3 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 hover:text-gray-800 transition-colors">
-              Nova Tarefa
-            </a>
-            <a href="#" class="block px-3 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 hover:text-gray-800 transition-colors">
-              Concluídas
-            </a>
-          </div>
+        <div class="ml-4 space-y-1 border-l border-gray-200 pl-4">
+          <a [routerLink]="['/tasks']" routerLinkActive="bg-gray-50 text-gray-800" class="block px-3 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 hover:text-gray-800 transition-colors">
+            {{ getTasksTitle() }}
+          </a>
+          <a [routerLink]="['/tasks/create']" routerLinkActive="bg-gray-50 text-gray-800" class="block px-3 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 hover:text-gray-800 transition-colors">
+            Nova Tarefa
+          </a>
+        </div>
         </div>
       </div>
-      
       <!-- Relatórios com submenu -->
       <div class="space-y-1">
         <button 

@@ -4,10 +4,11 @@ import { AuthenticationService } from '@core/services/authentication/authenticat
 import { ZardAvatarComponent } from '@shared/components/zardui/avatar/avatar.component';
 import { RouterLink } from "@angular/router";
 import { UserSessionService } from "@core/services/user-session/user-session.service";
+import { LucideAngularModule } from 'lucide-angular';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, ZardAvatarComponent, RouterLink],
+  imports: [CommonModule, ZardAvatarComponent, RouterLink, LucideAngularModule],
   templateUrl: './sidebar.component.html'
 })
 export class SidebarComponent {
@@ -51,6 +52,19 @@ export class SidebarComponent {
     
     if (!userSection && this._isUserMenuOpen()) {
       this.closeUserMenu();
+    }
+  }
+
+  getTasksTitle(): string {
+    const user = this.user();
+    if (!user) return 'Tarefas';
+    
+    if (user.isAdmin) {
+      return 'Todas as Tarefas';
+    } else if (user.onlyAttachedTasks) {
+      return 'Minhas Tarefas';
+    } else {
+      return 'Tarefas';
     }
   }
 }

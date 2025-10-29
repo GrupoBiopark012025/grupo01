@@ -121,10 +121,4 @@ static async create(taskData) {
       where: { id: parseInt(id) },
     });
   }
-
-  static async delete(id) {
-    return await prisma.task.delete({
-      where: { id: parseInt(id) },
-    });
-  }
 }

@@ -8,5 +8,7 @@ export interface PostCreateUserDto {
   accessLevel: UserAccessLevelEnum,
   isAdmin: boolean,
   onlyAttachedTasks: boolean,
-  status: UserStatusEnum
+  status: UserStatusEnum,
+  userClienteIds: number[],
+  userSectorIds: number[]
 }

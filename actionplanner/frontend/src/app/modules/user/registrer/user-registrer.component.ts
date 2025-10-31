@@ -2,8 +2,8 @@ import { Component, computed, DestroyRef, inject, OnDestroy, signal } from '@ang
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { userAccessLevelByString, UserAccessLevelEnum, userAccessLevelOptions, UserStatusEnum } from "@data/user/dtos";
 import { UserDataService } from "@data/user/user-data.service";
-import { take, tap } from "rxjs";
-import { takeUntilDestroyed, toObservable } from "@angular/core/rxjs-interop";
+import { take } from "rxjs";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ValidationService } from "@shared/services/validation/validation.service";
 import { Router } from "@angular/router";
 import { toast } from "ngx-sonner";
@@ -19,7 +19,7 @@ import {
 } from "@modules/user/select-user-clients-dialog/select-user-clients-dialog.component";
 import { GetClientDto } from "@data/client/dtos";
 import { ZardDialogRef } from "@shared/components/zardui/dialog/dialog-ref";
-import { JsonPipe, NgClass } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { ZardBadgeComponent } from "@shared/components/zardui/badge/badge.component";
 import { GetSectorDto } from "@data/sector/dtos";
 import {
@@ -37,7 +37,6 @@ import { ZardFormMessageComponent } from "@shared/components/zardui/form/form.co
     TextInputComponent,
     CheckboxComponent,
     SelectComponent,
-    JsonPipe,
     ZardBadgeComponent,
     NgClass,
     ZardFormMessageComponent
@@ -72,26 +71,22 @@ export class UserRegistrerComponent implements OnDestroy {
   });
 
   form = this.fb.nonNullable.group({
-    nome: this.fb.nonNullable.control('', [Validators.required]),
-    email: this.fb.nonNullable.control('', [Validators.required, Validators.email]),
-    password: this.fb.nonNullable.control('', [Validators.required]),
-    clienteId: this.fb.control<number | null>(null, [Validators.required]),
+    nome: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(255)]),
+    email: this.fb.nonNullable.control('', [Validators.required, Validators.email, Validators.maxLength(255)]),
+    password: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(6)]),
+    clienteId: this.fb.control<number | null>(null),
     accessLevel: this.fb.control<UserAccessLevelEnum | null>(null, [Validators.required]),
-    isAdmin: this.fb.nonNullable.control(false, [Validators.required]),
+    isAdmin: this.fb.nonNullable.control(false),
     onlyAttachedTasks: this.fb.nonNullable.control(false),
     status: this.fb.nonNullable.control(UserStatusEnum.Ativo, [Validators.required]),
     userClienteIds: this.fb.control<number[] | null>(null),
-    sectorIds: this.fb.control<number[] | null>(null)
+    userSectorIds: this.fb.control<number[] | null>(null)
   });
 
   isAdminBehindTheScenes = computed(() => {
     const accessLevel = this._accessLevel();
     return accessLevel ? ![UserAccessLevelEnum.ColaboradorCliente].includes(accessLevel) : false;
   });
-
-  constructor() {
-    this.listenAccessLevelChange();
-  }
 
   ngOnDestroy() {
     this._clientsModalRef()?.close();
@@ -104,19 +99,29 @@ export class UserRegistrerComponent implements OnDestroy {
 
     // WARN: Isso é carnissa, estou fazendo assim por uma limitação da lib (não ter select múltiplo)
     if (
+      this.accessLevel() !== UserAccessLevelEnum.Admin &&
+      this.getClientsError()
+    ) {
+      return;
+    }
+
+    if (
       this.accessLevel() === UserAccessLevelEnum.ColaboradorCliente &&
-      (this.getSectorsError() || this.getClientsError())
+      this.getSectorsError()
     ) {
       return;
     }
 
     const form = this.form.getRawValue();
 
-    this.userDataService.createUser({
-      ...form,
-      clienteId: form.clienteId!,
-      accessLevel: form.accessLevel!,
-    })
+    this.userDataService
+      .createUser({
+        ...form,
+        clienteId: form.clienteId!,
+        accessLevel: form.accessLevel!,
+        userClienteIds: form.userClienteIds || [],
+        userSectorIds: form.userSectorIds || []
+      })
       .pipe(take(1), takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
@@ -129,14 +134,15 @@ export class UserRegistrerComponent implements OnDestroy {
 
   onAccessLevelChange(value: string) {
     const accessLevel = userAccessLevelByString[value];
-
     this._accessLevel.set(accessLevel);
 
-    if (accessLevel === UserAccessLevelEnum.ColaboradorCliente) {
-      this.addNotAdminFieldsValidators();
+    if (accessLevel === UserAccessLevelEnum.Admin) {
+      this.form.controls.isAdmin.setValue(true);
     } else {
-      this.resetNotAdminFields();
+      this.form.controls.isAdmin.setValue(false);
     }
+
+    this.handleAccessLevelValidations(accessLevel);
   }
 
   openSectorSelect() {
@@ -181,7 +187,7 @@ export class UserRegistrerComponent implements OnDestroy {
   }
 
   getSectorsError(): string {
-    const selectedSectors = this.form.controls.sectorIds;
+    const selectedSectors = this.form.controls.userSectorIds;
 
     if (selectedSectors.hasError('required')) {
       return 'É necessário informar ao menos um setor.'
@@ -190,11 +196,37 @@ export class UserRegistrerComponent implements OnDestroy {
     return '';
   }
 
-  private addNotAdminFieldsValidators() {
+  private handleAccessLevelValidations(accessLevel: UserAccessLevelEnum) {
     const formControls = this.form.controls;
 
-    formControls.userClienteIds.setValidators([Validators.required]);
-    formControls.sectorIds.setValidators([Validators.required]);
+    this.resetNotAdminFields();
+
+    switch (accessLevel) {
+      case UserAccessLevelEnum.Admin:
+        formControls.clienteId.clearValidators();
+        formControls.userClienteIds.clearValidators();
+        formControls.userSectorIds.clearValidators();
+        break;
+
+      case UserAccessLevelEnum.Consultor:
+      case UserAccessLevelEnum.GestorCliente:
+        formControls.clienteId.setValidators([Validators.required]);
+        formControls.userClienteIds.setValidators([Validators.required]);
+        formControls.userSectorIds.clearValidators();
+        break;
+
+      case UserAccessLevelEnum.ColaboradorCliente:
+        formControls.clienteId.setValidators([Validators.required]);
+        formControls.userClienteIds.setValidators([Validators.required]);
+        break;
+
+      default:
+        formControls.clienteId.clearValidators();
+        formControls.userClienteIds.clearValidators();
+        formControls.userSectorIds.clearValidators();
+        break;
+    }
+
     this.form.updateValueAndValidity();
   }
 
@@ -204,11 +236,10 @@ export class UserRegistrerComponent implements OnDestroy {
     this._selectedSectors.set([]);
 
     const formControls = this.form.controls;
-    formControls.sectorIds.reset();
+    formControls.userSectorIds.reset();
     formControls.userClienteIds.reset();
     formControls.clienteId.reset();
 
-    formControls.sectorIds.clearValidators();
     formControls.userClienteIds.clearValidators();
 
     this.form.updateValueAndValidity();
@@ -217,7 +248,7 @@ export class UserRegistrerComponent implements OnDestroy {
   private onSectorsSelected(selectedSectors: GetSectorDto[]) {
     this._selectedSectors.set(selectedSectors);
 
-    this.form.controls.sectorIds.setValue(
+    this.form.controls.userSectorIds.setValue(
       selectedSectors.length
         ? selectedSectors.map(sector => sector.id)
         : null
@@ -236,36 +267,6 @@ export class UserRegistrerComponent implements OnDestroy {
     );
   }
 
-  private listenAccessLevelChange() {
-    toObservable(this._accessLevel)
-      .pipe(
-        tap((accessLevel) => {
-          const { userClienteIds, sectorIds } = this.form.controls;
-
-          sectorIds.clearValidators();
-          userClienteIds.clearValidators();
-
-          switch (accessLevel) {
-            case UserAccessLevelEnum.Consultor:
-              sectorIds.setValidators(Validators.required);
-              userClienteIds.setValidators(Validators.required);
-              break;
-
-            case UserAccessLevelEnum.GestorCliente:
-            case UserAccessLevelEnum.ColaboradorCliente:
-              userClienteIds.setValidators(Validators.required);
-              break;
-
-            case UserAccessLevelEnum.Admin:
-              break;
-          }
-
-          this.form.updateValueAndValidity();
-        }),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe();
-  }
-
   protected readonly userAccessLevelOptions = userAccessLevelOptions;
+  protected readonly UserAccessLevelEnum = UserAccessLevelEnum;
 }

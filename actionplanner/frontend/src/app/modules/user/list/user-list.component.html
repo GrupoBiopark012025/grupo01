@@ -1,4 +1,4 @@
-<app-list-header title="Usuários" actionTitle="Novo Usuário" />
+<app-list-header title="Usuários" actionTitle="Novo Usuário" (onActionClicked)="redirectToRegister()" />
 
 @if (users$ | async; as users) {
   @if (users.data.length; as recordsInView) {

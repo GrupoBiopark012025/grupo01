@@ -15,6 +15,7 @@ import { PaginationComponent } from "@shared/components/base/pagination/paginati
 import { UserStatusBadgeComponent } from "@modules/user/status-badge/user-status-badge.component";
 import { TableSkeletonComponent } from "@shared/components/base/skeletons/table-skeleton/table-skeleton.component";
 import { NoListContentComponent } from "@shared/components/base/no-list-content/no-list-content.component";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-user-list',
@@ -39,6 +40,7 @@ export class UserListComponent {
   private readonly userDataService = inject(UserDataService);
   private readonly userSessionService = inject(UserSessionService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
 
   private _query = signal<GetUserQuery>(new GetUserQuery());
 
@@ -54,6 +56,11 @@ export class UserListComponent {
 
   changeQuery(changes: Partial<GetUserQuery> = {}): void {
     this._query.update((prev) => ({ ...prev!, ...changes }));
+  }
+
+  redirectToRegister() {
+    // TODO: validar depois um navigate melhor via html
+    this.router.navigate(['users', 'register']);
   }
 
   protected readonly descricaoUserAccessLevelEnum = descricaoUserAccessLevelEnum;

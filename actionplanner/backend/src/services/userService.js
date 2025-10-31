@@ -7,19 +7,26 @@ const prisma = new PrismaClient();
 export class UserService {
   
   static async create(userData) {
-    const { password, userClienteIds, isAdmin, ...rest } = userData;
+    const { password, userClienteIds, userSectorIds, isAdmin, ...rest } = userData;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const data = {
       ...rest,
       password: hashedPassword,
+      clienteId: rest.clienteId ?? (isAdmin ? 1 : undefined)
     };
 
-    if (!isAdmin && Array.isArray(userClienteIds) && userClienteIds.length > 0) {
+    if (rest.accessLevel !== "ADMIN" && Array.isArray(userClienteIds) && userClienteIds.length > 0) {
       data.userClientes = {
         create: userClienteIds.map((clienteId) => ({
           cliente: { connect: { id: clienteId } },
         })),
+      };
+    }
+
+    if (!isAdmin && Array.isArray(userSectorIds) && userSectorIds.length > 0) {
+      data.sectors = {
+        connect: userSectorIds.map((sectorId) => ({ id: sectorId })),
       };
     }
 
@@ -31,7 +38,8 @@ export class UserService {
           include: {
             cliente: true
           }
-        }
+        },
+        sectors: true
       }
     });
   }

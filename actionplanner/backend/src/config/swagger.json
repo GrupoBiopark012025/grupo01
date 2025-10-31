@@ -2894,10 +2894,14 @@
           },
           "userClienteIds": {
             "type": "array",
-            "example": [
-              1,
-              2
-            ],
+            "example": [1, 2],
+            "items": {
+              "type": "number"
+            }
+          },
+          "userSectorIds": {
+            "type": "array",
+            "example": [1, 2],
             "items": {
               "type": "number"
             }

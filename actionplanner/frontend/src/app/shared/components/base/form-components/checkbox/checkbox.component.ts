@@ -44,6 +44,7 @@ export class CheckboxComponent implements OnInit, ControlValueAccessor {
   private readonly _hasRequiredValidator = signal(false);
   private readonly _formControl = signal<FormControl | undefined>(undefined);
 
+  readonly value = this._value.asReadonly();
   readonly formControl = this._formControl.asReadonly();
   readonly isDisabled = this._isDisabled.asReadonly();
 
@@ -68,6 +69,7 @@ export class CheckboxComponent implements OnInit, ControlValueAccessor {
 
   writeValue(value: boolean): void {
     this._value.set(value);
+    console.log('writeValue: ', value);
     if (!this._id()) {
       this._id.set(this.controlDir.name as string);
     }

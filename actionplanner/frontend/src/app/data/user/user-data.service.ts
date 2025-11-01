@@ -7,6 +7,7 @@ import {
   GetUserDto,
   GetUserQuery,
   PostCreateUserDto,
+  PutRequestUpdateUserDto,
   UserClientDto
 } from "@data/user/dtos";
 
@@ -33,5 +34,13 @@ export class UserDataService {
 
   getClients(userId: number, query: GetUserClientQuery) {
     return this.http.get<ApiPaginatedList<UserClientDto>>(`${this.path}/${userId}/clients`, { params: { ...query } });
+  }
+
+  updateUser(userId: number, params: PutRequestUpdateUserDto) {
+    return this.http.put<GetUserDataDto>(`${this.path}/${userId}`, params);
+  }
+
+  getUserById(userId: number) {
+    return this.http.get<GetUserDto>(`${this.path}/${userId}`);
   }
 }

@@ -41,8 +41,8 @@
             </td>
             <td>
               <div class="flex items-center gap-2">
-                <z-button zType="ghost" zSize="icon" title="Ver detalhes">
-                  <i-lucide [img]="icons.view"></i-lucide>
+                <z-button zType="ghost" zSize="icon" title="Editar Usuário" (click)="redirectToEdit(user.id)">
+                  <i-lucide [img]="icons.edit"></i-lucide>
                 </z-button>
               </div>
             </td>

@@ -8,7 +8,7 @@ import { ApiPaginatedList } from "@data/common/dtos";
 import { ZardTableComponent } from "@shared/components/zardui/table/table.component";
 import { ZardBadgeComponent } from "@shared/components/zardui/badge/badge.component";
 import { ZardButtonComponent } from "@shared/components/zardui/button/button.component";
-import { EyeIcon, LucideAngularModule } from "lucide-angular";
+import { LucideAngularModule, Pencil } from "lucide-angular";
 import { ListHeaderComponent } from "@shared/components/base/list-header/list-header.component";
 import { UserSessionService } from "@core/services/user-session/user-session.service";
 import { PaginationComponent } from "@shared/components/base/pagination/pagination.component";
@@ -63,9 +63,13 @@ export class UserListComponent {
     this.router.navigate(['users', 'register']);
   }
 
+  redirectToEdit(userId: number) {
+    this.router.navigate(['users', userId, 'edit']);
+  }
+
   protected readonly descricaoUserAccessLevelEnum = descricaoUserAccessLevelEnum;
 }
 
 const ICONS = {
-  view: EyeIcon
+  edit: Pencil
 }

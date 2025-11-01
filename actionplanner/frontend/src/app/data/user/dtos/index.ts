@@ -6,3 +6,4 @@ export * from './get-user-data.dto';
 export * from './post-create-user.dto';
 export * from './user-client.dto';
 export * from './get-user-client.query';
+export * from './put-request-update-user.dto';

@@ -14,7 +14,12 @@ export const UserRoutes: Routes = [
       {
         path: 'register',
         title: 'Novo Usuário - ActionPlanner',
-        loadComponent: () => import('./registrer/user-registrer.component').then((c) => c.UserRegistrerComponent)
+        loadComponent: () => import('./form/user-form.component').then((c) => c.UserFormComponent)
+      },
+      {
+        path: ':id/edit',
+        title: 'Editar Usuário - ActionPlanner',
+        loadComponent: () => import('./form/user-form.component').then((c) => c.UserFormComponent)
       }
     ]
   }

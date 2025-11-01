@@ -2926,9 +2926,46 @@
             "type": "string",
             "example": "novaSenha123"
           },
+          "clienteId": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do cliente ao qual o usuário pertence. Se omitido e o usuário for admin, assume 1 por padrão."
+          },
+          "accessLevel": {
+            "type": "string",
+            "example": "GESTOR_CLIENTE",
+            "enum": ["ADMIN", "CONSULTOR", "GESTOR_CLIENTE", "COLABORADOR_CLIENTE"]
+          },
+          "isAdmin": {
+            "type": "boolean",
+            "example": false,
+            "description": "Define se o usuário possui permissões administrativas."
+          },
+          "onlyAttachedTasks": {
+            "type": "boolean",
+            "example": false,
+            "description": "Restringe o acesso do usuário apenas às tarefas vinculadas diretamente a ele."
+          },
           "status": {
             "type": "string",
-            "example": "INATIVO"
+            "example": "INATIVO",
+            "enum": ["ATIVO", "INATIVO"]
+          },
+          "userClienteIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "example": [1, 2],
+            "description": "IDs dos clientes aos quais o usuário terá acesso. Obrigatório para usuários não administradores."
+          },
+          "userSectorIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "example": [3, 4],
+            "description": "IDs dos setores aos quais o usuário estará vinculado. Obrigatório para usuários não administradores."
           }
         },
         "xml": {

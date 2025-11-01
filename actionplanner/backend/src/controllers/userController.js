@@ -173,8 +173,7 @@ export const editUser = async (req, res, next) => {
     const userData = req.body;
     
     const user = await UserService.update(req.params.id, userData);
-    
-    // Remover senha do retorno
+
     const { password, ...userWithoutPassword } = user;
     
     res.hateoas_item(userWithoutPassword);

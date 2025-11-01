@@ -45,7 +45,7 @@ export class UserService {
   }
 
   static async findById(id) {
-    return await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: parseInt(id) },
       include: {
         cliente: true,
@@ -53,9 +53,15 @@ export class UserService {
           include: {
             cliente: true
           }
-        }
+        },
+        sectors: true
       }
     });
+
+    return {
+      ...user,
+      userClientes: user?.userClientes?.map(uc => uc.cliente) || []
+    }
   }
 
   // Buscar usuário por email
@@ -101,7 +107,8 @@ export class UserService {
             include: {
               cliente: true
             }
-          }
+          },
+          sectors: true
         }
       }),
       prisma.user.count({ where })
@@ -119,11 +126,45 @@ export class UserService {
   }
 
   static async update(id, userData) {
-    const { password, ...rest } = userData;
-    
-    const updateData = { ...rest };
+    const {
+      password,
+      userClienteIds,
+      userSectorIds,
+      isAdmin,
+      ...rest
+    } = userData;
+
+    const updateData = {
+      ...rest,
+      clienteId: rest.clienteId ?? (isAdmin ? 1 : undefined),
+    };
+
     if (password) {
       updateData.password = await bcrypt.hash(password, 10);
+    }
+
+    if (Array.isArray(userClienteIds)) {
+      await prisma.userCliente.deleteMany({
+        where: { userId: parseInt(id) },
+      });
+
+      if (rest.accessLevel !== "ADMIN" && userClienteIds.length > 0) {
+        updateData.userClientes = {
+          create: userClienteIds.map((clienteId) => ({
+            cliente: { connect: { id: clienteId } },
+          })),
+        };
+      }
+    }
+
+    if (Array.isArray(userSectorIds)) {
+      updateData.sectors = {
+        set: [],
+        ...( !isAdmin && userSectorIds.length > 0
+            ? { connect: userSectorIds.map((sectorId) => ({ id: sectorId })) }
+            : {}
+        )
+      };
     }
 
     return await prisma.user.update({
@@ -132,11 +173,10 @@ export class UserService {
       include: {
         cliente: true,
         userClientes: {
-          include: {
-            cliente: true
-          }
-        }
-      }
+          include: { cliente: true },
+        },
+        sectors: true,
+      },
     });
   }
 

@@ -3,46 +3,82 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export class ActionPlanService {
+  static getOrderBy(_order = "id") {
+    const fieldMap = {
+      id: "id",
+      numero: "number",
+      number: "number",
+      oQue: "what",
+      what: "what",
+      como: "how",
+      how: "how",
+      responsavel: "responsible",
+      responsible: "responsible",
+      inicio: "startDate",
+      startDate: "startDate",
+      fim: "endDate",
+      endDate: "endDate",
+      dataProrrogada: "postponedDate",
+      postponedDate: "postponedDate",
+      status: "status",
+      observacoes: "observations",
+      observations: "observations",
+      createdAt: "createdAt",
+      updatedAt: "updatedAt"
+    };
+
+    const orderField = _order.replace("-", "");
+    const fieldName = fieldMap[orderField] || "id";
+    const direction = _order.startsWith("-") ? "desc" : "asc";
+
+    return {
+      [fieldName]: direction
+    };
+  }
+
   static async findMany(filters = {}, pagination = {}) {
     const { page = 1, size = 10, _order = "id" } = pagination;
     const {
       projectId,
-      numero,
-      oQue,
-      como,
-      responsavel,
+      number,
+      what,
+      how,
+      responsible,
       status,
-      inicio,
-      fim,
+      startDate,
+      endDate,
       ...otherFilters
     } = filters;
 
     const where = {};
 
-    // Filtros específicos para planos de ação
     if (projectId) {
-      where.projectId = parseInt(projectId);
+      where.projects = {
+        some: {
+          projectId: parseInt(projectId)
+        }
+      };
     }
-    if (numero) {
-      where.numero = { contains: numero, mode: "insensitive" };
+    if (number) {
+      where.number = { contains: number, mode: "insensitive" };
     }
-    if (oQue) {
-      where.oQue = { contains: oQue, mode: "insensitive" };
+    if (what) {
+      where.what = { contains: what, mode: "insensitive" };
     }
-    if (como) {
-      where.como = { contains: como, mode: "insensitive" };
+    if (how) {
+      where.how = { contains: how, mode: "insensitive" };
     }
-    if (responsavel) {
-      where.responsavel = { contains: responsavel, mode: "insensitive" };
+    if (responsible) {
+      where.responsible = { contains: responsible, mode: "insensitive" };
     }
     if (status) {
       where.status = status;
     }
-    if (inicio) {
-      where.inicio = { gte: new Date(inicio) };
+    if (startDate) {
+      where.startDate = { gte: new Date(startDate) };
     }
-    if (fim) {
-      where.fim = { lte: new Date(fim) };
+    if (endDate) {
+      where.endDate = { lte: new Date(endDate) };
     }
 
     Object.assign(where, otherFilters);
@@ -54,11 +90,13 @@ export class ActionPlanService {
         where,
         skip,
         take: size,
-        orderBy: {
-          [_order.replace("-", "")]: _order.startsWith("-") ? "desc" : "asc",
-        },
+        orderBy: this.getOrderBy(_order),
         include: {
-          project: true,
+          projects: {
+            include: {
+              project: true
+            }
+          },
           tasks: {
             include: {
               cliente: true,
@@ -75,7 +113,7 @@ export class ActionPlanService {
       prisma.actionPlan.count({ where }),
     ]);
 
-    // Adicionar métricas para cada plano de ação
+    // Adicionar métricas para cada plano de ação e transformar projetos
     const actionPlansWithMetrics = actionPlans.map(actionPlan => {
       const tasks = actionPlan.tasks;
       const totalTasks = tasks.length;
@@ -84,6 +122,7 @@ export class ActionPlanService {
 
       return {
         ...actionPlan,
+        projects: actionPlan.projects?.map(ap => ap.project) || [],
         totalTasks,
         completedTasks,
         progress
@@ -102,10 +141,14 @@ export class ActionPlanService {
   }
 
   static async findById(id) {
-    return await prisma.actionPlan.findUnique({
+    const actionPlan = await prisma.actionPlan.findUnique({
       where: { id: parseInt(id) },
       include: {
-        project: true,
+        projects: {
+          include: {
+            project: true
+          }
+        },
         tasks: {
           include: {
             cliente: true,
@@ -119,15 +162,33 @@ export class ActionPlanService {
         }
       }
     });
+
+    if (!actionPlan) return null;
+
+    return {
+      ...actionPlan,
+      projects: actionPlan.projects?.map(ap => ap.project) || []
+    };
   }
 
   static async create(actionPlanData) {
-    return await prisma.actionPlan.create({
+    const { projectIds, ...data } = actionPlanData;
+    
+    const actionPlan = await prisma.actionPlan.create({
       data: {
-        ...actionPlanData
+        ...data,
+        projects: projectIds && projectIds.length > 0 ? {
+          create: projectIds.map(projectId => ({
+            projectId: parseInt(projectId)
+          }))
+        } : undefined
       },
       include: {
-        project: true,
+        projects: {
+          include: {
+            project: true
+          }
+        },
         tasks: {
           include: {
             cliente: true,
@@ -141,43 +202,45 @@ export class ActionPlanService {
         }
       }
     });
+
+    return {
+      ...actionPlan,
+      projects: actionPlan.projects?.map(ap => ap.project) || []
+    };
   }
 
   static async update(id, actionPlanData) {
-    return await prisma.actionPlan.update({
-      where: { id: parseInt(id) },
-      data: actionPlanData,
-      include: {
-        project: true,
-        tasks: {
-          include: {
-            cliente: true,
-            sector: true,
-            userResponsible: true,
-            userCreated: true,
-          },
-          orderBy: {
-            createdAt: 'asc'
-          }
+    const { projectIds, ...data } = actionPlanData;
+    
+    return await prisma.$transaction(async (tx) => {
+      // Se projectIds foi fornecido, atualizar os relacionamentos
+      if (projectIds !== undefined) {
+        // Remover todos os relacionamentos existentes
+        await tx.actionPlanProject.deleteMany({
+          where: { actionPlanId: parseInt(id) }
+        });
+        
+        // Criar novos relacionamentos se houver projectIds
+        if (projectIds && projectIds.length > 0) {
+          await tx.actionPlanProject.createMany({
+            data: projectIds.map(projectId => ({
+              actionPlanId: parseInt(id),
+              projectId: parseInt(projectId)
+            }))
+          });
         }
       }
-    });
-  }
-
-  static async inactive(id) {
-    return await prisma.$transaction(async (tx) => {
-      // Atualizar todas as tarefas relacionadas para CANCELADA
-      await tx.task.updateMany({
-        where: { actionPlanId: parseInt(id) },
-        data: { status: 'CANCELADA' }
-      });
-
-      // Atualizar o plano de ação para CANCELADO
-      return await tx.actionPlan.update({
+      
+      // Atualizar o plano de ação
+      const updatedActionPlan = await tx.actionPlan.update({
         where: { id: parseInt(id) },
-        data: { status: 'CANCELADO' },
+        data,
         include: {
-          project: true,
+          projects: {
+            include: {
+              project: true
+            }
+          },
           tasks: {
             include: {
               cliente: true,
@@ -191,6 +254,50 @@ export class ActionPlanService {
           }
         }
       });
+
+      return {
+        ...updatedActionPlan,
+        projects: updatedActionPlan.projects?.map(ap => ap.project) || []
+      };
+    });
+  }
+
+  static async inactive(id) {
+    return await prisma.$transaction(async (tx) => {
+      // Atualizar todas as tarefas relacionadas para CANCELADA
+      await tx.task.updateMany({
+        where: { actionPlanId: parseInt(id) },
+        data: { status: 'CANCELADA' }
+      });
+
+      // Atualizar o plano de ação para CANCELADO
+      const inactivatedActionPlan = await tx.actionPlan.update({
+        where: { id: parseInt(id) },
+        data: { status: 'CANCELADO' },
+        include: {
+          projects: {
+            include: {
+              project: true
+            }
+          },
+          tasks: {
+            include: {
+              cliente: true,
+              sector: true,
+              userResponsible: true,
+              userCreated: true,
+            },
+            orderBy: {
+              createdAt: 'asc'
+            }
+          }
+        }
+      });
+
+      return {
+        ...inactivatedActionPlan,
+        projects: inactivatedActionPlan.projects?.map(ap => ap.project) || []
+      };
     });
   }
 }

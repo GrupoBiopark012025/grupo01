@@ -2380,7 +2380,7 @@
           {
             "name": "_order",
             "in": "query",
-            "description": "Campo para ordenação (ex: numero, -inicio)",
+            "description": "Campo para ordenação (ex: number, -startDate)",
             "schema": {
               "type": "string"
             }
@@ -2394,33 +2394,33 @@
             }
           },
           {
-            "name": "numero",
+            "name": "number",
             "in": "query",
-            "description": "Filtrar por número do plano (Nº)",
+            "description": "Filtrar por número do plano",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "oQue",
+            "name": "what",
             "in": "query",
-            "description": "Filtrar por O QUE?",
+            "description": "Filtrar por WHAT",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "como",
+            "name": "how",
             "in": "query",
-            "description": "Filtrar por COMO?",
+            "description": "Filtrar por HOW",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "responsavel",
+            "name": "responsible",
             "in": "query",
-            "description": "Filtrar por RESPONSÁVEL",
+            "description": "Filtrar por RESPONSIBLE",
             "schema": {
               "type": "string"
             }
@@ -2434,18 +2434,18 @@
             }
           },
           {
-            "name": "inicio",
+            "name": "startDate",
             "in": "query",
-            "description": "Filtrar por INÍCIO (maior ou igual)",
+            "description": "Filtrar por START DATE (maior ou igual)",
             "format": "date",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "fim",
+            "name": "endDate",
             "in": "query",
-            "description": "Filtrar por FIM (menor ou igual)",
+            "description": "Filtrar por END DATE (menor ou igual)",
             "format": "date",
             "schema": {
               "type": "string"
@@ -3282,42 +3282,38 @@
             "type": "number",
             "example": 1
           },
-          "numero": {
+          "number": {
             "type": "string",
             "example": "PA-001"
           },
-          "oQue": {
+          "what": {
             "type": "string",
             "example": "Implementar sistema de gestão de tarefas"
           },
-          "como": {
+          "how": {
             "type": "string",
             "example": "Desenvolver aplicação web com React e Node.js"
           },
-          "responsavel": {
+          "responsible": {
             "type": "string",
             "example": "João Silva"
           },
-          "inicio": {
+          "startDate": {
             "type": "string",
             "example": "2025-01-15T00:00:00.000Z"
           },
-          "fim": {
+          "endDate": {
             "type": "string",
             "example": "2025-03-15T23:59:59.000Z"
           },
-          "dataProrrogada": {},
+          "postponedDate": {},
           "status": {
             "type": "string",
             "example": "EM_ANDAMENTO"
           },
-          "observacoes": {
+          "observations": {
             "type": "string",
             "example": "Plano de ação para modernização do sistema"
-          },
-          "projectId": {
-            "type": "number",
-            "example": 1
           },
           "createdAt": {
             "type": "string",
@@ -3327,20 +3323,23 @@
             "type": "string",
             "example": "2025-01-15T10:30:00.000Z"
           },
-          "project": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "number",
-                "example": 1
-              },
-              "name": {
-                "type": "string",
-                "example": "Projeto Alpha"
-              },
-              "description": {
-                "type": "string",
-                "example": "Sistema de gestão empresarial"
+          "projects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Projeto Alpha"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Sistema de gestão empresarial"
+                }
               }
             }
           },
@@ -3488,42 +3487,45 @@
       "CreateActionPlan": {
         "type": "object",
         "properties": {
-          "numero": {
+          "number": {
             "type": "string",
             "example": "PA-001"
           },
-          "oQue": {
+          "what": {
             "type": "string",
             "example": "Implementar sistema de gestão de tarefas"
           },
-          "como": {
+          "how": {
             "type": "string",
             "example": "Desenvolver aplicação web com React e Node.js"
           },
-          "responsavel": {
+          "responsible": {
             "type": "string",
             "example": "João Silva"
           },
-          "inicio": {
+          "startDate": {
             "type": "string",
             "example": "2025-01-15T00:00:00.000Z"
           },
-          "fim": {
+          "endDate": {
             "type": "string",
             "example": "2025-03-15T23:59:59.000Z"
           },
-          "dataProrrogada": {},
+          "postponedDate": {},
           "status": {
             "type": "string",
             "example": "EM_ANDAMENTO"
           },
-          "observacoes": {
+          "observations": {
             "type": "string",
             "example": "Plano de ação para modernização do sistema"
           },
-          "projectId": {
-            "type": "number",
-            "example": 1
+          "projectIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "example": [1, 2]
           }
         },
         "xml": {
@@ -3533,42 +3535,45 @@
       "UpdateActionPlan": {
         "type": "object",
         "properties": {
-          "numero": {
+          "number": {
             "type": "string",
             "example": "PA-001"
           },
-          "oQue": {
+          "what": {
             "type": "string",
             "example": "Implementar sistema de gestão de tarefas"
           },
-          "como": {
+          "how": {
             "type": "string",
             "example": "Desenvolver aplicação web com React e Node.js"
           },
-          "responsavel": {
+          "responsible": {
             "type": "string",
             "example": "João Silva"
           },
-          "inicio": {
+          "startDate": {
             "type": "string",
             "example": "2025-01-15T00:00:00.000Z"
           },
-          "fim": {
+          "endDate": {
             "type": "string",
             "example": "2025-03-15T23:59:59.000Z"
           },
-          "dataProrrogada": {},
+          "postponedDate": {},
           "status": {
             "type": "string",
             "example": "EM_ANDAMENTO"
           },
-          "observacoes": {
+          "observations": {
             "type": "string",
             "example": "Plano de ação para modernização do sistema"
           },
-          "projectId": {
-            "type": "number",
-            "example": 1
+          "projectIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "example": [1, 2]
           }
         },
         "xml": {

@@ -16,7 +16,7 @@ export const listActionPlans = async (req, res, next) => {
   }
   #swagger.parameters['_order'] = {
     in: 'query',
-    description: 'Campo para ordenação (ex: numero, -inicio)',
+    description: 'Campo para ordenação (ex: number, -startDate, what, how, responsible, endDate, status). Use "-" para ordem decrescente. Campos válidos: id, number, what, how, responsible, startDate, endDate, postponedDate, status, observations, createdAt, updatedAt',
     type: 'string'
   }
   #swagger.parameters['projectId'] = {
@@ -24,24 +24,24 @@ export const listActionPlans = async (req, res, next) => {
     description: 'Filtrar por ID do projeto',
     type: 'integer'
   }
-  #swagger.parameters['numero'] = {
+  #swagger.parameters['number'] = {
     in: 'query',
-    description: 'Filtrar por número do plano (Nº)',
+    description: 'Filtrar por número do plano',
     type: 'string'
   }
-  #swagger.parameters['oQue'] = {
+  #swagger.parameters['what'] = {
     in: 'query',
-    description: 'Filtrar por O QUE?',
+    description: 'Filtrar por WHAT',
     type: 'string'
   }
-  #swagger.parameters['como'] = {
+  #swagger.parameters['how'] = {
     in: 'query',
-    description: 'Filtrar por COMO?',
+    description: 'Filtrar por HOW',
     type: 'string'
   }
-  #swagger.parameters['responsavel'] = {
+  #swagger.parameters['responsible'] = {
     in: 'query',
-    description: 'Filtrar por RESPONSÁVEL',
+    description: 'Filtrar por RESPONSIBLE',
     type: 'string'
   }
   #swagger.parameters['status'] = {
@@ -49,15 +49,15 @@ export const listActionPlans = async (req, res, next) => {
     description: 'Filtrar por STATUS',
     type: 'string'
   }
-  #swagger.parameters['inicio'] = {
+  #swagger.parameters['startDate'] = {
     in: 'query',
-    description: 'Filtrar por INÍCIO (maior ou igual)',
+    description: 'Filtrar por START DATE (maior ou igual)',
     type: 'string',
     format: 'date'
   }
-  #swagger.parameters['fim'] = {
+  #swagger.parameters['endDate'] = {
     in: 'query',
-    description: 'Filtrar por FIM (menor ou igual)',
+    description: 'Filtrar por END DATE (menor ou igual)',
     type: 'string',
     format: 'date'
   }

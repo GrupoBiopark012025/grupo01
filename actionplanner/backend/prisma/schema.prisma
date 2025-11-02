@@ -129,7 +129,7 @@ model Project {
 
   // Relacionamentos
   tasks       Task[]
-  actionPlans ActionPlan[]
+  actionPlans ActionPlanProject[]
 
   @@map("projects")
 }
@@ -137,24 +137,39 @@ model Project {
 // Tabela de ActionPlan (Plano de Ação)
 model ActionPlan {
   id              Int      @id @default(autoincrement())
-  numero          String   @db.VarChar(50) // Nº
-  oQue            String   @db.Text        // O QUE?
-  como            String   @db.Text        // COMO?
-  responsavel     String   @db.VarChar(255) // RESPONSÁVEL
-  inicio          DateTime @map("inicio")   // INÍCIO
-  fim             DateTime @map("fim")     // FIM
-  dataProrrogada  DateTime? @map("data_prorrogada") // DATA PRORROGADA
-  status          String   @db.VarChar(50) // STATUS
-  observacoes     String?  @db.Text        // OBSERVAÇÕES
-  projectId       Int      @map("project_id") // Projeto associado
+  number          String   @db.VarChar(50) @map("number")
+  what            String   @db.Text @map("what")
+  how             String   @db.Text @map("how")
+  responsible     String   @db.VarChar(255) @map("responsible")
+  startDate       DateTime @map("start_date")
+  endDate         DateTime @map("end_date")
+  postponedDate   DateTime? @map("postponed_date")
+  status          String   @db.VarChar(50)
+  observations    String?  @db.Text @map("observations")
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   // Relacionamentos
-  project         Project  @relation(fields: [projectId], references: [id])
+  projects        ActionPlanProject[]
   tasks           Task[]   @relation("ActionPlanTasks")
 
   @@map("action_plans")
+}
+
+// Tabela de relacionamento ActionPlan-Project (quais projetos o plano de ação está vinculado)
+model ActionPlanProject {
+  id          Int      @id @default(autoincrement())
+  actionPlanId Int      @map("action_plan_id")
+  projectId   Int      @map("project_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+
+  // Relacionamentos
+  actionPlan ActionPlan @relation(fields: [actionPlanId], references: [id], onDelete: Cascade)
+  project    Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([actionPlanId, projectId])
+  @@map("action_plan_projects")
 }
 
 

@@ -160,11 +160,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // WARN: (Lógica original mantida)
+    // WARN: Isso é carnissa, fiz assim por uma limitação da lib (não ter select múltiplo)
     if (this.accessLevel() !== UserAccessLevelEnum.Admin && this.getClientsError()) {
-      return;
-    }
-    if (this.accessLevel() === UserAccessLevelEnum.ColaboradorCliente && this.getSectorsError()) {
       return;
     }
 
@@ -211,24 +208,28 @@ export class UserFormComponent implements OnInit, OnDestroy {
     }
 
     this.handleAccessLevelValidations(accessLevel);
+    console.log('this form: ', this.form)
   }
 
   private handleAccessLevelValidations(accessLevel: UserAccessLevelEnum) {
     const formControls = this.form.controls;
     this.resetNotAdminFields();
 
+    console.log('oi')
+
+    console.log('accessLevel: ', accessLevel)
+
     switch (accessLevel) {
       case UserAccessLevelEnum.Admin:
         formControls.clienteId.clearValidators();
         formControls.userClienteIds.clearValidators();
-        formControls.userSectorIds.clearValidators();
         break;
 
       case UserAccessLevelEnum.Consultor:
       case UserAccessLevelEnum.GestorCliente:
         formControls.clienteId.setValidators([Validators.required]);
         formControls.userClienteIds.setValidators([Validators.required]);
-        formControls.userSectorIds.clearValidators();
+        console.log('oi 2')
         break;
 
       case UserAccessLevelEnum.ColaboradorCliente:
@@ -239,9 +240,11 @@ export class UserFormComponent implements OnInit, OnDestroy {
       default:
         formControls.clienteId.clearValidators();
         formControls.userClienteIds.clearValidators();
-        formControls.userSectorIds.clearValidators();
         break;
     }
+
+    formControls.clienteId.updateValueAndValidity();
+    formControls.userClienteIds.updateValueAndValidity();
     this.form.updateValueAndValidity();
   }
 
@@ -301,19 +304,11 @@ export class UserFormComponent implements OnInit, OnDestroy {
   getClientsError(): string {
     const primaryClient = this.form.controls.clienteId;
     const selectedClients = this.form.controls.userClienteIds;
-    if (primaryClient.hasError('required')) {
-      return 'É necessário informar um cliente principal.';
-    }
     if (selectedClients.hasError('required')) {
       return 'É necessário informar ao menos um cliente para acesso.';
     }
-    return '';
-  }
-
-  getSectorsError(): string {
-    const selectedSectors = this.form.controls.userSectorIds;
-    if (selectedSectors.hasError('required')) {
-      return 'É necessário informar ao menos um setor.'
+    if (primaryClient.hasError('required')) {
+      return 'É necessário informar um cliente principal.';
     }
     return '';
   }

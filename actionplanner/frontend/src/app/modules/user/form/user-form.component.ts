@@ -27,7 +27,7 @@ import { ZardButtonComponent } from "@shared/components/zardui/button/button.com
 import { BackOrNavigateToDirective } from "@shared/directives/back-or-navigate-to/back-or-navigate-to.directive";
 import { CheckboxComponent } from "@shared/components/base/form-components/checkbox/checkbox.component";
 import { ZardFormMessageComponent } from "@shared/components/zardui/form/form.component";
-import { JsonPipe, NgClass } from "@angular/common";
+import { NgClass } from "@angular/common";
 import { ZardBadgeComponent } from "@shared/components/zardui/badge/badge.component";
 import { SelectComponent } from "@shared/components/base/form-components/select/select.component";
 import { TextInputComponent } from "@shared/components/base/form-components/text-input/text-input.component";
@@ -45,8 +45,7 @@ import { PageHeaderComponent } from "@shared/components/base/page-header/page-he
     ZardBadgeComponent,
     SelectComponent,
     TextInputComponent,
-    PageHeaderComponent,
-    JsonPipe
+    PageHeaderComponent
   ],
   templateUrl: './user-form.component.html'
 })

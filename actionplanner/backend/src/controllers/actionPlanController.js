@@ -14,7 +14,7 @@ export const listActionPlans = async (req, res, next) => {
     description: 'Tamanho da página',
     type: 'integer'
   }
-  #swagger.parameters['_order'] = {
+  #swagger.parameters['orderBy'] = {
     in: 'query',
     description: 'Campo para ordenação (ex: number, -startDate, what, how, responsible, endDate, status). Use "-" para ordem decrescente. Campos válidos: id, number, what, how, responsible, startDate, endDate, postponedDate, status, observations, createdAt, updatedAt',
     type: 'string'
@@ -79,11 +79,11 @@ export const listActionPlans = async (req, res, next) => {
   }
   */
   try {
-    const { page, size, _order, ...filters } = req.query;
+    const { page, size, orderBy, ...filters } = req.query;
     const pagination = {
       page: page ? parseInt(page) : 1,
       size: size ? parseInt(size) : 10,
-      _order
+      orderBy
     };
 
     const result = await ActionPlanService.findMany(filters, pagination);

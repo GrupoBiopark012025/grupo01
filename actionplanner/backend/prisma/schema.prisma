@@ -117,19 +117,17 @@ model AuditLog {
   @@map("audit_logs")
 }
 
-// Tabela de Projects, tarefa pode ter um projeto associado
 model Project {
   id          Int      @id @default(autoincrement())
   name        String   @db.VarChar(255)
   description String?  @db.Text
-
-
+  actionPlanId Int?    @map("action_plan_id")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   // Relacionamentos
   tasks       Task[]
-  actionPlans ActionPlanProject[]
+  actionPlan  ActionPlan? @relation(fields: [actionPlanId], references: [id], onDelete: SetNull)
 
   @@map("projects")
 }
@@ -150,28 +148,11 @@ model ActionPlan {
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   // Relacionamentos
-  projects        ActionPlanProject[]
+  projects        Project[]
   tasks           Task[]   @relation("ActionPlanTasks")
 
   @@map("action_plans")
 }
-
-// Tabela de relacionamento ActionPlan-Project (quais projetos o plano de ação está vinculado)
-model ActionPlanProject {
-  id          Int      @id @default(autoincrement())
-  actionPlanId Int      @map("action_plan_id")
-  projectId   Int      @map("project_id")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime? @updatedAt @map("updated_at")
-
-  // Relacionamentos
-  actionPlan ActionPlan @relation(fields: [actionPlanId], references: [id], onDelete: Cascade)
-  project    Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
-
-  @@unique([actionPlanId, projectId])
-  @@map("action_plan_projects")
-}
-
 
 // Tabela de Tasks (Tarefas), tarefa terá um projeto associado, terá um cliente e tera um setor
 model Task {

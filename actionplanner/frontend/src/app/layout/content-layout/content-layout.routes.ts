@@ -26,6 +26,15 @@ export const contentLayoutRoutes: Routes = [
         canActivate: [authenticationGuard]
       },
       {
+        path: 'clients',
+        title: 'Clientes - ActionPlanner',
+        data: {
+          description: 'Gestão dos Clientes registrados.'
+        },
+        loadChildren: () => import('@modules/clients/clients.routes').then(m => m.ClientsRoutes),
+        canActivate: [authenticationGuard]
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full'

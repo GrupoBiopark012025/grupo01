@@ -1,4 +1,5 @@
-import { UserAccessLevelEnum, UserStatusEnum } from "@data/user/dtos";
+import { UserAccessLevelEnum, UserClientDto, UserStatusEnum } from "@data/user/dtos";
+import { GetSectorDto } from "@data/sector/dtos";
 
 export interface GetUserDto {
   id: number;
@@ -12,17 +13,7 @@ export interface GetUserDto {
   lastLogin: string;
   createdAt: string;
   updatedAt: string;
-  cliente: UserClient;
-  userClientes: any[];
-}
-
-export interface UserClient {
-  id: number;
-  nome: string;
-  cnpj: string;
-  email: string;
-  telefone: string;
-  endereco: string;
-  createdAt: string;
-  updatedAt: string;
+  cliente: UserClientDto;
+  userClientes: UserClientDto[];
+  sectors: GetSectorDto[];
 }

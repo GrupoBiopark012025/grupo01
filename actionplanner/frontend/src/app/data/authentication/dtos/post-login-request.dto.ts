@@ -1,4 +1,4 @@
-export interface LoginRequestDto {
+export interface PostLoginRequestDto {
   email: string;
   password: string;
 }

@@ -59,7 +59,8 @@ const doc = {
         accessLevel: "GESTOR_CLIENTE",
         isAdmin: false,
         onlyAttachedTasks: false,
-        status: "ATIVO"
+        status: "ATIVO",
+        userClienteIds: [1, 2]
       },
 
       UpdateUser: {

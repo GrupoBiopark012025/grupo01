@@ -9,7 +9,17 @@ export const UserRoutes: Routes = [
       {
         path: '',
         title: 'Usuários - ActionPlanner',
-        loadComponent: () => import('./list/user-list.component').then((c) => c.UserListComponent),
+        loadComponent: () => import('./list/user-list.component').then((c) => c.UserListComponent)
+      },
+      {
+        path: 'register',
+        title: 'Novo Usuário - ActionPlanner',
+        loadComponent: () => import('./form/user-form.component').then((c) => c.UserFormComponent)
+      },
+      {
+        path: ':id/edit',
+        title: 'Editar Usuário - ActionPlanner',
+        loadComponent: () => import('./form/user-form.component').then((c) => c.UserFormComponent)
       }
     ]
   }

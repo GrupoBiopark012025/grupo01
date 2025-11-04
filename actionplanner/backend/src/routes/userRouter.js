@@ -5,7 +5,7 @@ import {
   createUser,
   editUser,
   deleteUser,
-  getUserProfile
+  getUserProfile, getUserClients
 } from "../controllers/userController.js";
 import { 
   verify, 
@@ -30,5 +30,6 @@ router.get("/:id", requireAdmin, showUser);
 router.post("/", requireAdmin, validator(createUserValidator), createUser);
 router.put("/:id", requireAdmin, validator(updateUserValidator), editUser);
 router.delete("/:id", requireAdmin, deleteUser);
+router.get("/:id/clients", getUserClients);
 
 export default router;

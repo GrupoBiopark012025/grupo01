@@ -1,0 +1,27 @@
+<z-form-field>
+  <label
+    z-form-label
+    [zRequired]="isRequired()"
+    [for]="id()"
+  >
+    {{ label() }}
+  </label>
+
+  <z-form-control
+    #feedback="controlValidationFeedback"
+    [controlValidationFeedback]="formControl()"
+    [errorMessage]="feedback.errorMessage"
+  >
+    <z-select
+      [zPlaceholder]="placeholder()"
+      [ngModel]="value()"
+      [zDisabled]="isDisabled()"
+      (zSelectionChange)="onSelect($event)"
+      (blur)="onBlur()"
+    >
+      @for (option of options(); track option.value) {
+        <z-select-item [zValue]="option.value">{{ option.label }}</z-select-item>
+      }
+    </z-select>
+  </z-form-control>
+</z-form-field>

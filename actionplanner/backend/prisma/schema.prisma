@@ -33,57 +33,56 @@ enum ActionType {
 }
 
 model Cliente {
-  id        Int      @id @default(autoincrement())
-  nome      String   @db.VarChar(255)
-  cnpj      String   @unique @db.VarChar(18)
-  email     String?  @db.VarChar(255)
-  telefone  String?  @db.VarChar(20)
-  endereco  String?  @db.Text
-  sectorId  Int?     @map("sector_id")
-  createdAt DateTime @default(now()) @map("created_at")
+  id        Int       @id @default(autoincrement())
+  nome      String    @db.VarChar(255)
+  cnpj      String    @unique @db.VarChar(18)
+  email     String?   @db.VarChar(255)
+  telefone  String?   @db.VarChar(20)
+  endereco  String?   @db.Text
+  createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   // Relacionamentos
-  usuarios       User[]
-  userClientes   UserCliente[]
-  sector          Sector[]
-  auditLogs      AuditLog[]
-  tasks          Task[]
+  usuarios     User[]
+  userClientes UserCliente[]
+  auditLogs    AuditLog[]
+  tasks        Task[]
 
   @@map("clientes")
 }
 
 // Tabela de Usuários
 model User {
-  id               Int        @id @default(autoincrement())
-  nome             String     @db.VarChar(255)
-  email            String     @unique @db.VarChar(255)
-  password         String     @db.VarChar(255)
-  clienteId        Int        @map("cliente_id")
-  isAdmin          Boolean    @default(false) @map("is_admin")
-  accessLevel      AccessLevel @map("access_level")
-  onlyAttachedTasks Boolean   @default(false) @map("only_attached_tasks")
-  status           UserStatus @default(ATIVO)
-  lastLogin        DateTime?  @map("last_login")
-  createdAt        DateTime   @default(now()) @map("created_at")
-  updatedAt        DateTime?   @updatedAt @map("updated_at")
+  id                Int         @id @default(autoincrement())
+  nome              String      @db.VarChar(255)
+  email             String      @unique @db.VarChar(255)
+  password          String      @db.VarChar(255)
+  clienteId         Int         @map("cliente_id")
+  isAdmin           Boolean     @default(false) @map("is_admin")
+  accessLevel       AccessLevel @map("access_level")
+  onlyAttachedTasks Boolean     @default(false) @map("only_attached_tasks")
+  status            UserStatus  @default(ATIVO)
+  lastLogin         DateTime?   @map("last_login")
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime?   @updatedAt @map("updated_at")
 
   // Relacionamentos
-  cliente        Cliente       @relation(fields: [clienteId], references: [id])
-  userClientes   UserCliente[]
-  auditLogs      AuditLog[]
-  tasksResponsible Task[]      @relation("UserResponsibleTasks")
-  tasksCreated     Task[]      @relation("UserCreatedTasks")
+  cliente          Cliente       @relation(fields: [clienteId], references: [id])
+  userClientes     UserCliente[]
+  auditLogs        AuditLog[]
+  tasksResponsible Task[]        @relation("UserResponsibleTasks")
+  tasksCreated     Task[]        @relation("UserCreatedTasks")
+  sectors          Sector[]      @relation("UserSectors")
 
   @@map("users")
 }
 
 // Tabela de relacionamento User-Cliente (quais clientes o usuario pode acessar)
 model UserCliente {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @map("user_id")
-  clienteId Int      @map("cliente_id")
-  createdAt DateTime @default(now()) @map("created_at")
+  id        Int       @id @default(autoincrement())
+  userId    Int       @map("user_id")
+  clienteId Int       @map("cliente_id")
+  createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   // Relacionamentos
@@ -183,16 +182,17 @@ model Task {
 }
 
 model Sector {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(255)
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
   acronym     String   @db.VarChar(5)
   description String?  @db.VarChar(160)
   status      String   @default("ativo") @db.VarChar(10)
   color       String   @db.VarChar(7)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  tasks     Task[]
-  clientes Cliente[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tasks Task[]
+  users User[] @relation("UserSectors")
 
   @@map("sectors")
 }

@@ -1,0 +1,27 @@
+<z-form-field>
+  <z-form-control
+    class="flex flex-col"
+    #feedback="controlValidationFeedback"
+    [controlValidationFeedback]="formControl()"
+    [errorMessage]="feedback.errorMessage"
+  >
+    <div class="flex items-center space-x-2">
+      <z-checkbox
+        [id]="id()"
+        [ngModel]="value()"
+        [disabled]="isDisabled()"
+        (checkChange)="toggleCheckbox()"
+        (blur)="onBlur()"
+      />
+
+      <label
+        z-form-label
+        class="!mb-0"
+        [for]="id()"
+        [zRequired]="isRequired()"
+      >
+        {{ label() }}
+      </label>
+    </div>
+  </z-form-control>
+</z-form-field>

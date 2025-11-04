@@ -138,3 +138,11 @@
     background-color: var(--default-bg) !important;
   }
 }
+
+form.ng-invalid z-form-control > :nth-child(2) {
+  display: none;
+}
+
+form.ng-submitted.ng-invalid z-form-control > :nth-child(2) {
+  display: block;
+}

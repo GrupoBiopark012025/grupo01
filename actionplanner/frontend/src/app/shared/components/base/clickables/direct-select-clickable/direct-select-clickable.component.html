@@ -1,0 +1,17 @@
+<div
+  class="group flex items-center justify-between rounded-xl border p-3 transition-all duration-150"
+  [class.cursor-pointer]="!isActiveOrDisabled()"
+  [class.hover:bg-accent]="!isActiveOrDisabled()"
+  [class.bg-muted]="isActiveOrDisabled()"
+  [class.opacity-70]="isActiveOrDisabled()"
+  [class.pointer-events-none]="isActiveOrDisabled()"
+  (click)="onClick.emit()"
+>
+  <ng-content />
+
+  @if (active() && !disabled()) {
+    <i-lucide [img]="icons.check" class="text-success" />
+  } @else {
+    <i-lucide [img]="icons.chevronRight" />
+  }
+</div>

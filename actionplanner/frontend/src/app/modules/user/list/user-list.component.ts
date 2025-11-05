@@ -49,7 +49,7 @@ export class UserListComponent {
 
   users$: Observable<ApiPaginatedList<GetUserDto>> = toObservable(this._query)
     .pipe(
-      switchMap(() => this.userDataService.getUsers(this._query())),
+      switchMap((query) => this.userDataService.getUsers(query)),
       shareReplay(1),
       takeUntilDestroyed(this.destroyRef)
     );

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ErrorLayoutComponent } from './error-layout.component';
+import { CheckClickableComponent } from './check-clickable.component';
 
-describe('ErrorLayoutComponent', () => {
-  let component: ErrorLayoutComponent;
-  let fixture: ComponentFixture<ErrorLayoutComponent>;
+describe('CheckClickableComponent', () => {
+  let component: CheckClickableComponent;
+  let fixture: ComponentFixture<CheckClickableComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ErrorLayoutComponent]
+      imports: [CheckClickableComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ErrorLayoutComponent);
+    fixture = TestBed.createComponent(CheckClickableComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { AuthenticationDataService } from "@data/authentication/authentication-data.service";
-import { map } from "rxjs";
+import { map, switchMap, tap } from "rxjs";
 import { LocalStorageService } from "@core/services/local-storage/local-storage.service";
 import { JwtService } from "@core/services/jwt/jwt.service";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { WINDOW } from "@core/injection-tokens/injection-tokens";
 import { Router } from "@angular/router";
+import { UserSessionService } from "@core/services/user-session/user-session.service";
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class AuthenticationService {
   private readonly jwtService = inject(JwtService);
   private readonly jwtHelperService = inject(JwtHelperService);
   private readonly localStorageService = inject(LocalStorageService);
+  private readonly userSessionService = inject(UserSessionService);
 
   login(
     email: string,
@@ -34,7 +36,7 @@ export class AuthenticationService {
 
           const { token } = response;
           this.registraNovoToken(token);
-          this.navigateAfterLogin();
+          this.navigateAfterLogin(returnUrl);
           return token;
         })
       )
@@ -46,7 +48,21 @@ export class AuthenticationService {
 
     if (!redirect) { return; }
 
-    this.window.location.href = '/login'; // TODO: validar
+    this.window.location.href = 'login';
+  }
+
+  changeEnvironment(clienteId: number) {
+    return this.authenticationService
+      .changeEnvironment({ clienteId })
+      .pipe(
+        tap((response) => {
+          const { token } = response;
+
+          this.registraNovoToken(token);
+          this.userSessionService.reloadSessionData();
+        }),
+        switchMap(() =>  this.userSessionService.reloadSessionData())
+      )
   }
 
   isLoggedIn(): boolean {
@@ -57,26 +73,8 @@ export class AuthenticationService {
     return Promise.resolve(this.jwtHelperService.isTokenExpired());
   }
 
-  getCurrentUser(): { name?: string; email?: string } | null {
-    const token = this.jwtService.getToken();
-    if (!token) {
-      return null;
-    }
-
-    try {
-      const decodedToken = this.jwtHelperService.decodeToken(token);
-      return {
-        name: decodedToken?.name || decodedToken?.sub || 'Usuário',
-        email: decodedToken?.email
-      };
-    } catch (error) {
-      console.error('Erro ao decodificar token:', error);
-      return null;
-    }
-  }
-
   private navigateAfterLogin(returnUrl?: string): void {
-    this.router.navigate([returnUrl ?? '']);
+    this.router.navigate([returnUrl ?? 'home']);
   }
 
   private registraNovoToken(newToken: string): void {

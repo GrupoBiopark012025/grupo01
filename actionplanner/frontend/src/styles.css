@@ -1,9 +1,7 @@
 @import 'tailwindcss';
-@import 'lucide-static/font/lucide.css';
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
-
 
 :root {
   --radius: 0.625rem;
@@ -139,4 +137,12 @@
   .bg-default {
     background-color: var(--default-bg) !important;
   }
+}
+
+form.ng-invalid z-form-control > :nth-child(2) {
+  display: none;
+}
+
+form.ng-submitted.ng-invalid z-form-control > :nth-child(2) {
+  display: block;
 }

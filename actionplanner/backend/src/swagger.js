@@ -18,13 +18,13 @@ const doc = {
         code: "",
         message: "",
       },
-      
+
       // Auth
       LoginRequest: {
         email: "hermes@actionplan.com.br",
         password: "123456"
       },
-      
+
       LoginResponse: {
         message: "Login realizado com sucesso",
         user: {
@@ -59,7 +59,8 @@ const doc = {
         accessLevel: "GESTOR_CLIENTE",
         isAdmin: false,
         onlyAttachedTasks: false,
-        status: "ATIVO"
+        status: "ATIVO",
+        userClienteIds: [1, 2]
       },
 
       UpdateUser: {
@@ -79,6 +80,160 @@ const doc = {
         endereco: "Rua da Inovação, 123 - São Paulo, SP"
       },
 
+      // Task
+      Task: {
+        id: 1,
+        title: "Implementar nova funcionalidade",
+        description: "Desenvolver módulo de relatórios personalizados",
+        status: "EM_ANDAMENTO",
+        priority: "ALTA",
+        dueDate: "2025-10-20T23:59:59.000Z",
+        projectId: 1,
+        clienteId: 1,
+        sectorId: 2,
+        userResponsibleId: 3,
+        userCreatedId: 1,
+        createdAt: "2025-10-10T10:30:00.000Z",
+        updatedAt: "2025-10-10T10:30:00.000Z",
+        project: {
+          id: 1,
+          nome: "Projeto Alpha"
+        },
+        cliente: {
+          id: 1,
+          nome: "ActionPlan"
+        },
+        sector: {
+          id: 2,
+          nome: "Desenvolvimento"
+        },
+        userResponsible: {
+          id: 3,
+          nome: "João Silva",
+          email: "joao@empresa.com.br"
+        },
+        userCreated: {
+          id: 1,
+          nome: "Hermes",
+          email: "hermes@actionplan.com.br"
+        }
+      },
+
+      CreateTask: {
+        title: "Implementar nova funcionalidade",
+        description: "Desenvolver módulo de relatórios personalizados",
+        status: "PENDENTE",
+        priority: "ALTA",
+        dueDate: "2025-10-20T23:59:59.000Z",
+        projectId: 1,
+        clienteId: 1,
+        sectorId: 2,
+        userResponsibleId: 3,
+        userCreatedId: 1
+      },
+
+      UpdateTask: {
+        title: "Implementar nova funcionalidade - Atualizado",
+        description: "Desenvolver módulo de relatórios personalizados com gráficos",
+        status: "EM_ANDAMENTO",
+        priority: "URGENTE",
+        dueDate: "2025-10-25T23:59:59.000Z",
+        userResponsibleId: 5
+      },
+
+      // Action Plan
+      ActionPlan: {
+        id: 1,
+        number: "PA-001",
+        what: "Implementar sistema de gestão de tarefas",
+        how: "Desenvolver aplicação web com React e Node.js",
+        responsible: "João Silva",
+        startDate: "2025-01-15T00:00:00.000Z",
+        endDate: "2025-03-15T23:59:59.000Z",
+        postponedDate: null,
+        status: "EM_ANDAMENTO",
+        observations: "Plano de ação para modernização do sistema",
+        createdAt: "2025-01-15T10:30:00.000Z",
+        updatedAt: "2025-01-15T10:30:00.000Z",
+        projects: [
+          {
+            id: 1,
+            name: "Projeto Alpha",
+            description: "Sistema de gestão empresarial"
+          },
+          {
+            id: 2,
+            name: "Projeto Beta",
+            description: "Sistema de análise de dados"
+          }
+        ],
+        tasks: [
+          {
+            id: 1,
+            title: "Criar interface de usuário",
+            description: "Desenvolver telas principais do sistema",
+            status: "EM_ANDAMENTO",
+            priority: "ALTA",
+            dueDate: "2025-02-15T23:59:59.000Z",
+            projectId: 1,
+            actionPlanId: 1,
+            clienteId: 1,
+            sectorId: 2,
+            userResponsibleId: 3,
+            userCreatedId: 1,
+            createdAt: "2025-01-15T10:30:00.000Z",
+            updatedAt: "2025-01-15T10:30:00.000Z",
+            cliente: {
+              id: 1,
+              nome: "ActionPlan"
+            },
+            sector: {
+              id: 2,
+              name: "Desenvolvimento"
+            },
+            userResponsible: {
+              id: 3,
+              nome: "João Silva",
+              email: "joao@empresa.com.br"
+            },
+            userCreated: {
+              id: 1,
+              nome: "Hermes",
+              email: "hermes@actionplan.com.br"
+            }
+          }
+        ],
+        totalTasks: 5,
+        completedTasks: 2,
+        progress: 40
+      },
+
+      CreateActionPlan: {
+        number: "PA-001",
+        what: "Implementar sistema de gestão de tarefas",
+        how: "Desenvolver aplicação web com React e Node.js",
+        responsible: "João Silva",
+        startDate: "2025-01-15T00:00:00.000Z",
+        endDate: "2025-03-15T23:59:59.000Z",
+        postponedDate: null,
+        status: "EM_ANDAMENTO",
+        observations: "Plano de ação para modernização do sistema",
+        projectIds: [1, 2]
+      },
+
+      UpdateActionPlan: {
+        number: "PA-001",
+        what: "Implementar sistema de gestão de tarefas",
+        how: "Desenvolver aplicação web com React e Node.js",
+        responsible: "João Silva",
+        startDate: "2025-01-15T00:00:00.000Z",
+        endDate: "2025-03-15T23:59:59.000Z",
+        postponedDate: null,
+        status: "EM_ANDAMENTO",
+        observations: "Plano de ação para modernização do sistema",
+        projectIds: [1, 2]
+      },
+
       // Responses
       ValidationError: {
         error: "Dados inválidos",
@@ -91,6 +246,42 @@ const doc = {
 
       Success: {
         message: "Operação realizada com sucesso"
+      },
+
+      Client: {
+        id: 1,
+        nome: "ActionPlan",
+        cnpj: "12.345.678/0001-90",
+        email: "contato@actionplan.com.br",
+        telefone: "(11) 99999-9999",
+        endereco: "Rua da Inovação, 123 - São Paulo, SP",
+        sectorId: 2,
+        createdAt: "2025-01-15T10:30:00.000Z",
+        updatedAt: "2025-01-15T10:30:00.000Z"
+      },
+      CreateClient: {
+        nome: "ActionPlan",
+        cnpj: "12.345.678/0001-90",
+        email: "contato@actionplan.com.br",
+        telefone: "(11) 99999-9999",
+        endereco: "Rua da Inovação, 123 - São Paulo, SP",
+        sectorId: 2
+      },
+      UpdateClient: {
+        nome: "ActionPlan LTDA",
+        email: "contato@actionplan.com.br",
+        telefone: "(11) 98888-8888",
+        endereco: "Rua Nova, 456 - São Paulo, SP",
+        sectorId: 3
+      },
+      ClientListResponse: {
+        totalData: 2,
+        totalPages: 1,
+        currentPage: 1,
+        size: 10,
+        data: [
+          { $ref: "#/components/schemas/Client" }
+        ]
       }
     },
 

@@ -21,20 +21,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -44,7 +30,7 @@
         }
       }
     },
-    "/auth/login": {
+    "/api/auth/login": {
       "post": {
         "tags": [
           "Auth"
@@ -53,20 +39,6 @@
         "parameters": [
           {
             "name": "_page",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
             "in": "query",
             "schema": {
               "type": "string"
@@ -183,7 +155,7 @@
         }
       }
     },
-    "/auth/refresh": {
+    "/api/auth/refresh": {
       "post": {
         "tags": [
           "Auth"
@@ -192,20 +164,6 @@
         "parameters": [
           {
             "name": "_page",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
             "in": "query",
             "schema": {
               "type": "string"
@@ -300,7 +258,7 @@
         ]
       }
     },
-    "/auth/logout": {
+    "/api/auth/logout": {
       "post": {
         "tags": [
           "Auth"
@@ -309,20 +267,6 @@
         "parameters": [
           {
             "name": "_page",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
             "in": "query",
             "schema": {
               "type": "string"
@@ -341,7 +285,7 @@
         ]
       }
     },
-    "/auth/validate": {
+    "/api/auth/validate": {
       "get": {
         "tags": [
           "Auth"
@@ -350,20 +294,6 @@
         "parameters": [
           {
             "name": "_page",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
             "in": "query",
             "schema": {
               "type": "string"
@@ -457,6 +387,125 @@
         ]
       }
     },
+    "/api/auth/change-environment": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ambiente alterado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "cliente": {
+                          "$ref": "#/components/schemas/Cliente"
+                        },
+                        "token": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "cliente": {
+                          "$ref": "#/components/schemas/Cliente"
+                        },
+                        "token": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciais inválidas ou usuário inativo"
+          },
+          "403": {
+            "description": "Usuário não possui acesso a este cliente"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "clienteId"
+                ],
+                "properties": {
+                  "clienteId": {
+                    "type": "integer",
+                    "example": 2
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/users/init": {
       "post": {
         "tags": [
@@ -470,23 +519,12 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "201": {
             "description": "Usuário criado com sucesso",
             "content": {
@@ -539,20 +577,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -594,13 +618,6 @@
             }
           },
           {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "page",
             "in": "query",
             "description": "Número da página",
@@ -617,7 +634,7 @@
             }
           },
           {
-            "name": "_order",
+            "name": "orderBy",
             "in": "query",
             "description": "Campo para ordenação",
             "schema": {
@@ -854,23 +871,12 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "201": {
             "description": "Usuário criado com sucesso",
             "content": {
@@ -931,20 +937,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -989,20 +981,6 @@
           },
           {
             "name": "_page",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
             "in": "query",
             "schema": {
               "type": "string"
@@ -1068,23 +1046,12 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "204": {
             "description": "Usuário excluído"
           },
@@ -1099,10 +1066,277 @@
         ]
       }
     },
-    "/api/tasks/": {
+    "/api/users/{id}/clients": {
       "get": {
         "tags": [
-          "Tasks"
+          "Users"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página",
+            "required": false,
+            "example": 1,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Tamanho da página (quantidade de registros por página)",
+            "required": false,
+            "example": 10,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "Campo para ordenação (use - para ordem decrescente, ex: -nome)",
+            "required": false,
+            "example": "nome",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "schema",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "totalPages",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currentPage",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista paginada de clientes acessíveis ao usuário",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "clients": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "array"
+                            },
+                            "items": {
+                              "$ref": "#/components/schemas/Cliente"
+                            }
+                          }
+                        },
+                        "totalData": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            },
+                            "example": {
+                              "type": "number",
+                              "example": 45
+                            }
+                          }
+                        },
+                        "totalPages": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            },
+                            "example": {
+                              "type": "number",
+                              "example": 5
+                            }
+                          }
+                        },
+                        "currentPage": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            },
+                            "example": {
+                              "type": "number",
+                              "example": 1
+                            }
+                          }
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            },
+                            "example": {
+                              "type": "number",
+                              "example": 10
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "clients": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "array"
+                            },
+                            "items": {
+                              "$ref": "#/components/schemas/Cliente"
+                            }
+                          }
+                        },
+                        "totalData": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            },
+                            "example": {
+                              "type": "number",
+                              "example": 45
+                            }
+                          }
+                        },
+                        "totalPages": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            },
+                            "example": {
+                              "type": "number",
+                              "example": 5
+                            }
+                          }
+                        },
+                        "currentPage": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            },
+                            "example": {
+                              "type": "number",
+                              "example": 1
+                            }
+                          }
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            },
+                            "example": {
+                              "type": "number",
+                              "example": 10
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Usuário não autenticado ou token inválido"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/clients/": {
+      "get": {
+        "tags": [
+          "Clients"
         ],
         "description": "",
         "parameters": [
@@ -1114,7 +1348,900 @@
             }
           },
           {
-            "name": "_sort",
+            "name": "page",
+            "in": "query",
+            "description": "Número da página",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "nome",
+            "in": "query",
+            "description": "Filtrar por nome",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "schema",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de clientes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientListResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientListResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Clients"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Cliente criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "409": {
+            "description": "CNPJ já existe"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClient"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/clients/{id}": {
+      "get": {
+        "tags": [
+          "Clients"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cliente não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Clients"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente atualizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Client"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cliente não encontrado"
+          },
+          "409": {
+            "description": "CNPJ já existe"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClient"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Clients"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "204": {
+            "description": "Cliente excluído"
+          },
+          "404": {
+            "description": "Cliente não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/sectors/": {
+      "get": {
+        "tags": [
+          "Sectors"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Tamanho da página",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "Campo para ordenação (ex: name, -name para desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filtrar por nome",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "acronym",
+            "in": "query",
+            "description": "Filtrar por sigla",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filtrar por status",
+            "enum": [
+              "ativo",
+              "inativo"
+            ],
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "color",
+            "in": "query",
+            "description": "Filtrar por cor",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "schema",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "totalPages",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currentPage",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de setores",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "sectors": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "array"
+                            },
+                            "items": {
+                              "$ref": "#/components/schemas/Sector"
+                            }
+                          }
+                        },
+                        "totalData": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "totalPages": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "currentPage": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "sectors": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "array"
+                            },
+                            "items": {
+                              "$ref": "#/components/schemas/Sector"
+                            }
+                          }
+                        },
+                        "totalData": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "totalPages": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "currentPage": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Sectors"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Setor criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sector"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sector"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "409": {
+            "description": "Nome ou sigla já existe"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSector"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sectors/{id}/statistics": {
+      "get": {
+        "tags": [
+          "Sectors"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Estatísticas do setor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "sectorId": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "sectorName": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            }
+                          }
+                        },
+                        "totalTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "activeTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "completedTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "canceledTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "completionRate": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "sectorId": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "sectorName": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            }
+                          }
+                        },
+                        "totalTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "activeTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "completedTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "canceledTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "completionRate": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Setor não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/sectors/{id}": {
+      "get": {
+        "tags": [
+          "Sectors"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Setor encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sector"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sector"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Setor não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Sectors"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Setor atualizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sector"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sector"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "404": {
+            "description": "Setor não encontrado"
+          },
+          "409": {
+            "description": "Nome ou sigla já existe"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSector"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tasks/": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
             "in": "query",
             "schema": {
               "type": "string"
@@ -1139,7 +2266,7 @@
           {
             "name": "_order",
             "in": "query",
-            "description": "Campo para ordenação",
+            "description": "Campo para ordenação (ex: title, -createdAt)",
             "schema": {
               "type": "string"
             }
@@ -1156,6 +2283,12 @@
             "name": "status",
             "in": "query",
             "description": "Filtrar por status",
+            "enum": [
+              "PENDENTE",
+              "EM_ANDAMENTO",
+              "CONCLUIDA",
+              "CANCELADA"
+            ],
             "schema": {
               "type": "string"
             }
@@ -1164,6 +2297,12 @@
             "name": "priority",
             "in": "query",
             "description": "Filtrar por prioridade",
+            "enum": [
+              "BAIXA",
+              "MEDIA",
+              "ALTA",
+              "URGENTE"
+            ],
             "schema": {
               "type": "string"
             }
@@ -1178,14 +2317,229 @@
             }
           },
           {
-            "name": "_size",
+            "name": "projectId",
+            "in": "query",
+            "description": "Filtrar por ID do projeto",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "clienteId",
+            "in": "query",
+            "description": "Filtrar por ID do cliente",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sectorId",
+            "in": "query",
+            "description": "Filtrar por ID do setor",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "userResponsibleId",
+            "in": "query",
+            "description": "Filtrar por ID do usuário responsável",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "userCreatedId",
+            "in": "query",
+            "description": "Filtrar por ID do usuário criador",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "description",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "filters",
+            "name": "schema",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "totalPages",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currentPage",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "tasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "array"
+                            },
+                            "items": {
+                              "$ref": "#/components/schemas/Task"
+                            }
+                          }
+                        },
+                        "totalData": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "totalPages": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "currentPage": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "tasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "array"
+                            },
+                            "items": {
+                              "$ref": "#/components/schemas/Task"
+                            }
+                          }
+                        },
+                        "totalData": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "totalPages": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "currentPage": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Tasks"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
             "in": "query",
             "schema": {
               "type": "string"
@@ -1195,37 +2549,39 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "201": {
+            "description": "Task criada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
           }
-        }
-      },
-      "post": {
-        "description": "",
-        "parameters": [
+        },
+        "security": [
           {
-            "name": "_page",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
+            "bearerAuth": []
           }
         ],
-        "responses": {
-          "201": {
-            "description": "Created"
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTask"
+              }
+            }
           }
         }
       }
@@ -1251,32 +2607,38 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "_order",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "_sort",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Task encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Task não encontrada"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
-      "delete": {
+      "put": {
+        "tags": [
+          "Tasks"
+        ],
         "description": "",
         "parameters": [
           {
@@ -1293,16 +2655,60 @@
             "schema": {
               "type": "string"
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task atualizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
           },
+          "404": {
+            "description": "Task não encontrada"
+          }
+        },
+        "security": [
           {
-            "name": "_order",
-            "in": "query",
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTask"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Tasks"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "_sort",
+            "name": "_page",
             "in": "query",
             "schema": {
               "type": "string"
@@ -1310,10 +2716,516 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
           "204": {
-            "description": "No Content"
+            "description": "Task excluída com sucesso"
+          },
+          "404": {
+            "description": "Task não encontrada"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/actionPlans/": {
+      "get": {
+        "tags": [
+          "Action Plans"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Tamanho da página",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "_order",
+            "in": "query",
+            "description": "Campo para ordenação (ex: number, -startDate)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "description": "Filtrar por ID do projeto",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "number",
+            "in": "query",
+            "description": "Filtrar por número do plano",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "what",
+            "in": "query",
+            "description": "Filtrar por WHAT",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "how",
+            "in": "query",
+            "description": "Filtrar por HOW",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "responsible",
+            "in": "query",
+            "description": "Filtrar por RESPONSIBLE",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filtrar por STATUS",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Filtrar por START DATE (maior ou igual)",
+            "format": "date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "Filtrar por END DATE (menor ou igual)",
+            "format": "date",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "schema",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "totalPages",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currentPage",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de planos de ação",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "actionPlans": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "array"
+                            },
+                            "items": {
+                              "$ref": "#/components/schemas/ActionPlan"
+                            }
+                          }
+                        },
+                        "totalData": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "totalPages": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "currentPage": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "actionPlans": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "array"
+                            },
+                            "items": {
+                              "$ref": "#/components/schemas/ActionPlan"
+                            }
+                          }
+                        },
+                        "totalData": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "totalPages": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "currentPage": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Action Plans"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Plano de ação criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateActionPlan"
+              }
+            }
           }
         }
+      }
+    },
+    "/api/actionPlans/{id}": {
+      "get": {
+        "tags": [
+          "Action Plans"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plano de ação encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Plano de ação não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Action Plans"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plano de ação atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "404": {
+            "description": "Plano de ação não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateActionPlan"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/actionPlans/{id}/inactive": {
+      "patch": {
+        "tags": [
+          "Action Plans"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Plano de ação inativado com sucesso. Todas as tarefas relacionadas foram canceladas.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionPlan"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Plano de ação não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   },
@@ -1474,6 +3386,20 @@
           "status": {
             "type": "string",
             "example": "ATIVO"
+          },
+          "userClienteIds": {
+            "type": "array",
+            "example": [1, 2],
+            "items": {
+              "type": "number"
+            }
+          },
+          "userSectorIds": {
+            "type": "array",
+            "example": [1, 2],
+            "items": {
+              "type": "number"
+            }
           }
         },
         "xml": {
@@ -1495,9 +3421,46 @@
             "type": "string",
             "example": "novaSenha123"
           },
+          "clienteId": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do cliente ao qual o usuário pertence. Se omitido e o usuário for admin, assume 1 por padrão."
+          },
+          "accessLevel": {
+            "type": "string",
+            "example": "GESTOR_CLIENTE",
+            "enum": ["ADMIN", "CONSULTOR", "GESTOR_CLIENTE", "COLABORADOR_CLIENTE"]
+          },
+          "isAdmin": {
+            "type": "boolean",
+            "example": false,
+            "description": "Define se o usuário possui permissões administrativas."
+          },
+          "onlyAttachedTasks": {
+            "type": "boolean",
+            "example": false,
+            "description": "Restringe o acesso do usuário apenas às tarefas vinculadas diretamente a ele."
+          },
           "status": {
             "type": "string",
-            "example": "INATIVO"
+            "example": "INATIVO",
+            "enum": ["ATIVO", "INATIVO"]
+          },
+          "userClienteIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "example": [1, 2],
+            "description": "IDs dos clientes aos quais o usuário terá acesso. Obrigatório para usuários não administradores."
+          },
+          "userSectorIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "example": [3, 4],
+            "description": "IDs dos setores aos quais o usuário estará vinculado. Obrigatório para usuários não administradores."
           }
         },
         "xml": {
@@ -1534,6 +3497,524 @@
         },
         "xml": {
           "name": "Cliente"
+        }
+      },
+      "Task": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "title": {
+            "type": "string",
+            "example": "Implementar nova funcionalidade"
+          },
+          "description": {
+            "type": "string",
+            "example": "Desenvolver módulo de relatórios personalizados"
+          },
+          "status": {
+            "type": "string",
+            "example": "EM_ANDAMENTO"
+          },
+          "priority": {
+            "type": "string",
+            "example": "ALTA"
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2025-10-20T23:59:59.000Z"
+          },
+          "projectId": {
+            "type": "number",
+            "example": 1
+          },
+          "clienteId": {
+            "type": "number",
+            "example": 1
+          },
+          "sectorId": {
+            "type": "number",
+            "example": 2
+          },
+          "userResponsibleId": {
+            "type": "number",
+            "example": 3
+          },
+          "userCreatedId": {
+            "type": "number",
+            "example": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2025-10-10T10:30:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2025-10-10T10:30:00.000Z"
+          },
+          "project": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "nome": {
+                "type": "string",
+                "example": "Projeto Alpha"
+              }
+            }
+          },
+          "cliente": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "nome": {
+                "type": "string",
+                "example": "ActionPlan"
+              }
+            }
+          },
+          "sector": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 2
+              },
+              "nome": {
+                "type": "string",
+                "example": "Desenvolvimento"
+              }
+            }
+          },
+          "userResponsible": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 3
+              },
+              "nome": {
+                "type": "string",
+                "example": "João Silva"
+              },
+              "email": {
+                "type": "string",
+                "example": "joao@empresa.com.br"
+              }
+            }
+          },
+          "userCreated": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "nome": {
+                "type": "string",
+                "example": "Hermes"
+              },
+              "email": {
+                "type": "string",
+                "example": "hermes@actionplan.com.br"
+              }
+            }
+          }
+        },
+        "xml": {
+          "name": "Task"
+        }
+      },
+      "CreateTask": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Implementar nova funcionalidade"
+          },
+          "description": {
+            "type": "string",
+            "example": "Desenvolver módulo de relatórios personalizados"
+          },
+          "status": {
+            "type": "string",
+            "example": "PENDENTE"
+          },
+          "priority": {
+            "type": "string",
+            "example": "ALTA"
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2025-10-20T23:59:59.000Z"
+          },
+          "projectId": {
+            "type": "number",
+            "example": 1
+          },
+          "clienteId": {
+            "type": "number",
+            "example": 1
+          },
+          "sectorId": {
+            "type": "number",
+            "example": 2
+          },
+          "userResponsibleId": {
+            "type": "number",
+            "example": 3
+          },
+          "userCreatedId": {
+            "type": "number",
+            "example": 1
+          }
+        },
+        "xml": {
+          "name": "CreateTask"
+        }
+      },
+      "UpdateTask": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Implementar nova funcionalidade - Atualizado"
+          },
+          "description": {
+            "type": "string",
+            "example": "Desenvolver módulo de relatórios personalizados com gráficos"
+          },
+          "status": {
+            "type": "string",
+            "example": "EM_ANDAMENTO"
+          },
+          "priority": {
+            "type": "string",
+            "example": "URGENTE"
+          },
+          "dueDate": {
+            "type": "string",
+            "example": "2025-10-25T23:59:59.000Z"
+          },
+          "userResponsibleId": {
+            "type": "number",
+            "example": 5
+          }
+        },
+        "xml": {
+          "name": "UpdateTask"
+        }
+      },
+      "ActionPlan": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "number": {
+            "type": "string",
+            "example": "PA-001"
+          },
+          "what": {
+            "type": "string",
+            "example": "Implementar sistema de gestão de tarefas"
+          },
+          "how": {
+            "type": "string",
+            "example": "Desenvolver aplicação web com React e Node.js"
+          },
+          "responsible": {
+            "type": "string",
+            "example": "João Silva"
+          },
+          "startDate": {
+            "type": "string",
+            "example": "2025-01-15T00:00:00.000Z"
+          },
+          "endDate": {
+            "type": "string",
+            "example": "2025-03-15T23:59:59.000Z"
+          },
+          "postponedDate": {},
+          "status": {
+            "type": "string",
+            "example": "EM_ANDAMENTO"
+          },
+          "observations": {
+            "type": "string",
+            "example": "Plano de ação para modernização do sistema"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2025-01-15T10:30:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2025-01-15T10:30:00.000Z"
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Projeto Alpha"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Sistema de gestão empresarial"
+                }
+              }
+            }
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "title": {
+                  "type": "string",
+                  "example": "Criar interface de usuário"
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Desenvolver telas principais do sistema"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "EM_ANDAMENTO"
+                },
+                "priority": {
+                  "type": "string",
+                  "example": "ALTA"
+                },
+                "dueDate": {
+                  "type": "string",
+                  "example": "2025-02-15T23:59:59.000Z"
+                },
+                "projectId": {
+                  "type": "number",
+                  "example": 1
+                },
+                "actionPlanId": {
+                  "type": "number",
+                  "example": 1
+                },
+                "clienteId": {
+                  "type": "number",
+                  "example": 1
+                },
+                "sectorId": {
+                  "type": "number",
+                  "example": 2
+                },
+                "userResponsibleId": {
+                  "type": "number",
+                  "example": 3
+                },
+                "userCreatedId": {
+                  "type": "number",
+                  "example": 1
+                },
+                "createdAt": {
+                  "type": "string",
+                  "example": "2025-01-15T10:30:00.000Z"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "example": "2025-01-15T10:30:00.000Z"
+                },
+                "cliente": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "nome": {
+                      "type": "string",
+                      "example": "ActionPlan"
+                    }
+                  }
+                },
+                "sector": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 2
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "Desenvolvimento"
+                    }
+                  }
+                },
+                "userResponsible": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 3
+                    },
+                    "nome": {
+                      "type": "string",
+                      "example": "João Silva"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "joao@empresa.com.br"
+                    }
+                  }
+                },
+                "userCreated": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number",
+                      "example": 1
+                    },
+                    "nome": {
+                      "type": "string",
+                      "example": "Hermes"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "hermes@actionplan.com.br"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "totalTasks": {
+            "type": "number",
+            "example": 5
+          },
+          "completedTasks": {
+            "type": "number",
+            "example": 2
+          },
+          "progress": {
+            "type": "number",
+            "example": 40
+          }
+        },
+        "xml": {
+          "name": "ActionPlan"
+        }
+      },
+      "CreateActionPlan": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "string",
+            "example": "PA-001"
+          },
+          "what": {
+            "type": "string",
+            "example": "Implementar sistema de gestão de tarefas"
+          },
+          "how": {
+            "type": "string",
+            "example": "Desenvolver aplicação web com React e Node.js"
+          },
+          "responsible": {
+            "type": "string",
+            "example": "João Silva"
+          },
+          "startDate": {
+            "type": "string",
+            "example": "2025-01-15T00:00:00.000Z"
+          },
+          "endDate": {
+            "type": "string",
+            "example": "2025-03-15T23:59:59.000Z"
+          },
+          "postponedDate": {},
+          "status": {
+            "type": "string",
+            "example": "EM_ANDAMENTO"
+          },
+          "observations": {
+            "type": "string",
+            "example": "Plano de ação para modernização do sistema"
+          },
+          "projectIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "example": [1, 2]
+          }
+        },
+        "xml": {
+          "name": "CreateActionPlan"
+        }
+      },
+      "UpdateActionPlan": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "string",
+            "example": "PA-001"
+          },
+          "what": {
+            "type": "string",
+            "example": "Implementar sistema de gestão de tarefas"
+          },
+          "how": {
+            "type": "string",
+            "example": "Desenvolver aplicação web com React e Node.js"
+          },
+          "responsible": {
+            "type": "string",
+            "example": "João Silva"
+          },
+          "startDate": {
+            "type": "string",
+            "example": "2025-01-15T00:00:00.000Z"
+          },
+          "endDate": {
+            "type": "string",
+            "example": "2025-03-15T23:59:59.000Z"
+          },
+          "postponedDate": {},
+          "status": {
+            "type": "string",
+            "example": "EM_ANDAMENTO"
+          },
+          "observations": {
+            "type": "string",
+            "example": "Plano de ação para modernização do sistema"
+          },
+          "projectIds": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "example": [1, 2]
+          }
+        },
+        "xml": {
+          "name": "UpdateActionPlan"
         }
       },
       "ValidationError": {
@@ -1581,23 +4062,157 @@
         "xml": {
           "name": "Success"
         }
+      },
+      "Client": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "nome": {
+            "type": "string",
+            "example": "ActionPlan"
+          },
+          "cnpj": {
+            "type": "string",
+            "example": "12.345.678/0001-90"
+          },
+          "email": {
+            "type": "string",
+            "example": "contato@actionplan.com.br"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "(11) 99999-9999"
+          },
+          "endereco": {
+            "type": "string",
+            "example": "Rua da Inovação, 123 - São Paulo, SP"
+          },
+          "sectorId": {
+            "type": "number",
+            "example": 2
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2025-01-15T10:30:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2025-01-15T10:30:00.000Z"
+          }
+        },
+        "xml": {
+          "name": "Client"
+        }
+      },
+      "CreateClient": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "example": "ActionPlan"
+          },
+          "cnpj": {
+            "type": "string",
+            "example": "12.345.678/0001-90"
+          },
+          "email": {
+            "type": "string",
+            "example": "contato@actionplan.com.br"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "(11) 99999-9999"
+          },
+          "endereco": {
+            "type": "string",
+            "example": "Rua da Inovação, 123 - São Paulo, SP"
+          },
+          "sectorId": {
+            "type": "number",
+            "example": 2
+          }
+        },
+        "xml": {
+          "name": "CreateClient"
+        }
+      },
+      "UpdateClient": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "example": "ActionPlan LTDA"
+          },
+          "email": {
+            "type": "string",
+            "example": "contato@actionplan.com.br"
+          },
+          "telefone": {
+            "type": "string",
+            "example": "(11) 98888-8888"
+          },
+          "endereco": {
+            "type": "string",
+            "example": "Rua Nova, 456 - São Paulo, SP"
+          },
+          "sectorId": {
+            "type": "number",
+            "example": 3
+          }
+        },
+        "xml": {
+          "name": "UpdateClient"
+        }
+      },
+      "ClientListResponse": {
+        "type": "object",
+        "properties": {
+          "totalData": {
+            "type": "number",
+            "example": 2
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 1
+          },
+          "currentPage": {
+            "type": "number",
+            "example": 1
+          },
+          "size": {
+            "type": "number",
+            "example": 10
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "xml": {
+                "name": "client"
+              },
+              "$ref": "#/components/schemas/Client"
+            }
+          }
+        },
+        "xml": {
+          "name": "ClientListResponse"
+        }
       }
     },
-  "UserProfile": {
-    "type": "object",
-    "properties": {
-      "id": { "type": "number", "example": 1 },
-      "nome": { "type": "string", "example": "Hermes" },
-      "email": { "type": "string", "example": "hermes@actionplan.com.br" },
-      "clienteId": { "type": "number", "example": 1 },
-      "isAdmin": { "type": "boolean", "example": true },
-      "accessLevel": { "type": "string", "example": "ADMIN" },
-      "onlyAttachedTasks": { "type": "boolean", "example": false },
-      "status": { "type": "string", "example": "ATIVO" },
-      "createdAt": { "type": "string", "example": "2025-01-15T10:30:00.000Z" },
-      "updatedAt": { "type": "string", "example": "2025-01-15T10:30:00.000Z" }
-    }
-  },
+    "UserProfile": {
+      "id": 1,
+      "nome": "Hermes",
+      "email": "hermes@actionplan.com.br",
+      "clienteId": 1,
+      "isAdmin": true,
+      "accessLevel": "ADMIN",
+      "onlyAttachedTasks": false,
+      "status": "ATIVO",
+      "createdAt": "2025-01-15T10:30:00.000Z",
+      "updatedAt": "2025-01-15T10:30:00.000Z"
+    },
     "securitySchemes": {
       "bearerAuth": {
         "type": "http",

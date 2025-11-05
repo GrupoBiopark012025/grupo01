@@ -37,7 +37,7 @@ export class LocalStorageService {
   }
 
   clear() {
-    (Object.keys(LocalStorageKey) as LocalStorageKey[]).forEach((key) => this.remove(key));
+    (Object.values(LocalStorageKey) as LocalStorageKey[]).forEach((key) => this.remove(key));
   }
 
   private atualizarState(): void {
@@ -48,5 +48,6 @@ export class LocalStorageService {
 }
 
 export enum LocalStorageKey {
-  AccessToken = 'access_token'
+  AccessToken = 'access_token',
+  SessionData = 'session_data'
 }

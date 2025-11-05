@@ -1,13 +1,12 @@
 <div class="flex h-screen flex-col overflow-hidden">
-  <app-header></app-header>
+  <app-header />
   <div class="flex w-full justify-start overflow-hidden h-full">
     <div class="flex-shrink-0">
-      <app-sidebar></app-sidebar>
+      <app-sidebar />
     </div>
-    <div class="flex grow h-full overflow-auto p-0">
-      <div class="w-full h-full">
-        <router-outlet />
-      </div>
+    <div class="flex grow flex-col h-full px-4 mt-4 overflow-auto">
+      <app-breadcrumb />
+      <router-outlet />
     </div>
   </div>
 </div>

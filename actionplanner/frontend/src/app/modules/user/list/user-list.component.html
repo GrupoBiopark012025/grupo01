@@ -1,0 +1,69 @@
+<app-list-header title="Usuários" actionTitle="Novo Usuário" (onActionClicked)="redirectToRegister()" />
+
+@if (users$ | async; as users) {
+  @if (users.data.length; as recordsInView) {
+    <table z-table class="w-full">
+      <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Acesso</th>
+        <th>Status</th>
+        <th>Data Registro</th>
+        <th>Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (user of users.data; track user.id) {
+          @let isLoggerUser = loggedUser()?.id === user.id;
+          <tr>
+            <td class="font-medium">
+              <div class="flex flex-row items-center gap-2">
+                <span>{{ user.nome }}</span>
+
+                @if (isLoggerUser) {
+                  <z-badge
+                    zType="outline"
+                    class="text-amber-400 border-amber-400 hover:text-amber-300 hover:border-amber-300 transition-colors"
+                  >
+                    Você
+                  </z-badge>
+                }
+              </div>
+            </td>
+            <td>{{ user.email }}</td>
+            <td>{{ descricaoUserAccessLevelEnum[user.accessLevel] }}</td>
+            <td>
+              <app-user-status-badge [status]="user.status" />
+            </td>
+            <td>
+              {{ user.createdAt | date: 'shortDate' }}
+            </td>
+            <td>
+              <div class="flex items-center gap-2">
+                <z-button zType="ghost" zSize="icon" title="Editar Usuário" (click)="redirectToEdit(user.id)">
+                  <i-lucide [img]="icons.edit"></i-lucide>
+                </z-button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <app-pagination
+      [currentPage]="query().page"
+      [pageSize]="query().size"
+      [recordsInView]="recordsInView"
+      [totalPages]="users.totalPages"
+      [collectionSize]="users.totalData"
+      (onPageChange)="changeQuery({ page: $event })"
+    />
+  } @else {
+    <app-no-list-content
+      text="Nenhum usuário encontrado."
+    />
+  }
+} @else {
+  <app-table-skeleton />
+}

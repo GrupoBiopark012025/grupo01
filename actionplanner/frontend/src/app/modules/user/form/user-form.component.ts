@@ -85,7 +85,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
   form = this.fb.nonNullable.group({
     nome: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(255)]),
     email: this.fb.nonNullable.control('', [Validators.required, Validators.email, Validators.maxLength(255)]),
-    password: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(6)]), // Validação será ajustada no ngOnInit
+    password: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(6)]),
     clienteId: this.fb.control<number | null>(null),
     accessLevel: this.fb.control<UserAccessLevelEnum | null>(null, [Validators.required]),
     isAdmin: this.fb.nonNullable.control(false),
@@ -102,11 +102,17 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const userId = this.route.snapshot.paramMap.get('id');
+    const userIdNumber = Number(userId);
 
     if (userId) {
-      this._userId.set(+userId);
-      this.setupEditMode();
-      this.loadUserData(+userId);
+      if (isNaN(userIdNumber)) {
+        this._userId.set(userIdNumber);
+        this.setupEditMode();
+        this.loadUserData(userIdNumber);
+      } else {
+        toast.error('ID do usuário inválido.');
+        this.router.navigate(['/users']);
+      }
     }
   }
 

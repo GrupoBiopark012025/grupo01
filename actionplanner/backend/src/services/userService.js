@@ -1,19 +1,30 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import { ClientService } from "./clientService.js";
 
 const prisma = new PrismaClient();
 
 export class UserService {
   
   static async create(userData) {
-    const { password, ...rest } = userData;
+    const { password, userClienteIds, isAdmin, ...rest } = userData;
     const hashedPassword = await bcrypt.hash(password, 10);
-    
+
+    const data = {
+      ...rest,
+      password: hashedPassword,
+    };
+
+    if (!isAdmin && Array.isArray(userClienteIds) && userClienteIds.length > 0) {
+      data.userClientes = {
+        create: userClienteIds.map((clienteId) => ({
+          cliente: { connect: { id: clienteId } },
+        })),
+      };
+    }
+
     return await prisma.user.create({
-      data: {
-        ...rest,
-        password: hashedPassword,
-      },
+      data,
       include: {
         cliente: true,
         userClientes: {
@@ -167,6 +178,22 @@ export class UserService {
     return user?.userClientes.map(uc => uc.cliente) || [];
   }
 
+  static async getPaginatedUserAccessibleClients(userId, pagination) {
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(userId) }
+    });
+
+    if (!user) {
+      throw new Error('Usuário não encontrado');
+    }
+
+    if (user?.isAdmin) {
+      return await ClientService.findMany({}, pagination);
+    }
+
+    return await ClientService.findManyAccessibleByUser(userId, pagination);
+  }
+
   // Verificar se usuário tem acesso a um cliente específico
   static async hasAccessToClient(userId, clienteId) {
     const user = await prisma.user.findUnique({
@@ -179,5 +206,12 @@ export class UserService {
     if (user?.isAdmin) return true;
 
     return user?.userClientes.some(uc => uc.clienteId === parseInt(clienteId)) || false;
+  }
+
+  static async userHasAccessToClient(userId, clienteId) {
+    const count = await prisma.userCliente.count({
+      where: { userId, clienteId }
+    });
+    return count > 0;
   }
 }

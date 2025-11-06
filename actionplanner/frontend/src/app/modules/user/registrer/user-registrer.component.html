@@ -17,6 +17,7 @@
         formControlName="nome"
       />
     </div>
+
     <div>
       <app-text-input
         id="email"
@@ -25,6 +26,7 @@
         formControlName="email"
       />
     </div>
+
     <div>
       <app-text-input
         id="password"
@@ -33,9 +35,7 @@
         formControlName="password"
       />
     </div>
-    <div>
-      Select do Cliente Principal
-    </div>
+
     <div>
       <app-select
         label="Nível de Acesso"
@@ -44,8 +44,62 @@
         (onSelectionChange)="onAccessLevelChange($event)"
       />
     </div>
+
+    <div></div>
+
     @if (!isAdminBehindTheScenes() && accessLevel()) {
       <div>
+        <div class="w-full flex flex-col border p-6 rounded-lg gap-4">
+          <div class="flex justify-between items-center">
+            <div class="text-md font-semibold">Acesso a Setores</div>
+            <button z-button zType="outline" type="button" (click)="openSectorSelect()">Editar</button>
+          </div>
+          <div class="flex gap-2">
+            @for (sector of selectedSectors(); track sector.id) {
+              <z-badge
+                zType="outline"
+                class="transition-colors text-nowrap"
+              >
+                {{ sector.name }}
+              </z-badge>
+            } @empty {
+              <small class="text-muted-foreground">Sem setores selecionados.</small>
+            }
+          </div>
+        </div>
+        @if (getSectorsError(); as error) {
+          <z-form-message zType="error">{{ error }}</z-form-message>
+        }
+      </div>
+
+      <div>
+        <div class="w-full flex flex-col border p-6 rounded-lg gap-4">
+          <div class="flex justify-between items-center">
+            <div class="text-md font-semibold">Acesso a Clientes</div>
+            <button z-button zType="outline" type="button" (click)="openClientSelect()">Editar</button>
+          </div>
+          <div class="flex gap-2">
+            @for (client of clientsWithPrimaryFirst(); track client.id) {
+              <z-badge
+                zType="outline"
+                class="transition-colors text-nowrap"
+                [ngClass]="{
+                  'text-green-400 border-green-400 hover:text-green-300 hover:border-green-300': client.isPrimary
+                }"
+              >
+                {{ client.nome }}{{ client.isPrimary ? ' (Principal)' : '' }}
+              </z-badge>
+            } @empty {
+              <small class="text-muted-foreground">Sem clientes selecionados.</small>
+            }
+          </div>
+        </div>
+        @if (getClientsError(); as error) {
+          <z-form-message zType="error">{{ error }}</z-form-message>
+        }
+      </div>
+
+      <div class="col-span-2">
         <app-checkbox
           label="Visualiza apenas tasks assinadas"
           formControlName="onlyAttachedTasks"
@@ -53,6 +107,8 @@
       </div>
     }
   </div>
+
+  {{ form.value | json }}
 
   <div class="flex grow items-center justify-end gap-2">
     <button z-button zType="outline" type="button">Cancelar</button>

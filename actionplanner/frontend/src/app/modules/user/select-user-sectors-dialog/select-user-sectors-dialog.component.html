@@ -1,0 +1,35 @@
+@if (sectors$ | async; as sectors) {
+  @if (sectors.data.length; as recordsInView) {
+    <div class="flex flex-col gap-3 p-3">
+      @for (sector of sectors.data; track sector.id) {
+        <app-check-clickable
+          [checked]="selectedClientsIds().includes(sector.id)"
+          (onCheck)="onCheck(sector)"
+        >
+          <div class="flex grow flex-col">
+            <span class="font-medium">{{ sector.name }}</span>
+            <span class="text-sm text-muted-foreground group-hover:text-accent-foreground">
+              {{ sector.description }}
+            </span>
+          </div>
+        </app-check-clickable>
+      }
+    </div>
+
+    <app-pagination
+      [currentPage]="query().page"
+      [pageSize]="query().size"
+      [recordsInView]="recordsInView"
+      [totalPages]="sectors.totalPages"
+      [collectionSize]="sectors.totalData"
+      (onPageChange)="changeQuery({ page: $event })"
+      [hiddenIfPossible]="true"
+    />
+  } @else {
+    <app-no-list-content
+      text="Nenhum setor encontrado."
+    />
+  }
+} @else {
+  Carregando...
+}

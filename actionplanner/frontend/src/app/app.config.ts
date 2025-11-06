@@ -22,6 +22,7 @@ import { makeBaseUrlInterceptor } from "@core/interceptors/make-base-url/make-ba
 import { GlobalErrorHandler } from "@core/error-handlers/global-error-handler/global.error-handler";
 import { errorInterceptor } from "@core/interceptors/error-interceptor/error.interceptor";
 import { provideEnvironmentNgxMask } from "ngx-mask";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -59,6 +60,7 @@ export const appConfig: ApplicationConfig = {
       thousandSeparator: '.',
       decimalMarker: ',',
       allowNegativeNumbers: false
-    })
+    }),
+    provideAnimations()
   ]
 };

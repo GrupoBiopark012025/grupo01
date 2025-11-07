@@ -43,7 +43,7 @@ export class SectorFormComponent implements OnInit {
   form = this.fb.group({
     name: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(255)]),
     acronym: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(5)]),
-    description: this.fb.nonNullable.control('', [Validators.maxLength(500)]),
+    description: this.fb.nonNullable.control('', [Validators.maxLength(160)]),
     status: this.fb.nonNullable.control(SectorStatusEnum.Ativo, [Validators.required]),
     color: this.fb.nonNullable.control('', [Validators.maxLength(7)])
   });

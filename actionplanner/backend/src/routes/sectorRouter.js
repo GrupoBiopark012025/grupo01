@@ -17,6 +17,6 @@ router.get('/:id/statistics', sectorController.getSectorStatistics);
 router.get('/:id', sectorController.showSector);
 
 // Atualizar setor 
-router.patch('/:id', sectorController.editSector);
+router.put('/:id', sectorController.editSector);
 
 export default router;

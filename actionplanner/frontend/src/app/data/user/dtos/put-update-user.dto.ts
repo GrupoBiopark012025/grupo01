@@ -1,7 +1,7 @@
 import { UserAccessLevelEnum } from "@data/user/dtos/user-access-level.enum";
 import { UserStatusEnum } from "@data/user/dtos/user-status.enum";
 
-export interface PutRequestUpdateUserDto {
+export interface PutUpdateUserDto {
   nome: string,
   email: string,
   password?: string,

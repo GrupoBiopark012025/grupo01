@@ -1,6 +1,5 @@
 import { Component, signal, computed, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { JsonPipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
@@ -16,7 +15,6 @@ import { SetorDataService } from '../setor-data.service';
   selector: 'app-setor-edit',
   imports: [
     FormsModule,
-    JsonPipe,
     ZardFormModule,
     ZardInputDirective,
     ZardButtonComponent,

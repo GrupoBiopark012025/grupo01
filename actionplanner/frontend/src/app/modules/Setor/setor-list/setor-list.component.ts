@@ -10,7 +10,6 @@ import {
   ZardTableCellComponent
 } from '@shared/components/zardui/table';
 import { ZardButtonComponent } from '@shared/components/zardui/button/button.component';
-import { ZardBadgeComponent } from '@shared/components/zardui/badge/badge.component';
 import { ZardCardComponent } from '@shared/components/zardui/card/card.component';
 
 import { Setor } from '../setor.model';
@@ -26,7 +25,6 @@ import { SetorDataService } from '../setor-data.service';
     ZardTableHeadComponent,
     ZardTableCellComponent,
     ZardButtonComponent,
-    ZardBadgeComponent,
     ZardCardComponent
   ],
   templateUrl: './setor-list.component.html',

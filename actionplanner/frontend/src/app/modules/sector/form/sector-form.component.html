@@ -26,6 +26,24 @@
         maxlength="3"
       />
     </div>
+
+    <div class="col-span-4">
+      <app-text-area
+        id="description"
+        label="Descrição"
+        formControlName="description"
+        [rows]="4"
+      />
+    </div>
+
+    <div>
+      <app-text-input
+        id="color"
+        label="Cor"
+        formControlName="color"
+        placeholder="#000000"
+      />
+    </div>
   </div>
 
   <div class="flex grow items-center justify-end gap-2">

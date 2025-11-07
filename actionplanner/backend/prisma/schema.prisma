@@ -185,7 +185,7 @@ model Sector {
   id          Int      @id @default(autoincrement())
   name        String   @db.VarChar(255)
   acronym     String   @db.VarChar(5)
-  description String?  @db.VarChar(500)
+  description String?  @db.VarChar(160)
   status      String   @default("ATIVO") @db.VarChar(10)
   color       String   @db.VarChar(7)
   createdAt   DateTime @default(now()) @map("created_at")

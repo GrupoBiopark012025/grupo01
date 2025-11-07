@@ -106,12 +106,12 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
     if (userId) {
       if (isNaN(userIdNumber)) {
+        toast.error('ID do usuário inválido.');
+        this.router.navigate(['/users']);
+      } else {
         this._userId.set(userIdNumber);
         this.setupEditMode();
         this.loadUserData(userIdNumber);
-      } else {
-        toast.error('ID do usuário inválido.');
-        this.router.navigate(['/users']);
       }
     }
   }
@@ -153,8 +153,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
           this.form.updateValueAndValidity();
         },
-        error: (e) => {
-          toast.error("Falha ao carregar usuário.");
+        error: () => {
+          toast.error("Falha ao carregar dados do usuário.");
           this.router.navigate(['/users']);
         }
       });

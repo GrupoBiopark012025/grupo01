@@ -234,6 +234,54 @@ const doc = {
         projectIds: [1, 2]
       },
 
+      // Project
+      Project: {
+        id: 1,
+        name: "Sistema de Gestão de Tarefas",
+        description: "Projeto para desenvolvimento de um sistema completo de gestão de tarefas e projetos",
+        status: "ativo",
+        createdAt: "2025-01-15T10:30:00.000Z",
+        updatedAt: "2025-01-15T10:30:00.000Z",
+        tasks: [
+          {
+            id: 1,
+            title: "Implementar nova funcionalidade",
+            status: "EM_ANDAMENTO"
+          }
+        ]
+      },
+
+      CreateProject: {
+        name: "Sistema de Gestão de Tarefas",
+        description: "Projeto para desenvolvimento de um sistema completo de gestão de tarefas e projetos"
+      },
+
+      UpdateProject: {
+        name: "Sistema de Gestão de Tarefas - Atualizado",
+        description: "Projeto para desenvolvimento de um sistema completo de gestão de tarefas e projetos com novas funcionalidades",
+        status: "ativo"
+      },
+
+      ProjectListResponse: {
+        totalData: 10,
+        totalPages: 1,
+        currentPage: 1,
+        size: 10,
+        data: [
+          { $ref: "#/components/schemas/Project" }
+        ]
+      },
+
+      ProjectStatistics: {
+        projectId: 1,
+        projectName: "Sistema de Gestão de Tarefas",
+        totalTasks: 25,
+        activeTasks: 15,
+        completedTasks: 8,
+        canceledTasks: 2,
+        completionRate: "32.00"
+      },
+
       // Responses
       ValidationError: {
         error: "Dados inválidos",

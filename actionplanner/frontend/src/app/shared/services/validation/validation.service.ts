@@ -32,26 +32,35 @@ export class ValidationService {
 
   handleServerValidation(responseError: any): boolean {
     const isHttpErrorResponse = responseError instanceof HttpErrorResponse;
-    const apiResponse = isHttpErrorResponse ? responseError.error : responseError
+    const apiResponse = isHttpErrorResponse ? responseError.error : responseError;
 
     if (!apiResponse) {
       throw responseError;
     }
 
-    let message = apiResponse.message;
+    let message: string | undefined;
 
-    const isRegistroEmUso = isHttpErrorResponse && responseError.status === HttpStatusCode.Conflict;
-    const isErroIntegracao = isHttpErrorResponse && responseError.status === HttpStatusCode.BadGateway;
-
-    if (!isErroIntegracao && !isRegistroEmUso) {
+    // Devido a falta de padrão de retornos no backend, é necessário tratar várias possibilidades
+    if (typeof apiResponse === 'string') {
       message = apiResponse;
+    } else if (apiResponse.message) {
+      message = apiResponse.message;
+    } else if (apiResponse.error) {
+      message = apiResponse.error;
+    } else if (Array.isArray(apiResponse.errors) && apiResponse.errors.length > 0) {
+      message = apiResponse.errors.join('\n');
     }
 
-    if (!message) {
+    const isRegistroEmUso =
+      isHttpErrorResponse && responseError.status === HttpStatusCode.Conflict;
+    const isErroIntegracao =
+      isHttpErrorResponse && responseError.status === HttpStatusCode.BadGateway;
+
+    if (!message && !isErroIntegracao && !isRegistroEmUso) {
       message = 'Ocorreu um erro de validação inesperado.';
     }
 
-    toast.error(message);
+    toast.error(message ?? 'Erro desconhecido no servidor.');
     return true;
   }
 }

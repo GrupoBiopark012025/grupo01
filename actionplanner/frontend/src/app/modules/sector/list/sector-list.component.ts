@@ -58,7 +58,7 @@ export class SectorListComponent {
   }
 
   redirectToEdit(sectorId: number) {
-    this.router.navigate(['sectors', 'edit', sectorId]);
+    this.router.navigate(['sectors', sectorId, 'edit']);
   }
 }
 

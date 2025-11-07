@@ -1,6 +1,6 @@
 export enum SectorStatusEnum {
-  Ativo = 'ativo',
-  Inativo = 'inativo'
+  Ativo = 'ATIVO',
+  Inativo = 'INATIVO'
 }
 
 export const descricaoSectorStatusEnum: Record<SectorStatusEnum, string> = {

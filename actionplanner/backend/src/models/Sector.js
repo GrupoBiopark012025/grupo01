@@ -31,8 +31,8 @@ export class Sector extends BaseModel {
       errors.push('Sigla do setor não pode ter mais de 5 caracteres');
     }
     
-    if (this.description && this.description.length > 160) {
-      errors.push('Descrição não pode ter mais de 160 caracteres');
+    if (this.description && this.description.length > 500) {
+      errors.push('Descrição não pode ter mais de 500 caracteres');
     }
     
     if (!['ativo', 'inativo'].includes(this.status)) {

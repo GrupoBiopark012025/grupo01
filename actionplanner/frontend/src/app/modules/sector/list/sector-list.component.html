@@ -17,6 +17,9 @@
           <tr>
             <td class="font-medium">
               {{ sector.name }}
+              @if (sector.acronym; as acronym) {
+                <small class="text-muted-foreground">({{ acronym }})</small>
+              }
             </td>
             <td>
               {{ sector.description }}

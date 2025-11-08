@@ -69,7 +69,6 @@ export class CheckboxComponent implements OnInit, ControlValueAccessor {
 
   writeValue(value: boolean): void {
     this._value.set(value);
-    console.log('writeValue: ', value);
     if (!this._id()) {
       this._id.set(this.controlDir.name as string);
     }

@@ -213,16 +213,11 @@ export class UserFormComponent implements OnInit, OnDestroy {
     }
 
     this.handleAccessLevelValidations(accessLevel);
-    console.log('this form: ', this.form)
   }
 
   private handleAccessLevelValidations(accessLevel: UserAccessLevelEnum) {
     const formControls = this.form.controls;
     this.resetNotAdminFields();
-
-    console.log('oi')
-
-    console.log('accessLevel: ', accessLevel)
 
     switch (accessLevel) {
       case UserAccessLevelEnum.Admin:
@@ -234,7 +229,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
       case UserAccessLevelEnum.GestorCliente:
         formControls.clienteId.setValidators([Validators.required]);
         formControls.userClienteIds.setValidators([Validators.required]);
-        console.log('oi 2')
         break;
 
       case UserAccessLevelEnum.ColaboradorCliente:

@@ -3,9 +3,9 @@
 
 @custom-variant dark (&:is(.dark *));
 
+
 :root {
   --radius: 0.625rem;
-  --default-bg: #f8fafc;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
@@ -112,30 +112,15 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 }
- 
+
+
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
-    background-color: var(--default-bg) !important;
-    font-family: 'Poppins', sans-serif !important;
-  }
-  
-  html, body, #root, app-root {
-    background-color: var(--default-bg) !important;
-    min-height: 100vh;
-    font-family: 'Poppins', sans-serif !important;
-  }
-  
-  /* Aplicando Poppins globalmente */
-  *, *::before, *::after {
-    font-family: 'Poppins', sans-serif !important;
-  }
-  
-  .bg-default {
-    background-color: var(--default-bg) !important;
   }
 }
 

@@ -35,8 +35,8 @@ export class Sector extends BaseModel {
       errors.push('Descrição não pode ter mais de 160 caracteres');
     }
     
-    if (!['ativo', 'inativo'].includes(this.status)) {
-      errors.push('Status deve ser "ativo" ou "inativo"');
+    if (!['ATIVO', 'INATIVO'].includes(this.status)) {
+      errors.push('Status deve ser "ATIVO" ou "INATIVO"');
     }
     
     if (!this.color || !this.isValidColor(this.color)) {

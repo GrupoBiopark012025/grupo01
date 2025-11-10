@@ -11,7 +11,7 @@ import SectorRouter from "./routes/sectorRouter.js";
 import TasksRouter from "./routes/tasksRouter.js";
 import ActionPlanRouter from "./routes/actionPlanRouter.js";
 import ProjectRouter from "./routes/projectRouter.js";
-
+import ImportActionPlanRouter from "./routes/importActionPlanRouter.js";
 const routes = Router();
 
 routes.use(hateoas);
@@ -33,5 +33,6 @@ routes.use("/api/sectors", SectorRouter);
 routes.use("/api/tasks", TasksRouter);
 routes.use("/api/actionPlans", ActionPlanRouter);
 routes.use("/api/projects", ProjectRouter);
+routes.use("/api/import", ImportActionPlanRouter);
 
 export default routes;

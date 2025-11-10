@@ -30,6 +30,6 @@ export const updateProjectValidator = yup
 
     status: yup
       .string()
-      .oneOf(["ativo", "inativo"], "Status deve ser 'ativo' ou 'inativo'")
+      .oneOf(["ATIVO", "INATIVO"], "Status deve ser 'ATIVO' ou 'INATIVO'")
   });
 

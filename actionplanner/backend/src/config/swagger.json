@@ -2764,9 +2764,9 @@
             }
           },
           {
-            "name": "_order",
+            "name": "orderBy",
             "in": "query",
-            "description": "Campo para ordenação (ex: number, -startDate)",
+            "description": null,
             "schema": {
               "type": "string"
             }
@@ -3227,6 +3227,667 @@
           }
         ]
       }
+    },
+    "/api/projects/": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Número da página",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Tamanho da página",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "Campo para ordenação (ex: name, -name para desc)",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Filtrar por nome",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "description": "Filtrar por descrição",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filtrar por status",
+            "enum": [
+              "ativo",
+              "inativo"
+            ],
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "schema",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "totalPages",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currentPage",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de projetos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "projects": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "array"
+                            },
+                            "items": {
+                              "$ref": "#/components/schemas/Project"
+                            }
+                          }
+                        },
+                        "totalData": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "totalPages": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "currentPage": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "projects": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "array"
+                            },
+                            "items": {
+                              "$ref": "#/components/schemas/Project"
+                            }
+                          }
+                        },
+                        "totalData": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "totalPages": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "currentPage": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "size": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Projects"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "201": {
+            "description": "Projeto criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "409": {
+            "description": "Nome já existe"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProject"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projects/{id}/statistics": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Estatísticas do projeto",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "projectId": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "projectName": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            }
+                          }
+                        },
+                        "totalTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "activeTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "completedTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "canceledTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "completionRate": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "example": "object"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "properties": {
+                        "projectId": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "projectName": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            }
+                          }
+                        },
+                        "totalTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "activeTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "completedTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "canceledTasks": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "integer"
+                            }
+                          }
+                        },
+                        "completionRate": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "example": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Projeto não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/projects/{id}": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Projeto encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Projeto não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Projects"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Projeto atualizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "404": {
+            "description": "Projeto não encontrado"
+          },
+          "409": {
+            "description": "Nome já existe"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProject"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Projects"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "_page",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Projeto inativado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Não é possível excluir projeto com tarefas associadas"
+          },
+          "404": {
+            "description": "Projeto não encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -3389,14 +4050,10 @@
           },
           "userClienteIds": {
             "type": "array",
-            "example": [1, 2],
-            "items": {
-              "type": "number"
-            }
-          },
-          "userSectorIds": {
-            "type": "array",
-            "example": [1, 2],
+            "example": [
+              1,
+              2
+            ],
             "items": {
               "type": "number"
             }
@@ -3421,46 +4078,9 @@
             "type": "string",
             "example": "novaSenha123"
           },
-          "clienteId": {
-            "type": "number",
-            "example": 1,
-            "description": "ID do cliente ao qual o usuário pertence. Se omitido e o usuário for admin, assume 1 por padrão."
-          },
-          "accessLevel": {
-            "type": "string",
-            "example": "GESTOR_CLIENTE",
-            "enum": ["ADMIN", "CONSULTOR", "GESTOR_CLIENTE", "COLABORADOR_CLIENTE"]
-          },
-          "isAdmin": {
-            "type": "boolean",
-            "example": false,
-            "description": "Define se o usuário possui permissões administrativas."
-          },
-          "onlyAttachedTasks": {
-            "type": "boolean",
-            "example": false,
-            "description": "Restringe o acesso do usuário apenas às tarefas vinculadas diretamente a ele."
-          },
           "status": {
             "type": "string",
-            "example": "INATIVO",
-            "enum": ["ATIVO", "INATIVO"]
-          },
-          "userClienteIds": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            },
-            "example": [1, 2],
-            "description": "IDs dos clientes aos quais o usuário terá acesso. Obrigatório para usuários não administradores."
-          },
-          "userSectorIds": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            },
-            "example": [3, 4],
-            "description": "IDs dos setores aos quais o usuário estará vinculado. Obrigatório para usuários não administradores."
+            "example": "INATIVO"
           }
         },
         "xml": {
@@ -3767,15 +4387,15 @@
               "properties": {
                 "id": {
                   "type": "number",
-                  "example": 1
+                  "example": 2
                 },
                 "name": {
                   "type": "string",
-                  "example": "Projeto Alpha"
+                  "example": "Projeto Beta"
                 },
                 "description": {
                   "type": "string",
-                  "example": "Sistema de gestão empresarial"
+                  "example": "Sistema de análise de dados"
                 }
               }
             }
@@ -3959,10 +4579,13 @@
           },
           "projectIds": {
             "type": "array",
+            "example": [
+              1,
+              2
+            ],
             "items": {
               "type": "number"
-            },
-            "example": [1, 2]
+            }
           }
         },
         "xml": {
@@ -4007,14 +4630,174 @@
           },
           "projectIds": {
             "type": "array",
+            "example": [
+              1,
+              2
+            ],
             "items": {
               "type": "number"
-            },
-            "example": [1, 2]
+            }
           }
         },
         "xml": {
           "name": "UpdateActionPlan"
+        }
+      },
+      "Project": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Sistema de Gestão de Tarefas"
+          },
+          "description": {
+            "type": "string",
+            "example": "Projeto para desenvolvimento de um sistema completo de gestão de tarefas e projetos"
+          },
+          "status": {
+            "type": "string",
+            "example": "ativo"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2025-01-15T10:30:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2025-01-15T10:30:00.000Z"
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "title": {
+                  "type": "string",
+                  "example": "Implementar nova funcionalidade"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "EM_ANDAMENTO"
+                }
+              }
+            }
+          }
+        },
+        "xml": {
+          "name": "Project"
+        }
+      },
+      "CreateProject": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Sistema de Gestão de Tarefas"
+          },
+          "description": {
+            "type": "string",
+            "example": "Projeto para desenvolvimento de um sistema completo de gestão de tarefas e projetos"
+          }
+        },
+        "xml": {
+          "name": "CreateProject"
+        }
+      },
+      "UpdateProject": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Sistema de Gestão de Tarefas - Atualizado"
+          },
+          "description": {
+            "type": "string",
+            "example": "Projeto para desenvolvimento de um sistema completo de gestão de tarefas e projetos com novas funcionalidades"
+          },
+          "status": {
+            "type": "string",
+            "example": "ativo"
+          }
+        },
+        "xml": {
+          "name": "UpdateProject"
+        }
+      },
+      "ProjectListResponse": {
+        "type": "object",
+        "properties": {
+          "totalData": {
+            "type": "number",
+            "example": 10
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 1
+          },
+          "currentPage": {
+            "type": "number",
+            "example": 1
+          },
+          "size": {
+            "type": "number",
+            "example": 10
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "xml": {
+                "name": "project"
+              },
+              "$ref": "#/components/schemas/Project"
+            }
+          }
+        },
+        "xml": {
+          "name": "ProjectListResponse"
+        }
+      },
+      "ProjectStatistics": {
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "number",
+            "example": 1
+          },
+          "projectName": {
+            "type": "string",
+            "example": "Sistema de Gestão de Tarefas"
+          },
+          "totalTasks": {
+            "type": "number",
+            "example": 25
+          },
+          "activeTasks": {
+            "type": "number",
+            "example": 15
+          },
+          "completedTasks": {
+            "type": "number",
+            "example": 8
+          },
+          "canceledTasks": {
+            "type": "number",
+            "example": 2
+          },
+          "completionRate": {
+            "type": "string",
+            "example": "32.00"
+          }
+        },
+        "xml": {
+          "name": "ProjectStatistics"
         }
       },
       "ValidationError": {

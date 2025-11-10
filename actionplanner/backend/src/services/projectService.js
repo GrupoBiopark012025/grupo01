@@ -122,7 +122,7 @@ export class ProjectService {
 
     return await prisma.project.update({
       where: { id: parseInt(id) },
-      data: { status: 'inativo' },
+      data: { status: 'INATIVO' },
       include: {
         tasks: true
       }

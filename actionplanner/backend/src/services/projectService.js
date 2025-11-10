@@ -207,11 +207,11 @@ export class ProjectService {
     if (!project) return null;
 
     const totalTasks = project.tasks.length;
-    const completedTasks = project.tasks.filter(t => t.status === 'concluida').length;
+    const completedTasks = project.tasks.filter(t => t.status === 'CONCLUIDA').length;
     const activeTasks = project.tasks.filter(t => 
-      t.status !== 'cancelada' && t.status !== 'concluida'
+      t.status !== 'CANCELADA' && t.status !== 'CONCLUIDA'
     ).length;
-    const canceledTasks = project.tasks.filter(t => t.status === 'cancelada').length;
+    const canceledTasks = project.tasks.filter(t => t.status === 'CANCELADA').length;
 
     return {
       projectId: project.id,

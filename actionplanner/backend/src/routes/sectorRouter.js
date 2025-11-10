@@ -1,5 +1,4 @@
 import { Router } from "express";
-import validator from "../middlewares/validator.js";
 import * as sectorController from "../controllers/sectorController.js";
 
 const router = Router();

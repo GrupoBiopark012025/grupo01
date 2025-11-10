@@ -85,7 +85,7 @@ export class UserFormComponent implements OnInit, OnDestroy {
   form = this.fb.nonNullable.group({
     nome: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(255)]),
     email: this.fb.nonNullable.control('', [Validators.required, Validators.email, Validators.maxLength(255)]),
-    password: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(6)]), // Validação será ajustada no ngOnInit
+    password: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(6)]),
     clienteId: this.fb.control<number | null>(null),
     accessLevel: this.fb.control<UserAccessLevelEnum | null>(null, [Validators.required]),
     isAdmin: this.fb.nonNullable.control(false),
@@ -102,11 +102,17 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const userId = this.route.snapshot.paramMap.get('id');
+    const userIdNumber = Number(userId);
 
     if (userId) {
-      this._userId.set(+userId);
-      this.setupEditMode();
-      this.loadUserData(+userId);
+      if (isNaN(userIdNumber)) {
+        toast.error('ID do usuário inválido.');
+        this.router.navigate(['/users']);
+      } else {
+        this._userId.set(userIdNumber);
+        this.setupEditMode();
+        this.loadUserData(userIdNumber);
+      }
     }
   }
 
@@ -147,8 +153,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
 
           this.form.updateValueAndValidity();
         },
-        error: (e) => {
-          toast.error("Falha ao carregar usuário.");
+        error: () => {
+          toast.error("Falha ao carregar dados do usuário.");
           this.router.navigate(['/users']);
         }
       });
@@ -207,16 +213,11 @@ export class UserFormComponent implements OnInit, OnDestroy {
     }
 
     this.handleAccessLevelValidations(accessLevel);
-    console.log('this form: ', this.form)
   }
 
   private handleAccessLevelValidations(accessLevel: UserAccessLevelEnum) {
     const formControls = this.form.controls;
     this.resetNotAdminFields();
-
-    console.log('oi')
-
-    console.log('accessLevel: ', accessLevel)
 
     switch (accessLevel) {
       case UserAccessLevelEnum.Admin:
@@ -228,7 +229,6 @@ export class UserFormComponent implements OnInit, OnDestroy {
       case UserAccessLevelEnum.GestorCliente:
         formControls.clienteId.setValidators([Validators.required]);
         formControls.userClienteIds.setValidators([Validators.required]);
-        console.log('oi 2')
         break;
 
       case UserAccessLevelEnum.ColaboradorCliente:

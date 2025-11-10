@@ -9,7 +9,7 @@ export class ProjectService {
     return await prisma.project.create({
       data: {
         ...projectData,
-        status: projectData.status || 'ativo'
+        status: projectData.status || 'ATIVO'
       },
       include: {
         tasks: true

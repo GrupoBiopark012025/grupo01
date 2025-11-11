@@ -2,7 +2,6 @@
   "name": "actionplanner-backend",
   "version": "1.0.0",
   "type": "module",
-  
   "scripts": {
     "start": "node src/server",
     "start:watch": "node --watch src/server",
@@ -27,8 +26,10 @@
     "http-status": "2.1.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "1.10.0",
+    "multer": "^2.0.2",
     "swagger-ui-express": "5.0.1",
     "uuid": "~11.1.0",
+    "xlsx": "^0.18.5",
     "yup": "1.6.1"
   },
   "devDependencies": {

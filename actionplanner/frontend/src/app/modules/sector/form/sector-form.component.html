@@ -1,0 +1,58 @@
+<app-page-header [title]="pageTitle()">
+  <button z-button zType="outline" [backOrNavigateTo]="['sectors']">
+    Voltar
+  </button>
+</app-page-header>
+
+<form
+  class="flex flex-col gap-6"
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="grid grid-cols-4 gap-4">
+    <div class="col-span-3">
+      <app-text-input
+        id="nome"
+        label="Nome"
+        formControlName="name"
+      />
+    </div>
+
+    <div class="col-span-1">
+      <app-text-input
+        id="acronym"
+        label="Acrônimo"
+        formControlName="acronym"
+        maxlength="5"
+      />
+    </div>
+
+    <div class="col-span-4">
+      <app-text-area
+        id="description"
+        label="Descrição"
+        formControlName="description"
+        [rows]="4"
+      />
+    </div>
+
+    <div>
+      <app-text-input
+        id="color"
+        label="Cor"
+        formControlName="color"
+        placeholder="#000000"
+      />
+    </div>
+  </div>
+
+  <div class="flex grow items-center justify-end gap-2">
+    <button z-button zType="outline" type="button" [backOrNavigateTo]="['sectors']">
+      Cancelar
+    </button>
+
+    <button z-button type="submit">
+      {{ submitButtonText() }}
+    </button>
+  </div>
+</form>

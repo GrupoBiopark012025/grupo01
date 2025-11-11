@@ -1,6 +1,4 @@
-import { UserAccessLevelEnum } from "@data/user/dtos/user-access-level.enum";
-import { UserStatusEnum } from "@data/user/dtos/user-status.enum";
-import { UserClient } from "@data/user/dtos/get-user.dto";
+import { UserAccessLevelEnum, UserClientDto, UserStatusEnum } from "@data/user/dtos";
 
 export interface GetUserDataDto {
   id: number;
@@ -11,5 +9,5 @@ export interface GetUserDataDto {
   accessLevel: UserAccessLevelEnum;
   onlyAttachedTasks: boolean;
   status: UserStatusEnum;
-  cliente: UserClient;
+  cliente: UserClientDto;
 }

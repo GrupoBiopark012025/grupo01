@@ -1,0 +1,28 @@
+<div
+  class="group flex items-center space-x-3 justify-between rounded-xl border p-3 transition-all duration-150"
+  [class.cursor-pointer]="!disabled()"
+  [class.hover:bg-accent]="!disabled()"
+  [class.bg-muted]="disabled()"
+  [class.opacity-70]="disabled()"
+  [class.pointer-events-none]="disabled()"
+  (click)="onCheck.emit()"
+>
+  <div class="flex items-center">
+    <z-checkbox
+      [ngModel]="checked()"
+      [disabled]="disabled()"
+    />
+  </div>
+
+  <div class="flex grow">
+    <ng-content />
+  </div>
+
+  <div class="flex items-center" (click)="onStarClick($event)">
+    @if (stared()) {
+      <i-lucide [img]="icons.star" class="text-yellow-400" />
+    } @else {
+      <i-lucide [img]="icons.star" />
+    }
+  </div>
+</div>

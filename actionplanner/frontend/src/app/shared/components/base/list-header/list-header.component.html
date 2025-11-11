@@ -5,11 +5,9 @@
 
   <div class="flex-shrink-0">
     <div class="flex gap-2">
-      <div>
-        <button z-button (click)="onActionClicked.emit()">
-          {{ actionTitle() }}
-        </button>
-      </div>
+      <button z-button (click)="onActionClicked.emit()">
+        {{ actionTitle() }}
+      </button>
     </div>
   </div>
 </div>

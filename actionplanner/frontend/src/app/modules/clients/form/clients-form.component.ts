@@ -15,7 +15,7 @@ export class ClientsFormComponent implements OnChanges {
   private clientsService = inject(ClientsDataService)
 
   @Input() client?: GetClientsDto | null = null
-  @Input() mode: 'edit' | 'view' = 'edit'
+  @Input() mode: 'view' | 'edit' | 'create' = 'view'
   @Output() closed = new EventEmitter<boolean>()
 
   form = this.fb.group({

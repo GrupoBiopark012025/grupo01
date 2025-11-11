@@ -16,21 +16,28 @@ export class CreateClientModalComponent {
 
   serverError = ''
 
-  form = this.fb.group({
-    nome: ['', Validators.required],
-    cnpj: ['', Validators.required],
-    email: [''],
-    telefone: [''],
-    endereco: [''],
-    sectorId: [null]
+  form = this.fb.nonNullable.group({
+    nome: this.fb.nonNullable.control('', Validators.required),
+    cnpj: this.fb.nonNullable.control('', Validators.required),
+    email: this.fb.control(''),
+    telefone: this.fb.control(''),
+    endereco: this.fb.control(''),
+    sectorId: this.fb.control<number | null>(null)
   })
 
   save() {
     this.serverError = ''
+
+    if (this.form.invalid) {
+      this.form.markAllAsTouched()
+      return
+    }
+
     const raw = this.form.getRawValue()
     const data = Object.fromEntries(
       Object.entries(raw).map(([k, v]) => [k, v === null ? undefined : v])
     )
+
     this.clientsService.createClient(data).subscribe({
       next: () => this.closed.emit(true),
       error: err => {

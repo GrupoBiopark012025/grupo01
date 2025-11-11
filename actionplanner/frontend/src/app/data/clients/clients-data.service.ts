@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { ApiPaginatedList } from '@data/common/dtos'
-import { GetClientsDto, GetClientsQuery } from '@data/clients/dtos'
+import { ApiPaginatedList, PaginationQuery } from '@data/common/dtos'
+import { GetClientsDto } from '@data/clients/dtos'
 
 @Injectable({
   providedIn: 'root'
@@ -9,12 +9,12 @@ import { GetClientsDto, GetClientsQuery } from '@data/clients/dtos'
 export class ClientsDataService {
   private path = 'clients'
   private http = inject(HttpClient)
-
-  getClients(query: GetClientsQuery) {
+  
+  getClients(query: PaginationQuery) {
     return this.http.get<ApiPaginatedList<GetClientsDto>>(this.path, { params: { ...query } })
   }
 
-  getClientById(id: string) {
+  getClientById(id: number) {
     return this.http.get<GetClientsDto>(`${this.path}/${id}`)
   }
 
@@ -22,11 +22,11 @@ export class ClientsDataService {
     return this.http.post<GetClientsDto>(this.path, data)
   }
 
-  updateClient(id: string, data: Partial<GetClientsDto>) {
+  updateClient(id: number, data: Partial<GetClientsDto>) {
     return this.http.put<GetClientsDto>(`${this.path}/${id}`, data)
   }
 
-  deleteClient(id: string) {
+  deleteClient(id: number) {
     return this.http.delete<void>(`${this.path}/${id}`)
   }
 }

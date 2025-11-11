@@ -1,10 +1,10 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core'
 import { CommonModule, AsyncPipe, DatePipe } from '@angular/common'
 import { Observable, shareReplay, switchMap } from 'rxjs'
-import { GetClientsDto, GetClientsQuery } from '@data/clients/dtos'
+import { GetClientsDto } from '@data/clients/dtos'
 import { ClientsDataService } from '@data/clients/clients-data.service'
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop'
-import { ApiPaginatedList } from '@data/common/dtos'
+import { ApiPaginatedList, PaginationQuery } from '@data/common/dtos'
 import { ZardTableComponent } from '@shared/components/zardui/table/table.component'
 import { ZardButtonComponent } from '@shared/components/zardui/button/button.component'
 import { EyeIcon, PencilIcon, LucideAngularModule } from 'lucide-angular'
@@ -39,7 +39,7 @@ export class ClientsComponent {
   private readonly clientsDataService = inject(ClientsDataService)
   private readonly destroyRef = inject(DestroyRef)
 
-  private _query = signal<GetClientsQuery>(new GetClientsQuery())
+  private _query = signal<PaginationQuery>(new PaginationQuery())
   query = this._query.asReadonly()
 
   clients$: Observable<ApiPaginatedList<GetClientsDto>> = toObservable(this._query).pipe(
@@ -81,7 +81,7 @@ export class ClientsComponent {
     if (refresh) this.changeQuery()
   }
 
-  changeQuery(changes: Partial<GetClientsQuery> = {}): void {
+  changeQuery(changes: Partial<PaginationQuery> = {}): void {
     this._query.update(prev => ({ ...prev!, ...changes }))
   }
 }

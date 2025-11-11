@@ -1,5 +1,5 @@
 export interface GetClientsDto {
-  id: string
+  id: number
   nome: string
   cnpj?: string
   cpf?: string
@@ -7,7 +7,7 @@ export interface GetClientsDto {
   email: string
   telefone: string
   setor?: {
-    id: string
+    id: number
     nome: string
   }
   createdAt: string

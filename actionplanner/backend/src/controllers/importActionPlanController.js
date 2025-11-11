@@ -4,28 +4,55 @@ export const importActionPlan = async (req, res, next) => {
   /*
   #swagger.tags = ["Import Action Plan"]
   #swagger.security = [{"bearerAuth": []}]
-  #swagger.consumes = ['multipart/form-data']
-  #swagger.parameters['file'] = {
-    in: 'formData',
-    type: 'file',
+  #swagger.requestBody = {
     required: true,
-    description: 'Arquivo Excel (.xlsx) contendo o plano de ação na primeira linha e as tarefas nas demais linhas'
+    content: {
+      "multipart/form-data": {
+        schema: {
+          type: "object",
+          required: ["file"],
+          properties: {
+            file: {
+              type: "string",
+              format: "binary",
+              description: "Arquivo Excel (.xlsx) contendo o plano de ação na primeira linha e as tarefas nas demais linhas"
+            }
+          }
+        }
+      }
+    }
   }
   #swagger.responses[201] = {
     description: "Plano de ação importado com sucesso",
-    schema: { $ref: "#/components/schemas/ActionPlan" }
+    content: {
+      "application/json": {
+        schema: { $ref: "#/components/schemas/ImportActionPlanResponse" }
+      }
+    }
   }
   #swagger.responses[400] = {
     description: "Erro de validação ou arquivo inválido",
-    schema: {
-      type: "object",
-      properties: {
-        error: { type: "string" }
+    content: {
+      "application/json": {
+        schema: { $ref: "#/components/schemas/ImportActionPlanError" }
       }
     }
   }
   #swagger.responses[401] = {
-    description: "Não autenticado"
+    description: "Não autenticado",
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            error: { 
+              type: "string",
+              example: "Usuário não autenticado. É necessário estar logado para importar planos de ação"
+            }
+          }
+        }
+      }
+    }
   }
   */
   try {

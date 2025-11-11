@@ -3888,16 +3888,6 @@
           }
         ]
       }
-    },
-    "/actionPlan": {
-      "post": {
-        "description": "",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
     }
   },
   "components": {

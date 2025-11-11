@@ -1,0 +1,59 @@
+<app-list-header title="Setores" actionTitle="Novo Setor" (onActionClicked)="redirectToRegister()" />
+
+@if (sectors$ | async; as sectors) {
+  @if (sectors.data.length; as recordsInView) {
+    <table z-table class="w-full">
+      <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Descrição</th>
+        <th>Status</th>
+        <th>Data Registro</th>
+        <th>Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (sector of sectors.data; track sector.id) {
+          <tr>
+            <td class="font-medium">
+              {{ sector.name }}
+              @if (sector.acronym; as acronym) {
+                <small class="text-muted-foreground">({{ acronym }})</small>
+              }
+            </td>
+            <td>
+              {{ sector.description }}
+            </td>
+            <td>
+              <app-sector-status-badge [status]="sector.status" />
+            </td>
+            <td>
+              {{ sector.createdAt | date: 'shortDate' }}
+            </td>
+            <td>
+              <div class="flex items center gap-2">
+                <z-button zType="ghost" zSize="icon" title="Editar Setor" (click)="redirectToEdit(sector.id)">
+                  <i-lucide [img]="icons.edit"></i-lucide>
+                </z-button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    <app-pagination
+      [currentPage]="query().page"
+      [pageSize]="query().size"
+      [recordsInView]="recordsInView"
+      [totalPages]="sectors.totalPages"
+      [collectionSize]="sectors.totalData"
+      (onPageChange)="changeQuery({ page: $event })"
+    />
+  } @else {
+    <app-no-list-content
+      text="Nenhum setor encontrado."
+    />
+  }
+} @else {
+  <app-table-skeleton />
+}

@@ -21,7 +21,16 @@ export const createUserValidator = yup
       .number()
       .integer("Cliente ID deve ser um número inteiro")
       .positive("Cliente ID deve ser positivo")
-      .required("Cliente ID é obrigatório"),
+      .nullable()
+      .test(
+        "required-if-non-admin",
+        "Cliente é obrigatório para usuários não administradores",
+        function (value) {
+          const { isAdmin } = this.parent;
+          return !(!isAdmin && (value === undefined || value === null));
+
+        }
+      ),
     accessLevel: yup
       .string()
       .oneOf(
@@ -38,7 +47,36 @@ export const createUserValidator = yup
     status: yup
       .string()
       .oneOf(['ATIVO', 'INATIVO'], "Status inválido")
-      .default('ATIVO')
+      .default('ATIVO'),
+    userClienteIds: yup
+      .array()
+      .of(
+        yup
+          .number()
+          .integer("ID do cliente deve ser um número inteiro")
+          .positive("ID do cliente deve ser positivo")
+      )
+      .default([])
+      .test(
+        "required-if-non-admin",
+        "Clientes são obrigatórios para usuários não administradores",
+        function (value) {
+          const { isAdmin, accessLevel } = this.parent;
+          if (!isAdmin || accessLevel !== "ADMIN") {
+            return Array.isArray(value) && value.length > 0;
+          }
+          return true;
+        }
+      ),
+    userSectorIds: yup
+      .array()
+      .of(
+        yup
+          .number()
+          .integer("ID do setor deve ser um número inteiro")
+          .positive("ID do setor deve ser positivo")
+      )
+      .default([])
   });
 
 export const updateUserValidator = yup

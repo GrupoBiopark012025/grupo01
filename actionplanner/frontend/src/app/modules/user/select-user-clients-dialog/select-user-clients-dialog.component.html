@@ -1,0 +1,37 @@
+@if (clients$ | async; as clients) {
+  @if (clients.data.length; as recordsInView) {
+    <div class="flex flex-col gap-3 p-3">
+      @for (client of clients.data; track client.id) {
+        <app-check-star-clickable
+          [checked]="selectedClientsIds().includes(client.id)"
+          [stared]="primaryClient()?.id === client.id"
+          (onCheck)="onCheck(client)"
+          (onStar)="onStar(client)"
+        >
+          <div class="flex grow flex-col">
+            <span class="font-medium">{{ client.nome }}</span>
+            <span class="text-sm text-muted-foreground group-hover:text-accent-foreground">
+              {{ client.cnpj }}
+            </span>
+          </div>
+        </app-check-star-clickable>
+      }
+    </div>
+
+    <app-pagination
+      [currentPage]="query().page"
+      [pageSize]="query().size"
+      [recordsInView]="recordsInView"
+      [totalPages]="clients.totalPages"
+      [collectionSize]="clients.totalData"
+      (onPageChange)="changeQuery({ page: $event })"
+      [hiddenIfPossible]="true"
+    />
+  } @else {
+    <app-no-list-content
+      text="Nenhum cliente encontrado."
+    />
+  }
+} @else {
+  Carregando...
+}

@@ -1,6 +1,6 @@
 <div class="flex h-screen justify-center items-center">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <z-card class="w-full max-w-sm" zTitle="Login to your account" zDescription="Enter your email below to login to your account">
+    <z-card class="w-full max-w-sm" zTitle="Faça login na sua conta" zDescription="Insira seu e-mail abaixo para logar em sua conta">
       <div class="space-y-4">
         <div class="space-y-2">
           @let emailControl = form.get('email')!;
@@ -8,12 +8,12 @@
           <z-form-field>
             <label z-form-label zRequired>Email</label>
             <z-form-control>
-              <input z-input type="email" placeholder="your.email@example.com" formControlName="email" [zStatus]="emailControl.invalid && emailControl.touched ? 'error' : undefined" />
+              <input z-input type="email" placeholder="seu.email@exemplo.com" formControlName="email" [zStatus]="emailControl.invalid && emailControl.touched ? 'error' : undefined" />
             </z-form-control>
             @if (emailControl.hasError('required') && emailControl.touched) {
-              <z-form-message zType="error">Email is required.</z-form-message>
+              <z-form-message zType="error">É necessário informar e-mail.</z-form-message>
             } @else if (emailControl.hasError('email') && emailControl.touched) {
-              <z-form-message zType="error">Please enter a valid email address.</z-form-message>
+              <z-form-message zType="error">Por favor, insira um e-mail válido.</z-form-message>
             }
           </z-form-field>
         </div>
@@ -23,10 +23,10 @@
           <z-form-field>
             <label z-form-label zRequired>Password</label>
             <z-form-control>
-              <input z-input type="password" placeholder="Create a password" formControlName="password" />
+              <input z-input type="password" placeholder="Crie uma senha" formControlName="password" />
             </z-form-control>
             @if (passwordControl.hasError('required') && passwordControl.touched) {
-              <z-form-message zType="error">Password is required.</z-form-message>
+              <z-form-message zType="error">É necessário informar senha.</z-form-message>
             }
           </z-form-field>
         </div>

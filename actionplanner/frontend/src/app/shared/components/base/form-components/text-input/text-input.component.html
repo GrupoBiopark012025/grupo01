@@ -1,0 +1,34 @@
+<z-form-field>
+  @if(label()) {
+    <label
+      z-form-label
+      [for]="id()"
+      [zRequired]="isRequired()"
+    >
+      {{ label() }}
+    </label>
+  }
+
+  <z-form-control
+    #feedback="controlValidationFeedback"
+    [controlValidationFeedback]="formControl()"
+    [errorMessage]="feedback.errorMessage"
+  >
+    <input
+      z-input
+      autocomplete="new-password"
+      [id]="id()"
+      [type]="inputType()"
+      [placeholder]="placeholder()"
+      [(ngModel)]="value"
+      [readonly]="readOnly()"
+      [required]="isRequired()"
+      [disabled]="disabled()"
+      [attr.minlength]="minLength()"
+      [attr.maxlength]="maxLength()"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+      (keydown.enter)="onEnterPressed.emit($event)"
+    />
+  </z-form-control>
+</z-form-field>

@@ -145,6 +145,71 @@ export const validateToken = async (req, res, next) => {
   }
 };
 
+export const changeEnvironment = async (req, res, next) => {
+  /*
+  #swagger.tags = ["Auth"]
+  #swagger.security = [{"bearerAuth": []}]
+  #swagger.requestBody = {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          required: ["clienteId"],
+          properties: {
+            clienteId: {
+              type: "integer",
+              example: 2
+            }
+          }
+        }
+      }
+    }
+  }
+  #swagger.responses[200] = {
+    description: "Ambiente alterado com sucesso",
+    schema: {
+      type: "object",
+      properties: {
+        cliente: { $ref: "#/components/schemas/Cliente" },
+        token: { type: "string" }
+      }
+    }
+  }
+  #swagger.responses[401] = {
+    description: "Credenciais inválidas ou usuário inativo"
+  }
+  #swagger.responses[403] = {
+    description: "Usuário não possui acesso a este cliente"
+  }
+  #swagger.responses[404] = {
+    description: "Usuário não encontrado"
+  }
+  */
+
+  try {
+    const { clienteId } = req.body;
+    const userId = req.user.id;
+
+    const result = await AuthService.changeEnvironment(userId, clienteId, res);
+
+    res.json({
+      message: "Ambiente alterado com sucesso",
+      ...result
+    });
+  } catch (err) {
+    if (err.message === 'Usuário não possui acesso a este cliente') {
+      return res.status(403).json({ error: err.message });
+    }
+
+    if (err.message === 'Usuário não encontrado') {
+      return res.status(404).json({ error: err.message });
+    }
+
+    next(err);
+  }
+};
+
 // Middleware exports para usar nos routers
 export const verify = AuthService.verifyAuth;
 export const requireAdmin = AuthService.requireAdmin;

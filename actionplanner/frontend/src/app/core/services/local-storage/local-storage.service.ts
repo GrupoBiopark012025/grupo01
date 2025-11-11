@@ -37,7 +37,7 @@ export class LocalStorageService {
   }
 
   clear() {
-    (Object.keys(LocalStorageKey) as LocalStorageKey[]).forEach((key) => this.remove(key));
+    (Object.values(LocalStorageKey) as LocalStorageKey[]).forEach((key) => this.remove(key));
   }
 
   private atualizarState(): void {

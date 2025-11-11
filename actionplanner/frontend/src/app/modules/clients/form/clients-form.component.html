@@ -1,6 +1,6 @@
 <div class="bg-white border border-gray-200 rounded-lg shadow-lg w-full max-w-lg p-6">
   <h2 class="text-lg font-semibold mb-4">
-    {{ mode === 'edit' ? 'Editar Cliente' : mode === 'view' ? 'Detalhes do Cliente' : 'Novo Cliente' }}
+    {{ mode() === 'edit' ? 'Editar Cliente' : mode() === 'view' ? 'Detalhes do Cliente' : 'Novo Cliente' }}
   </h2>
 
   <form [formGroup]="form" (ngSubmit)="save()" class="space-y-4">
@@ -13,7 +13,7 @@
     <div class="flex justify-end space-x-2">
       <button type="button" (click)="cancel()" class="px-4 py-2 bg-gray-200 rounded">Fechar</button>
       <button
-        *ngIf="mode !== 'view'"
+        *ngIf="mode() !== 'view'"
         type="submit"
         class="px-4 py-2 bg-blue-600 text-white rounded"
       >

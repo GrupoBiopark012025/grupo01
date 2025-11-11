@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject, OnChanges, SimpleChanges } from '@angular/core'
+import { Component, EventEmitter, Output, inject, input, OnChanges, SimpleChanges } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms'
 import { ClientsDataService } from '@data/clients/clients-data.service'
@@ -14,8 +14,8 @@ export class ClientsFormComponent implements OnChanges {
   private fb = inject(FormBuilder)
   private clientsService = inject(ClientsDataService)
 
-  @Input() client?: GetClientsDto | null = null
-  @Input() mode: 'view' | 'edit' | 'create' = 'view'
+  client = input<GetClientsDto | null>(null)
+  mode = input<'view' | 'edit' | 'create'>('view')
   @Output() closed = new EventEmitter<boolean>()
 
   form = this.fb.group({
@@ -27,24 +27,30 @@ export class ClientsFormComponent implements OnChanges {
   })
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['client'] && this.client) {
+    const client = this.client()
+    const mode = this.mode()
+
+    if (changes['client'] && client) {
       this.form.patchValue({
-        nome: this.client.nome ?? '',
-        cnpj: this.client.cnpj ?? '',
-        endereco: this.client.endereco ?? '',
-        email: this.client.email ?? '',
-        telefone: this.client.telefone ?? ''
+        nome: client.nome ?? '',
+        cnpj: client.cnpj ?? '',
+        endereco: client.endereco ?? '',
+        email: client.email ?? '',
+        telefone: client.telefone ?? ''
       })
     }
 
     if (changes['mode']) {
-      if (this.mode === 'view') this.form.disable()
+      if (mode === 'view') this.form.disable()
       else this.form.enable()
     }
   }
 
   save() {
-    if (this.mode === 'view') {
+    const mode = this.mode()
+    const client = this.client()
+
+    if (mode === 'view') {
       this.closed.emit(false)
       return
     }
@@ -56,8 +62,8 @@ export class ClientsFormComponent implements OnChanges {
     } as Partial<GetClientsDto>
 
     const req =
-      this.mode === 'edit' && this.client
-        ? this.clientsService.updateClient(this.client.id, data)
+      mode === 'edit' && client
+        ? this.clientsService.updateClient(client.id, data)
         : this.clientsService.createClient(data)
 
     req.subscribe(() => this.closed.emit(true))

@@ -26,6 +26,15 @@ export const contentLayoutRoutes: Routes = [
         canActivate: [authenticationGuard]
       },
       {
+        path: 'action-plans',
+        title: 'Planos de Ação - ActionPlanner',
+        data: {
+          description: 'Gestão dos Planos de Ação.'
+        },
+        loadChildren: () => import('@modules/action-plan/action-plan.routes').then(m => m.ActionPlanRoutes),
+        canActivate: [authenticationGuard]
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full'

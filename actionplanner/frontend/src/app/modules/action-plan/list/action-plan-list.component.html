@@ -1,0 +1,283 @@
+<div class="flex items-center justify-between gap-4 mb-6">
+  <div class="flex-1 max-w-md flex items-center gap-2 relative filter-section">
+    <input 
+      z-input 
+      type="text" 
+      placeholder="Buscar plano de ação por nome, número ou responsável..."
+      [value]="searchTerm()"
+      (input)="onSearchChange($any($event.target).value)"
+      class="w-full border-gray-300 focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+    />
+    
+    <!-- Botão de Filtro -->
+    <button
+      type="button"
+      class="flex items-center justify-center w-10 h-10 bg-black rounded-lg hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-200 relative"
+      (click)="toggleFilterMenu()"
+      [class.bg-gray-900]="isFilterMenuOpen()"
+    >
+      <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+      </svg>
+      @if (hasActiveFilters()) {
+        <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+      }
+    </button>
+
+    <!-- Modal de Filtro -->
+    <div
+      class="absolute top-full left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden transition-all duration-200 ease-in-out z-50 min-w-[280px]"
+      [class]="isFilterMenuOpen() ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-0 pointer-events-none'"
+    >
+      <div class="py-2">
+        <!-- Título do Modal -->
+        <div class="px-4 py-2 border-b border-gray-100 flex items-center justify-between">
+          <h3 class="text-sm font-semibold text-gray-900">Filtros</h3>
+          @if (hasActiveFilters()) {
+            <button
+              type="button"
+              class="text-xs text-gray-500 hover:text-gray-800 transition-colors"
+              (click)="clearAllFilters()"
+            >
+              Limpar
+            </button>
+          }
+        </div>
+
+        <!-- Opções de Filtro -->
+        <div class="py-1">
+          <!-- Filtro por Status -->
+          <div class="px-4 py-2">
+            <label class="text-xs font-medium text-gray-700 mb-2 block">Status</label>
+            <div class="space-y-1">
+              <button
+                class="w-full text-left px-3 py-2 text-sm rounded transition-colors flex items-center justify-between"
+                [class.bg-gray-900]="selectedStatus() === null"
+                [class.text-white]="selectedStatus() === null"
+                [class.text-gray-700]="selectedStatus() !== null"
+                [class.hover:bg-gray-50]="selectedStatus() !== null"
+                [class.hover:text-gray-900]="selectedStatus() !== null"
+                (click)="applyStatusFilter(null)"
+              >
+                <span>Todos</span>
+                @if (selectedStatus() === null) {
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                }
+              </button>
+              <button
+                class="w-full text-left px-3 py-2 text-sm rounded transition-colors flex items-center justify-between"
+                [class.bg-gray-900]="selectedStatus() === 'PENDENTE'"
+                [class.text-white]="selectedStatus() === 'PENDENTE'"
+                [class.text-gray-700]="selectedStatus() !== 'PENDENTE'"
+                [class.hover:bg-gray-50]="selectedStatus() !== 'PENDENTE'"
+                [class.hover:text-gray-900]="selectedStatus() !== 'PENDENTE'"
+                (click)="applyStatusFilter('PENDENTE')"
+              >
+                <span>Pendente</span>
+                @if (selectedStatus() === 'PENDENTE') {
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                }
+              </button>
+              <button
+                class="w-full text-left px-3 py-2 text-sm rounded transition-colors flex items-center justify-between"
+                [class.bg-gray-900]="selectedStatus() === 'EM_ANDAMENTO'"
+                [class.text-white]="selectedStatus() === 'EM_ANDAMENTO'"
+                [class.text-gray-700]="selectedStatus() !== 'EM_ANDAMENTO'"
+                [class.hover:bg-gray-50]="selectedStatus() !== 'EM_ANDAMENTO'"
+                [class.hover:text-gray-900]="selectedStatus() !== 'EM_ANDAMENTO'"
+                (click)="applyStatusFilter('EM_ANDAMENTO')"
+              >
+                <span>Em Andamento</span>
+                @if (selectedStatus() === 'EM_ANDAMENTO') {
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                }
+              </button>
+              <button
+                class="w-full text-left px-3 py-2 text-sm rounded transition-colors flex items-center justify-between"
+                [class.bg-gray-900]="selectedStatus() === 'CONCLUIDO'"
+                [class.text-white]="selectedStatus() === 'CONCLUIDO'"
+                [class.text-gray-700]="selectedStatus() !== 'CONCLUIDO'"
+                [class.hover:bg-gray-50]="selectedStatus() !== 'CONCLUIDO'"
+                [class.hover:text-gray-900]="selectedStatus() !== 'CONCLUIDO'"
+                (click)="applyStatusFilter('CONCLUIDO')"
+              >
+                <span>Concluído</span>
+                @if (selectedStatus() === 'CONCLUIDO') {
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                }
+              </button>
+            </div>
+          </div>
+
+          <!-- Divisor -->
+          <div class="border-t border-gray-100 my-1"></div>
+
+          <!-- Filtro por Data -->
+          <div class="px-4 py-2">
+            <label class="text-xs font-medium text-gray-700 mb-2 block">Período</label>
+            <div class="space-y-1">
+              <button
+                class="w-full text-left px-3 py-2 text-sm rounded transition-colors flex items-center justify-between"
+                [class.bg-gray-900]="selectedPeriod() === '7 dias'"
+                [class.text-white]="selectedPeriod() === '7 dias'"
+                [class.text-gray-700]="selectedPeriod() !== '7 dias'"
+                [class.hover:bg-gray-50]="selectedPeriod() !== '7 dias'"
+                [class.hover:text-gray-900]="selectedPeriod() !== '7 dias'"
+                (click)="applyPeriodFilter(7)"
+              >
+                <span>Últimos 7 dias</span>
+                @if (selectedPeriod() === '7 dias') {
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                }
+              </button>
+              <button
+                class="w-full text-left px-3 py-2 text-sm rounded transition-colors flex items-center justify-between"
+                [class.bg-gray-900]="selectedPeriod() === '30 dias'"
+                [class.text-white]="selectedPeriod() === '30 dias'"
+                [class.text-gray-700]="selectedPeriod() !== '30 dias'"
+                [class.hover:bg-gray-50]="selectedPeriod() !== '30 dias'"
+                [class.hover:text-gray-900]="selectedPeriod() !== '30 dias'"
+                (click)="applyPeriodFilter(30)"
+              >
+                <span>Últimos 30 dias</span>
+                @if (selectedPeriod() === '30 dias') {
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                }
+              </button>
+              <button
+                class="w-full text-left px-3 py-2 text-sm rounded transition-colors flex items-center justify-between"
+                [class.bg-gray-900]="selectedPeriod() === '90 dias'"
+                [class.text-white]="selectedPeriod() === '90 dias'"
+                [class.text-gray-700]="selectedPeriod() !== '90 dias'"
+                [class.hover:bg-gray-50]="selectedPeriod() !== '90 dias'"
+                [class.hover:text-gray-900]="selectedPeriod() !== '90 dias'"
+                (click)="applyPeriodFilter(90)"
+              >
+                <span>Últimos 90 dias</span>
+                @if (selectedPeriod() === '90 dias') {
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                }
+              </button>
+              <button
+                class="w-full text-left px-3 py-2 text-sm rounded transition-colors flex items-center justify-between text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                (click)="applyPeriodFilter(null)"
+              >
+                <span>Qualquer data</span>
+                @if (selectedPeriod() === null) {
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                  </svg>
+                }
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <z-button zType="default" class="bg-black text-white hover:bg-gray-800" (click)="onCreateClick()">
+    Criar Plano
+  </z-button>
+</div>
+
+@if (actionPlansResponse$ | async) {
+  @if (filteredActionPlans() && filteredActionPlans()!.length > 0) {
+    <div class="space-y-4 pb-6">
+      @for (plan of filteredActionPlans()!; track plan.id) {
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+          <!-- Header do Card -->
+          <div class="p-4 border-b border-gray-200">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <h3 class="text-base font-semibold text-gray-900">{{ plan.number }}</h3>
+                  <z-badge
+                    zType="outline"
+                    [class]="getStatusBadgeClass(plan.status)"
+                  >
+                    {{ getStatusDescription(plan.status) }}
+                  </z-badge>
+                </div>
+                <p class="text-sm font-medium text-gray-800">{{ plan.what }}</p>
+                <p class="text-xs text-gray-600 mt-0.5">{{ plan.how }}</p>
+              </div>
+              <z-button zType="default" zSize="sm" class="bg-black text-white hover:bg-gray-800" (click)="viewActionPlan(plan.id)">
+                Ver Plano
+              </z-button>
+            </div>
+          </div>
+
+          <!-- Informações Principais -->
+          <div class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div>
+              <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Responsável</p>
+              <p class="text-sm text-gray-900">{{ plan.responsible }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Data Início</p>
+              <p class="text-sm text-gray-900">{{ plan.startDate | date: 'shortDate' }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Data Fim</p>
+              <p class="text-sm text-gray-900">{{ plan.endDate | date: 'shortDate' }}</p>
+            </div>
+            <div>
+              <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Progresso</p>
+              <div class="flex items-center gap-2">
+                <div class="flex-1 bg-gray-200 rounded-full h-2">
+                  <div 
+                    class="bg-green-500 h-2 rounded-full transition-all"
+                    [style.width.%]="calculateProgress(plan)"
+                  ></div>
+                </div>
+                <span class="text-sm font-medium text-gray-900">{{ calculateProgress(plan) }}%</span>
+              </div>
+              <p class="text-xs text-gray-500 mt-0.5">
+                {{ getCompletedTasksCount(plan) }}/{{ plan.tasks?.length || 0 }} tarefas
+              </p>
+            </div>
+          </div>
+
+          <!-- Observações -->
+          @if (plan.observations) {
+            <div class="px-4 pb-4 border-t border-gray-200 pt-3">
+              <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Observações</p>
+              <p class="text-sm text-gray-700 line-clamp-2">{{ plan.observations }}</p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Paginação -->
+    <app-pagination
+      [currentPage]="currentPage()"
+      [totalPages]="totalPages()"
+      [pageSize]="pageSize()"
+      [recordsInView]="recordsInView()"
+      [collectionSize]="totalData()"
+      (onPageChange)="onPageChange($event)"
+    />
+  } @else {
+    <app-no-list-content
+      text="Nenhum plano de ação encontrado."
+    />
+  }
+} @else {
+  <app-table-skeleton />
+}
+

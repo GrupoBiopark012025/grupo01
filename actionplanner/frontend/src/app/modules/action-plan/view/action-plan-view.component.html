@@ -1,0 +1,156 @@
+@if (actionPlan$ | async; as plan) {
+  <div class="space-y-4 pb-6">
+    <div class="flex items-center justify-end">
+      <z-button zType="default" [routerLink]="['/action-plans']" class="bg-black text-white hover:bg-gray-800">
+        Voltar
+      </z-button>
+    </div>
+
+    <!-- Informações do Plano -->
+    <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
+      <div class="flex items-start justify-between mb-4 pb-3 border-b border-gray-100">
+        <div class="flex-1">
+          <h1 class="text-xl font-semibold text-gray-900 mb-1">{{ plan.number }}</h1>
+          <p class="text-sm text-gray-600 mb-3">{{ plan.what }}</p>
+          <div class="flex items-center gap-3">
+            <z-badge
+              zType="outline"
+              [class]="getStatusBadgeClass(plan.status)"
+            >
+              {{ getStatusDescription(plan.status) }}
+            </z-badge>
+            <span class="text-sm text-gray-600">{{ getCompletedTasksCount(plan) }}/{{ plan.tasks?.length || 0 }} tarefas concluídas</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4 pb-3 border-b border-gray-100">
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-sm">
+            <span class="font-medium text-gray-700">Progresso</span>
+            <span class="font-semibold text-gray-900">{{ calculateProgress(plan) }}%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+            <div 
+              class="bg-green-500 h-full rounded-full transition-all duration-300 ease-out"
+              [style.width.%]="calculateProgress(plan)"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+        <div>
+          <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Responsável</p>
+          <p class="text-gray-900">{{ plan.responsible }}</p>
+        </div>
+        <div>
+          <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Período</p>
+          <p class="text-gray-900">{{ plan.startDate | date: 'shortDate' }} - {{ plan.endDate | date: 'shortDate' }}</p>
+        </div>
+        @if (plan.observations) {
+          <div class="md:col-span-2 flex items-start justify-between gap-4">
+            <div class="flex-1">
+              <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Observações</p>
+              <p class="text-gray-900">{{ plan.observations }}</p>
+            </div>
+            <z-button zType="default" zSize="sm" class="bg-sky-500 text-white hover:bg-sky-600">
+              + Adicionar Tarefa
+            </z-button>
+          </div>
+        } @else {
+          <div class="md:col-span-2 flex justify-end">
+            <z-button zType="default" zSize="sm" class="bg-sky-500 text-white hover:bg-sky-600">
+              + Adicionar Tarefa
+            </z-button>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Tarefas -->
+    @if (plan.tasks && plan.tasks.length > 0) {
+      <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
+        <div class="p-4 border-b border-gray-200">
+          <div class="flex items-center justify-between gap-4">
+            <h2 class="text-lg font-semibold text-gray-900">Tarefas</h2>
+            <div class="flex-1 max-w-xs">
+              <input 
+                z-input 
+                type="text" 
+                placeholder="Buscar tarefa por nome..."
+                [value]="taskSearchTerm()"
+                (input)="onTaskSearchChange($any($event.target).value)"
+                class="w-full border-gray-300 focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="divide-y divide-gray-100">
+          @for (task of paginatedTasks(); track task.id) {
+            <div class="p-4 hover:bg-gray-50 transition-colors">
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex-1">
+                  <div class="flex items-center gap-3 mb-1.5">
+                    <h3 class="font-semibold text-gray-900">{{ task.title }}</h3>
+                    <z-badge 
+                      zType="outline"
+                      [class]="task.status === 'CONCLUIDO' 
+                        ? 'bg-emerald-500 text-white border-transparent' 
+                        : task.status === 'EM_ANDAMENTO'
+                        ? 'bg-indigo-500 text-white border-transparent'
+                        : 'bg-amber-500 text-white border-transparent'"
+                    >
+                      {{ task.status }}
+                    </z-badge>
+                    @if (task.priority) {
+                      <z-badge 
+                        zType="outline"
+                        [class]="getPriorityBadgeClass(task.priority)"
+                      >
+                        {{ task.priority }}
+                      </z-badge>
+                    }
+                  </div>
+                  @if (task.description) {
+                    <p class="text-sm text-gray-600 mb-2">{{ task.description }}</p>
+                  }
+                  <div class="flex items-center gap-4 text-xs text-gray-500">
+                    <span>Responsável: {{ task.userResponsible.nome }}</span>
+                    @if (task.dueDate) {
+                      <span>Prazo: {{ task.dueDate | date: 'shortDate' }}</span>
+                    }
+                  </div>
+                </div>
+                <z-button zType="default" zSize="sm" class="bg-black text-white hover:bg-gray-800" (click)="viewTask(task.id)">
+                  Visualizar Tarefa
+                </z-button>
+              </div>
+            </div>
+          }
+        </div>
+
+        @if (filteredTasks().length > 0) {
+          <app-pagination
+            [currentPage]="currentTaskPage()"
+            [pageSize]="taskPageSize()"
+            [recordsInView]="paginatedTasks().length"
+            [totalPages]="totalTaskPages()"
+            [collectionSize]="filteredTasks().length"
+            (onPageChange)="onTaskPageChange($event)"
+          />
+        }
+      </div>
+    }
+  </div>
+} @else {
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <h1 class="text-2xl font-semibold text-gray-900">Carregando...</h1>
+      <z-button zType="default" [routerLink]="['/action-plans']" class="bg-black text-white hover:bg-gray-800">
+        Voltar
+      </z-button>
+    </div>
+  </div>
+}
+

@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { GetActionPlanDto, GetActionPlanQuery, GetActionPlanResponseDto } from "@data/action-plan/dtos";
+import { CreateActionPlanDto, GetActionPlanDto, GetActionPlanQuery, GetActionPlanResponseDto } from "@data/action-plan/dtos";
 
 @Injectable({
   providedIn: 'root'
@@ -20,5 +20,10 @@ export class ActionPlanDataService {
   getActionPlanById(id: number): Observable<GetActionPlanDto> {
     return this.http.get<GetActionPlanDto>(`${this.path}/${id}`);
   }
+
+  createActionPlan(payload: CreateActionPlanDto): Observable<GetActionPlanDto> {
+    return this.http.post<GetActionPlanDto>(this.path, payload);
+  }
 }
+
 

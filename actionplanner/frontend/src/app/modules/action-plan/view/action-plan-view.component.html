@@ -19,7 +19,7 @@
             >
               {{ getStatusDescription(plan.status) }}
             </z-badge>
-            <span class="text-sm text-gray-600">{{ getCompletedTasksCount(plan) }}/{{ plan.tasks?.length || 0 }} tarefas concluídas</span>
+            <span class="text-sm text-gray-600">{{ getCompletedTasksCount(plan) }}/{{ plan.tasks.length || 0 }} tarefas concluídas</span>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output, inject, input, OnChanges, SimpleChanges } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms'
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ClientsDataService } from '@data/clients/clients-data.service'
 import { GetClientsDto } from '@data/clients/dtos'
 
@@ -18,12 +18,14 @@ export class ClientsFormComponent implements OnChanges {
   mode = input<'view' | 'edit' | 'create'>('view')
   @Output() closed = new EventEmitter<boolean>()
 
-  form = this.fb.group({
-    nome: [''],
-    cnpj: [''],
-    endereco: [''],
-    email: [''],
-    telefone: ['']
+  serverError = ''
+
+  form = this.fb.nonNullable.group({
+    nome: this.fb.nonNullable.control('', Validators.required),
+    cnpj: this.fb.nonNullable.control('', Validators.required),
+    endereco: this.fb.nonNullable.control('', Validators.required),
+    email: this.fb.nonNullable.control('', Validators.required),
+    telefone: this.fb.nonNullable.control('', Validators.required)
   })
 
   ngOnChanges(changes: SimpleChanges) {
@@ -55,18 +57,35 @@ export class ClientsFormComponent implements OnChanges {
       return
     }
 
+    if (this.form.invalid) {
+      this.form.markAllAsTouched()
+      return
+    }
+
     const raw = this.form.getRawValue()
-    const data = {
-      ...raw,
-      cnpj: raw.cnpj ? raw.cnpj.replace(/[^\d]/g, '') : undefined
-    } as Partial<GetClientsDto>
+
+    const data: Partial<GetClientsDto> = {
+      nome: raw.nome || undefined,
+      cnpj: raw.cnpj ? raw.cnpj.replace(/[^\d]/g, '') : undefined,
+      endereco: raw.endereco || undefined,
+      email: raw.email || undefined,
+      telefone: raw.telefone || undefined
+    }
 
     const req =
       mode === 'edit' && client
         ? this.clientsService.updateClient(client.id, data)
         : this.clientsService.createClient(data)
 
-    req.subscribe(() => this.closed.emit(true))
+    req.subscribe({
+      next: () => {
+        this.serverError = ''
+        this.closed.emit(true)
+      },
+      error: err => {
+        this.serverError = err?.error?.message || 'Erro ao salvar cliente.'
+      }
+    })
   }
 
   cancel() {

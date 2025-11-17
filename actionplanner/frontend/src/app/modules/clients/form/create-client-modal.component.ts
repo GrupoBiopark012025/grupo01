@@ -19,10 +19,9 @@ export class CreateClientModalComponent {
   form = this.fb.nonNullable.group({
     nome: this.fb.nonNullable.control('', Validators.required),
     cnpj: this.fb.nonNullable.control('', Validators.required),
-    email: this.fb.control(''),
-    telefone: this.fb.control(''),
-    endereco: this.fb.control(''),
-    sectorId: this.fb.control<number | null>(null)
+    email: this.fb.nonNullable.control(''),
+    telefone: this.fb.nonNullable.control(''),
+    endereco: this.fb.nonNullable.control('')
   })
 
   save() {
@@ -34,9 +33,14 @@ export class CreateClientModalComponent {
     }
 
     const raw = this.form.getRawValue()
-    const data = Object.fromEntries(
-      Object.entries(raw).map(([k, v]) => [k, v === null ? undefined : v])
-    )
+
+    const data = {
+      nome: raw.nome,
+      cnpj: raw.cnpj.replace(/[^\d]/g, ''),
+      email: raw.email || undefined,
+      telefone: raw.telefone || undefined,
+      endereco: raw.endereco || undefined
+    }
 
     this.clientsService.createClient(data).subscribe({
       next: () => this.closed.emit(true),

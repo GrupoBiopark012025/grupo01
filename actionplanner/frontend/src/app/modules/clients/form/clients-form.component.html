@@ -1,0 +1,56 @@
+<div class="bg-white border border-gray-200 rounded-lg shadow-lg w-full max-w-lg p-6">
+  <h2 class="text-lg font-semibold mb-4">
+    {{ mode() === 'edit' ? 'Editar Cliente' : mode() === 'view' ? 'Detalhes do Cliente' : 'Novo Cliente' }}
+  </h2>
+
+  @if (serverError) {
+    <div class="w-full p-3 mb-4 rounded bg-red-100 text-red-700 border border-red-300">
+      {{ serverError }}
+    </div>
+  }
+
+  <form class="flex flex-col gap-4" [formGroup]="form" (ngSubmit)="save()">
+    <app-text-input
+      id="nome"
+      label="Nome"
+      formControlName="nome"
+    />
+
+    <app-text-input
+      id="cnpj"
+      label="CNPJ"
+      formControlName="cnpj"
+    />
+
+    <app-text-input
+      id="email"
+      label="Email"
+      type="email"
+      formControlName="email"
+    />
+
+    <app-text-input
+      id="telefone"
+      label="Telefone"
+      formControlName="telefone"
+    />
+
+    <app-text-input
+      id="endereco"
+      label="Endereço"
+      formControlName="endereco"
+    />
+
+    <div class="flex justify-end gap-2 mt-2">
+      <button z-button zType="outline" type="button" (click)="cancel()">
+        Fechar
+      </button>
+
+      @if (mode() !== 'view') {
+        <button z-button type="submit">
+          Salvar
+        </button>
+      }
+    </div>
+  </form>
+</div>

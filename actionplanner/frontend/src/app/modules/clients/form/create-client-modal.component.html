@@ -1,0 +1,52 @@
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+  <div class="bg-white border border-gray-200 rounded-lg shadow-lg w-full max-w-lg p-6">
+    <h2 class="text-lg font-semibold mb-4">Novo Cliente</h2>
+
+    <form class="flex flex-col gap-4" [formGroup]="form" (ngSubmit)="save()">
+      <app-text-input
+        id="nome"
+        label="Nome"
+        formControlName="nome"
+      />
+
+      <app-text-input
+        id="cnpj"
+        label="CNPJ"
+        formControlName="cnpj"
+      />
+
+      <app-text-input
+        id="email"
+        label="Email"
+        type="email"
+        formControlName="email"
+      />
+
+      <app-text-input
+        id="telefone"
+        label="Telefone"
+        formControlName="telefone"
+      />
+
+      <app-text-input
+        id="endereco"
+        label="Endereço"
+        formControlName="endereco"
+      />
+
+      @if (serverError) {
+        <p class="text-sm text-red-500">{{ serverError }}</p>
+      }
+
+      <div class="flex justify-end gap-2">
+        <button z-button zType="outline" type="button" (click)="cancel()">
+          Fechar
+        </button>
+
+        <button z-button type="submit">
+          Salvar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

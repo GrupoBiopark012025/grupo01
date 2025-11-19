@@ -54,7 +54,7 @@ export class ActionPlanCreateComponent {
   // Projetos
   projectSearchTerm = signal<string>('');
   foundProjects = signal<GetProjectDto[]>([]);
-  selectedProjects = signal<GetProjectDto[]>([]);
+  selectedProject = signal<GetProjectDto | null>(null);
   isSearchingProjects = signal(false);
   showProjectDropdown = signal(false);
   private projectSearchSubject = new Subject<string>();
@@ -204,7 +204,7 @@ export class ActionPlanCreateComponent {
       postponedDate: value.postponedDate ? this.toIsoDate(value.postponedDate) : null,
       status: value.status!,
       observations: value.observations ? value.observations : null,
-      projectIds: this.selectedProjects().map(p => p.id)
+      projectIds: this.selectedProject() ? [this.selectedProject()!.id] : []
     };
 
     this.actionPlanDataService.createActionPlan(payload)
@@ -235,6 +235,12 @@ export class ActionPlanCreateComponent {
 
   onProjectSearchChange(value: string): void {
     console.log('⌨️ Input alterado:', value);
+    
+    // Se o usuário começar a digitar e já houver um projeto selecionado, limpa a seleção
+    if (this.selectedProject() && value !== this.selectedProject()?.name) {
+      this.selectedProject.set(null);
+    }
+    
     this.projectSearchTerm.set(value);
     const shouldShow = value.length >= 2;
     this.showProjectDropdown.set(shouldShow);
@@ -243,23 +249,29 @@ export class ActionPlanCreateComponent {
   }
 
   selectProject(project: GetProjectDto): void {
-    const selected = this.selectedProjects();
-    if (!selected.find(p => p.id === project.id)) {
-      this.selectedProjects.set([...selected, project]);
-    }
-    this.projectSearchTerm.set('');
-    this.form.get('projectSearch')?.setValue('');
+    console.log('📦 Projeto selecionado:', project);
+    this.selectedProject.set(project);
+    this.projectSearchTerm.set(project.name);
+    this.form.get('projectSearch')?.setValue(project.name);
     this.showProjectDropdown.set(false);
     this.foundProjects.set([]);
   }
 
-  removeProject(projectId: number): void {
-    this.selectedProjects.set(
-      this.selectedProjects().filter(p => p.id !== projectId)
-    );
+  clearProject(): void {
+    this.selectedProject.set(null);
+    this.form.get('projectSearch')?.setValue('');
+    this.projectSearchTerm.set('');
+    this.foundProjects.set([]);
   }
 
   onProjectInputFocus(): void {
+    // Se houver um projeto selecionado e o campo estiver vazio, mostra o dropdown se houver busca anterior
+    if (this.selectedProject()) {
+      // Permite que o usuário edite ou busque novamente
+      return;
+    }
+    
+    // Se não houver projeto selecionado, mostra dropdown se houver termo de busca
     if (this.projectSearchTerm().length >= 2) {
       this.showProjectDropdown.set(true);
     }

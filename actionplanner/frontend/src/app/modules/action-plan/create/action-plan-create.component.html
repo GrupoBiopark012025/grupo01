@@ -191,7 +191,7 @@
         <!-- Projetos -->
         <div class="space-y-2 md:col-span-2">
           <z-form-field>
-            <label z-form-label>Projetos relacionados</label>
+            <label z-form-label>Projeto relacionado</label>
             <z-form-control>
               <div class="relative">
                 <input
@@ -199,7 +199,7 @@
                   type="text"
                   placeholder="Buscar projeto por nome..."
                   formControlName="projectSearch"
-                  [value]="projectSearchTerm()"
+                  [value]="selectedProject() ? selectedProject()!.name : projectSearchTerm()"
                   (input)="onProjectSearchChange($any($event.target).value)"
                   (focus)="onProjectInputFocus()"
                   (blur)="onProjectInputBlur()"
@@ -235,29 +235,9 @@
               </div>
             </z-form-control>
             <z-form-message zType="default">
-              Digite pelo menos 2 caracteres para buscar projetos por nome
+              Digite pelo menos 2 caracteres para buscar projeto por nome
             </z-form-message>
           </z-form-field>
-
-          <!-- Projetos selecionados -->
-          @if (selectedProjects().length > 0) {
-            <div class="flex flex-wrap gap-2 mt-2">
-              @for (project of selectedProjects(); track project.id) {
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 border border-gray-300 rounded-lg text-sm">
-                  <span class="font-medium text-gray-900">{{ project.name }}</span>
-                  <button
-                    type="button"
-                    class="text-gray-500 hover:text-gray-700 transition-colors"
-                    (click)="removeProject(project.id)"
-                  >
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                  </button>
-                </div>
-              }
-            </div>
-          }
         </div>
       </div>
 

@@ -7,18 +7,27 @@ const prisma = new PrismaClient();
 export class UserService {
   
   static async create(userData) {
-    const { password, userClienteIds, isAdmin, ...rest } = userData;
+    const { password, userClienteIds, userSectorIds, isAdmin, ...rest } = userData;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const data = {
       ...rest,
       password: hashedPassword,
+      clienteId: rest.clienteId ?? (isAdmin ? 1 : undefined)
     };
 
-    if (!isAdmin && Array.isArray(userClienteIds) && userClienteIds.length > 0) {
+    if (rest.accessLevel !== "ADMIN" && Array.isArray(userClienteIds) && userClienteIds.length > 0) {
       data.userClientes = {
         create: userClienteIds.map((clienteId) => ({
           cliente: { connect: { id: clienteId } },
+        })),
+      };
+    }
+
+    if (!isAdmin && Array.isArray(userSectorIds) && userSectorIds.length > 0) {
+      data.userSectors = {
+        create: userSectorIds.map((sectorId) => ({
+          sector: { connect: { id: sectorId } },
         })),
       };
     }
@@ -31,13 +40,18 @@ export class UserService {
           include: {
             cliente: true
           }
+        },
+        userSectors: {
+          include: {
+            sector: true
+          }
         }
       }
     });
   }
 
   static async findById(id) {
-    return await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: parseInt(id) },
       include: {
         cliente: true,
@@ -45,9 +59,20 @@ export class UserService {
           include: {
             cliente: true
           }
+        },
+        userSectors: {
+          include: {
+            sector: true
+          }
         }
       }
     });
+
+    return {
+      ...user,
+      userClientes: user?.userClientes?.map(uc => uc.cliente) || [],
+      sectors: user?.userSectors?.map(us => us.sector) || []
+    }
   }
 
   // Buscar usuário por email
@@ -93,6 +118,11 @@ export class UserService {
             include: {
               cliente: true
             }
+          },
+          userSectors: {
+            include: {
+              sector: true
+            }
           }
         }
       }),
@@ -102,7 +132,10 @@ export class UserService {
     const totalPages = Math.ceil(totalData / size);
 
     return {
-      users,
+      users: users.map(user => ({
+        ...user,
+        sectors: user.userSectors?.map(us => us.sector) || []
+      })),
       totalData,
       totalPages,
       currentPage: page,
@@ -111,11 +144,49 @@ export class UserService {
   }
 
   static async update(id, userData) {
-    const { password, ...rest } = userData;
-    
-    const updateData = { ...rest };
+    const {
+      password,
+      userClienteIds,
+      userSectorIds,
+      isAdmin,
+      ...rest
+    } = userData;
+
+    const updateData = {
+      ...rest,
+      clienteId: rest.clienteId ?? (isAdmin ? 1 : undefined),
+    };
+
     if (password) {
       updateData.password = await bcrypt.hash(password, 10);
+    }
+
+    if (Array.isArray(userClienteIds)) {
+      await prisma.userCliente.deleteMany({
+        where: { userId: parseInt(id) },
+      });
+
+      if (rest.accessLevel !== "ADMIN" && userClienteIds.length > 0) {
+        updateData.userClientes = {
+          create: userClienteIds.map((clienteId) => ({
+            cliente: { connect: { id: clienteId } },
+          })),
+        };
+      }
+    }
+
+    if (Array.isArray(userSectorIds)) {
+      await prisma.userSector.deleteMany({
+        where: { userId: parseInt(id) },
+      });
+
+      if (!isAdmin && userSectorIds.length > 0) {
+        updateData.userSectors = {
+          create: userSectorIds.map((sectorId) => ({
+            sector: { connect: { id: sectorId } },
+          })),
+        };
+      }
     }
 
     return await prisma.user.update({
@@ -124,11 +195,14 @@ export class UserService {
       include: {
         cliente: true,
         userClientes: {
+          include: { cliente: true },
+        },
+        userSectors: {
           include: {
-            cliente: true
+            sector: true
           }
         }
-      }
+      },
     });
   }
 

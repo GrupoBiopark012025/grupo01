@@ -1,4 +1,4 @@
-<app-page-header title="Cadastro de Novo Usuário">
+<app-page-header [title]="pageTitle()">
   <button z-button zType="outline" [backOrNavigateTo]="['users']">
     Voltar
   </button>
@@ -31,9 +31,15 @@
       <app-text-input
         id="password"
         label="Senha"
-        type="password"
+        inputType="password"
         formControlName="password"
       />
+
+      @if (isEditMode()) {
+        <small class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          Deixe em branco para manter a senha atual.
+        </small>
+      }
     </div>
 
     <div>
@@ -47,30 +53,29 @@
 
     <div></div>
 
-    @if (!isAdminBehindTheScenes() && accessLevel()) {
-      <div>
-        <div class="w-full flex flex-col border p-6 rounded-lg gap-4">
-          <div class="flex justify-between items-center">
-            <div class="text-md font-semibold">Acesso a Setores</div>
-            <button z-button zType="outline" type="button" (click)="openSectorSelect()">Editar</button>
-          </div>
-          <div class="flex gap-2">
-            @for (sector of selectedSectors(); track sector.id) {
-              <z-badge
-                zType="outline"
-                class="transition-colors text-nowrap"
-              >
-                {{ sector.name }}
-              </z-badge>
-            } @empty {
-              <small class="text-muted-foreground">Sem setores selecionados.</small>
-            }
+    @if (accessLevel() && accessLevel() !== UserAccessLevelEnum.Admin) {
+      @if(!isAdminBehindTheScenes()) {
+        <div>
+          <div class="w-full flex flex-col border p-6 rounded-lg gap-4">
+            <div class="flex justify-between items-center">
+              <div class="text-md font-semibold">Acesso a Setores</div>
+              <button z-button zType="outline" type="button" (click)="openSectorSelect()">Editar</button>
+            </div>
+            <div class="flex gap-2 flex-wrap">
+              @for (sector of selectedSectors(); track sector.id) {
+                <z-badge
+                  zType="outline"
+                  class="transition-colors text-nowrap"
+                >
+                  {{ sector.name }}
+                </z-badge>
+              } @empty {
+                <small class="text-muted-foreground">Sem setores selecionados.</small>
+              }
+            </div>
           </div>
         </div>
-        @if (getSectorsError(); as error) {
-          <z-form-message zType="error">{{ error }}</z-form-message>
-        }
-      </div>
+      }
 
       <div>
         <div class="w-full flex flex-col border p-6 rounded-lg gap-4">
@@ -78,7 +83,7 @@
             <div class="text-md font-semibold">Acesso a Clientes</div>
             <button z-button zType="outline" type="button" (click)="openClientSelect()">Editar</button>
           </div>
-          <div class="flex gap-2">
+          <div class="flex gap-2 flex-wrap">
             @for (client of clientsWithPrimaryFirst(); track client.id) {
               <z-badge
                 zType="outline"
@@ -99,19 +104,24 @@
         }
       </div>
 
-      <div class="col-span-2">
-        <app-checkbox
-          label="Visualiza apenas tasks assinadas"
-          formControlName="onlyAttachedTasks"
-        />
-      </div>
+      @if (!isAdminBehindTheScenes()) {
+        <div class="col-span-2">
+          <app-checkbox
+            label="Visualiza apenas tasks assinadas"
+            formControlName="onlyAttachedTasks"
+          />
+        </div>
+      }
     }
   </div>
 
-  {{ form.value | json }}
-
   <div class="flex grow items-center justify-end gap-2">
-    <button z-button zType="outline" type="button">Cancelar</button>
-    <button z-button type="submit">Salvar</button>
+    <button z-button zType="outline" type="button" [backOrNavigateTo]="['users']">
+      Cancelar
+    </button>
+
+    <button z-button type="submit">
+      {{ submitButtonText() }}
+    </button>
   </div>
 </form>

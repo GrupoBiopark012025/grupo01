@@ -1,5 +1,4 @@
 import { Router } from "express";
-import validator from "../middlewares/validator.js";
 import * as sectorController from "../controllers/sectorController.js";
 
 const router = Router();
@@ -17,6 +16,6 @@ router.get('/:id/statistics', sectorController.getSectorStatistics);
 router.get('/:id', sectorController.showSector);
 
 // Atualizar setor 
-router.patch('/:id', sectorController.editSector);
+router.put('/:id', sectorController.editSector);
 
 export default router;

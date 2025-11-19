@@ -34,7 +34,15 @@ export const contentLayoutRoutes: Routes = [
         loadChildren: () => import('@modules/tasks/tasks.routes').then(m => m.TasksRoutes),
         canActivate: [authenticationGuard]
       },
-
+      {
+        path: 'sectors',
+        title: 'Setores - ActionPlanner',
+        data: {
+          description: 'Gestão de Setores registrados.'
+        },
+        loadChildren: () => import('@modules/sector/sector.routes').then(m => m.SectorRoutes),
+        canActivate: [authenticationGuard]
+      },
       {
         path: '',
         redirectTo: 'home',

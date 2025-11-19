@@ -4,9 +4,11 @@ export interface PostCreateUserDto {
   nome: string,
   email: string,
   password: string,
-  clienteId: number,
+  clienteId: number, // TODO: mexer para aplicar undefined
   accessLevel: UserAccessLevelEnum,
   isAdmin: boolean,
   onlyAttachedTasks: boolean,
-  status: UserStatusEnum
+  status: UserStatusEnum,
+  userClienteIds: number[],
+  userSectorIds: number[]
 }

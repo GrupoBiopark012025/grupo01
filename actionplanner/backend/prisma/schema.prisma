@@ -33,57 +33,56 @@ enum ActionType {
 }
 
 model Cliente {
-  id        Int      @id @default(autoincrement())
-  nome      String   @db.VarChar(255)
-  cnpj      String   @unique @db.VarChar(18)
-  email     String?  @db.VarChar(255)
-  telefone  String?  @db.VarChar(20)
-  endereco  String?  @db.Text
-  sectorId  Int?     @map("sector_id")
-  createdAt DateTime @default(now()) @map("created_at")
+  id        Int       @id @default(autoincrement())
+  nome      String    @db.VarChar(255)
+  cnpj      String    @unique @db.VarChar(18)
+  email     String?   @db.VarChar(255)
+  telefone  String?   @db.VarChar(20)
+  endereco  String?   @db.Text
+  createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   // Relacionamentos
-  usuarios       User[]
-  userClientes   UserCliente[]
-  sector          Sector[]
-  auditLogs      AuditLog[]
-  tasks          Task[]
+  usuarios     User[]
+  userClientes UserCliente[]
+  auditLogs    AuditLog[]
+  tasks        Task[]
 
   @@map("clientes")
 }
 
 // Tabela de Usuários
 model User {
-  id               Int        @id @default(autoincrement())
-  nome             String     @db.VarChar(255)
-  email            String     @unique @db.VarChar(255)
-  password         String     @db.VarChar(255)
-  clienteId        Int        @map("cliente_id")
-  isAdmin          Boolean    @default(false) @map("is_admin")
-  accessLevel      AccessLevel @map("access_level")
-  onlyAttachedTasks Boolean   @default(false) @map("only_attached_tasks")
-  status           UserStatus @default(ATIVO)
-  lastLogin        DateTime?  @map("last_login")
-  createdAt        DateTime   @default(now()) @map("created_at")
-  updatedAt        DateTime?   @updatedAt @map("updated_at")
+  id                Int         @id @default(autoincrement())
+  nome              String      @db.VarChar(255)
+  email             String      @unique @db.VarChar(255)
+  password          String      @db.VarChar(255)
+  clienteId         Int         @map("cliente_id")
+  isAdmin           Boolean     @default(false) @map("is_admin")
+  accessLevel       AccessLevel @map("access_level")
+  onlyAttachedTasks Boolean     @default(false) @map("only_attached_tasks")
+  status            UserStatus  @default(ATIVO)
+  lastLogin         DateTime?   @map("last_login")
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime?   @updatedAt @map("updated_at")
 
   // Relacionamentos
-  cliente        Cliente       @relation(fields: [clienteId], references: [id])
-  userClientes   UserCliente[]
-  auditLogs      AuditLog[]
-  tasksResponsible Task[]      @relation("UserResponsibleTasks")
-  tasksCreated     Task[]      @relation("UserCreatedTasks")
+  cliente          Cliente       @relation(fields: [clienteId], references: [id])
+  userClientes     UserCliente[]
+  userSectors      UserSector[]
+  auditLogs        AuditLog[]
+  tasksResponsible Task[]        @relation("UserResponsibleTasks")
+  tasksCreated     Task[]        @relation("UserCreatedTasks")
 
   @@map("users")
 }
 
 // Tabela de relacionamento User-Cliente (quais clientes o usuario pode acessar)
 model UserCliente {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @map("user_id")
-  clienteId Int      @map("cliente_id")
-  createdAt DateTime @default(now()) @map("created_at")
+  id        Int       @id @default(autoincrement())
+  userId    Int       @map("user_id")
+  clienteId Int       @map("cliente_id")
+  createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   // Relacionamentos
@@ -117,60 +116,99 @@ model AuditLog {
   @@map("audit_logs")
 }
 
-// Tabela de Projects, tarefa pode ter um projeto associado
 model Project {
-  id          Int      @id @default(autoincrement())
-  name        String   @db.VarChar(255)
-  description String?  @db.Text
-
-
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(255)
+  description  String?  @db.Text
+  actionPlanId Int?     @map("action_plan_id")
+  status      String   @default("ATIVO") @db.VarChar(10)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   // Relacionamentos
-  tasks       Task[]
+  tasks      Task[]
+  actionPlan ActionPlan? @relation(fields: [actionPlanId], references: [id], onDelete: SetNull)
 
   @@map("projects")
 }
 
+// Tabela de ActionPlan (Plano de Ação)
+model ActionPlan {
+  id            Int       @id @default(autoincrement())
+  number        String    @map("number") @db.VarChar(50)
+  what          String    @map("what") @db.Text
+  how           String    @map("how") @db.Text
+  responsible   String    @map("responsible") @db.VarChar(255)
+  startDate     DateTime  @map("start_date")
+  endDate       DateTime  @map("end_date")
+  postponedDate DateTime? @map("postponed_date")
+  status        String    @db.VarChar(50)
+  observations  String?   @map("observations") @db.Text
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relacionamentos
+  projects Project[]
+  tasks    Task[]    @relation("ActionPlanTasks")
+
+  @@map("action_plans")
+}
 
 // Tabela de Tasks (Tarefas), tarefa terá um projeto associado, terá um cliente e tera um setor
 model Task {
-  id            Int      @id @default(autoincrement())
-  title         String   @db.VarChar(255)
-  description   String?  @db.Text
-  status        String   @db.VarChar(50)
-  priority      String   @db.VarChar(50)
-  dueDate       DateTime? @map("due_date")
-  projectId     Int?     @map("project_id")
-  clienteId     Int      @map("cliente_id")
-  sectorId      Int      @map("sector_id")
-  createdAt     DateTime @default(now()) @map("created_at")
-  updatedAt     DateTime @updatedAt @map("updated_at")
-  userResponsibleId Int?    @map("user_responsible_id")
-  userCreatedId     Int      @map("user_created_id")
+  id                Int       @id @default(autoincrement())
+  title             String    @db.VarChar(255)
+  description       String?   @db.Text
+  status            String    @db.VarChar(50)
+  priority          String    @db.VarChar(50)
+  dueDate           DateTime? @map("due_date")
+  projectId         Int?      @map("project_id")
+  actionPlanId      Int?      @map("action_plan_id")
+  clienteId         Int       @map("cliente_id")
+  sectorId          Int       @map("sector_id")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  userResponsibleId Int?      @map("user_responsible_id")
+  userCreatedId     Int       @map("user_created_id")
 
   // Relacionamentos
-  project Project? @relation(fields: [projectId], references: [id])
-  cliente Cliente @relation(fields: [clienteId], references: [id])
-  sector   Sector   @relation(fields: [sectorId], references: [id])
-  userResponsible User? @relation("UserResponsibleTasks", fields: [userResponsibleId], references: [id])
-  userCreated     User  @relation("UserCreatedTasks", fields: [userCreatedId], references: [id])
+  project         Project?    @relation(fields: [projectId], references: [id])
+  actionPlan      ActionPlan? @relation("ActionPlanTasks", fields: [actionPlanId], references: [id])
+  cliente         Cliente     @relation(fields: [clienteId], references: [id])
+  sector          Sector      @relation(fields: [sectorId], references: [id])
+  userResponsible User?       @relation("UserResponsibleTasks", fields: [userResponsibleId], references: [id])
+  userCreated     User        @relation("UserCreatedTasks", fields: [userCreatedId], references: [id])
 
   @@map("tasks")
 }
 
 model Sector {
-  id        Int      @id @default(autoincrement())
-  name      String?   @db.VarChar(255)
+  id          Int      @id @default(autoincrement())
+  name        String?   @db.VarChar(255)
   acronym     String?   @db.VarChar(5)
   description String?  @db.VarChar(160)
-  status      String   @default("ativo") @db.VarChar(10)
+  status      String   @default("ATIVO") @db.VarChar(10)
   color       String?   @db.VarChar(7)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  tasks     Task[]
-  clientes Cliente[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tasks       Task[]
+  userSectors UserSector[]
 
   @@map("sectors")
+}
+
+model UserSector {
+  id        Int       @id @default(autoincrement())
+  userId    Int       @map("user_id")
+  sectorId  Int       @map("sector_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sector Sector @relation(fields: [sectorId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, sectorId])
+  @@map("user_sectors")
 }

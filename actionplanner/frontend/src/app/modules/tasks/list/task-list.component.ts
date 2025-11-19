@@ -82,7 +82,7 @@ export class TaskListComponent {
   }
 
   editTask(id: number): void {
-    this.router.navigate(['/tasks/edit', id]);
+    this.router.navigate(['/tasks', id, 'edit']);
   }
 
   deleteTask(id: number): void {
@@ -104,6 +104,10 @@ export class TaskListComponent {
     } else {
       return 'Tarefas';
     }
+  }
+
+  createTask(): void {
+    this.router.navigate(['/tasks/new']);
   }
 }
 

@@ -45,6 +45,10 @@ export class TaskDataService {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 
+  getAvailableResponsibles(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/available-responsibles`);
+  }
+
   getTaskData(): Observable<GetTaskDataDto> {
     return this.http.get<GetTaskDataDto>(`${this.baseUrl}/data`);
   }

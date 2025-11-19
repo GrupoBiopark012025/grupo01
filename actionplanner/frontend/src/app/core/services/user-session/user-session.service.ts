@@ -2,7 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { of, switchMap, tap } from "rxjs";
 import { LocalStorageKey, LocalStorageService } from "@core/services/local-storage/local-storage.service";
 import { UserDataService } from "@data/user/user-data.service";
-import { GetUserDataDto, UserAccessLevelEnum, UserClientDto } from "@data/user/dtos";
+import { GetUserDataDto, UserAccessLevelEnum } from "@data/user/dtos";
 
 @Injectable({
   providedIn: 'root'

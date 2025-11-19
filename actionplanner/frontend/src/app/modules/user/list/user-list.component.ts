@@ -8,13 +8,14 @@ import { ApiPaginatedList } from "@data/common/dtos";
 import { ZardTableComponent } from "@shared/components/zardui/table/table.component";
 import { ZardBadgeComponent } from "@shared/components/zardui/badge/badge.component";
 import { ZardButtonComponent } from "@shared/components/zardui/button/button.component";
-import { EyeIcon, LucideAngularModule } from "lucide-angular";
+import { LucideAngularModule, Pencil } from "lucide-angular";
 import { ListHeaderComponent } from "@shared/components/base/list-header/list-header.component";
 import { UserSessionService } from "@core/services/user-session/user-session.service";
 import { PaginationComponent } from "@shared/components/base/pagination/pagination.component";
 import { UserStatusBadgeComponent } from "@modules/user/status-badge/user-status-badge.component";
 import { TableSkeletonComponent } from "@shared/components/base/skeletons/table-skeleton/table-skeleton.component";
 import { NoListContentComponent } from "@shared/components/base/no-list-content/no-list-content.component";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-user-list',
@@ -39,6 +40,7 @@ export class UserListComponent {
   private readonly userDataService = inject(UserDataService);
   private readonly userSessionService = inject(UserSessionService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
 
   private _query = signal<GetUserQuery>(new GetUserQuery());
 
@@ -47,7 +49,7 @@ export class UserListComponent {
 
   users$: Observable<ApiPaginatedList<GetUserDto>> = toObservable(this._query)
     .pipe(
-      switchMap(() => this.userDataService.getUsers(this._query())),
+      switchMap((query) => this.userDataService.getUsers(query)),
       shareReplay(1),
       takeUntilDestroyed(this.destroyRef)
     );
@@ -56,9 +58,18 @@ export class UserListComponent {
     this._query.update((prev) => ({ ...prev!, ...changes }));
   }
 
+  redirectToRegister() {
+    // TODO: validar depois um navigate melhor via html
+    this.router.navigate(['users', 'register']);
+  }
+
+  redirectToEdit(userId: number) {
+    this.router.navigate(['users', userId, 'edit']);
+  }
+
   protected readonly descricaoUserAccessLevelEnum = descricaoUserAccessLevelEnum;
 }
 
 const ICONS = {
-  view: EyeIcon
+  edit: Pencil
 }

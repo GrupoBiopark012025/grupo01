@@ -11,12 +11,26 @@ export const showTask = async (req, res, next) => {
   #swagger.responses[404] = {
     description: "Task não encontrada"
   }
+]  #swagger.responses[403] = {
+    description: "Acesso negado"
+  }
   */
   try {
-    const task = await TasksService.findById(req.params.id);
+    const task = await TasksService.findById(
+      req.params.id,
+      req.user.id,
+      req.user.onlyAttachedTasks
+    );
+    
     if (!task) {
       return res.status(404).json({ error: "Task não encontrada" });
     }
+
+    // Verifica se a task pertence ao cliente atual do usuário
+    if (task.clienteId !== req.user.clienteId) {
+      return res.status(403).json({ error: "Acesso negado a esta tarefa" });
+    }
+
     return res.status(200).json(task);
   } catch (error) {
     next(error);
@@ -113,7 +127,13 @@ export const listTasks = async (req, res, next) => {
       _order
     };
 
-    const result = await TasksService.findMany(filters, pagination);
+    const result = await TasksService.findMany(
+      filters,
+      pagination,
+      req.user.id,
+      req.user.onlyAttachedTasks,
+      req.user.clienteId
+    );
     return res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -139,11 +159,24 @@ export const createTask = async (req, res, next) => {
   #swagger.responses[400] = {
     description: "Dados inválidos"
   }
+  #swagger.responses[403] = {
+    description: "Acesso negado ao cliente especificado"
+  }
   */
   try {
-    const task = await TasksService.create(req.body);
+    if (req.body.clienteId && req.body.clienteId !== req.user.clienteId) {
+      return res.status(403).json({ 
+        error: "Você só pode criar tarefas para o cliente do seu ambiente atual" 
+      });
+    }
+
+    req.body.clienteId = req.user.clienteId;
+    
+
+    const task = await TasksService.create(req.body, req.user.id);
     return res.status(201).json(task);
   } catch (error) {
+    console.error('ERRO ao criar task:', error);
     next(error);
   }
 };
@@ -167,13 +200,50 @@ export const editTask = async (req, res, next) => {
   #swagger.responses[404] = {
     description: "Task não encontrada"
   }
+  #swagger.responses[403] = {
+    description: "Acesso negado"
+  }
   */
   try {
-    const updatedTask = await TasksService.update(req.params.id, req.body);
+    // Verifica se a task existe e se pertence ao cliente atual
+    const existingTask = await TasksService.findById(
+      req.params.id,
+      req.user.id,
+      req.user.onlyAttachedTasks
+    );
+
+    if (!existingTask) {
+      return res.status(404).json({ error: 'Task não encontrada' });
+    }
+
+    if (existingTask.clienteId !== req.user.clienteId) {
+      return res.status(403).json({ error: 'Acesso negado a esta tarefa' });
+    }
+
+    // Não permite alterar o clienteId
+    if (req.body.clienteId && req.body.clienteId !== req.user.clienteId) {
+      return res.status(403).json({ 
+        error: 'Não é possível alterar o cliente da tarefa' 
+      });
+    }
+
+    delete req.body.clienteId; // Remove clienteId do body para evitar alterações
+    delete req.body.userCreatedId; // Não permite alterar quem criou
+
+    const updatedTask = await TasksService.update(
+      req.params.id,
+      req.body,
+      req.user.id,
+      req.user.onlyAttachedTasks
+    );
+    
     return res.status(200).json(updatedTask);
   } catch (error) {
     if (error.code === 'P2025') {
       return res.status(404).json({ error: 'Task não encontrada' });
+    }
+    if (error.message === 'Você só pode editar tarefas das quais é responsável') {
+      return res.status(403).json({ error: error.message });
     }
     next(error);
   }
@@ -189,14 +259,69 @@ export const deleteTask = async (req, res, next) => {
   #swagger.responses[404] = {
     description: "Task não encontrada"
   }
+  #swagger.responses[403] = {
+    description: "Acesso negado"
+  }
   */
   try {
-    await TasksService.delete(req.params.id);
+    // Verifica se a task existe e se pertence ao cliente atual
+    const existingTask = await TasksService.findById(
+      req.params.id,
+      req.user.id,
+      req.user.onlyAttachedTasks
+    );
+
+    if (!existingTask) {
+      return res.status(404).json({ error: 'Task não encontrada' });
+    }
+
+    if (existingTask.clienteId !== req.user.clienteId) {
+      return res.status(403).json({ error: 'Acesso negado a esta tarefa' });
+    }
+
+    await TasksService.delete(
+      req.params.id,
+      req.user.id,
+      req.user.onlyAttachedTasks,
+      req.user.isAdmin
+    );
+    
     return res.status(204).send();
   } catch (error) {
     if (error.code === 'P2025') {
       return res.status(404).json({ error: 'Task não encontrada' });
     }
+    if (error.message === 'Você só pode deletar tarefas das quais é responsável') {
+      return res.status(403).json({ error: error.message });
+    }
+    next(error);
+  }
+};
+
+export const getAvailableResponsibles = async (req, res, next) => {
+  /*
+  #swagger.tags = ["Tasks"]
+  #swagger.security = [{"bearerAuth": []}]
+  #swagger.responses[200] = {
+    description: "Lista de usuários disponíveis para serem responsáveis",
+    schema: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          id: { type: "integer" },
+          nome: { type: "string" },
+          email: { type: "string" },
+          accessLevel: { type: "string" }
+        }
+      }
+    }
+  }
+  */
+  try {
+    const users = await TasksService.getAvailableResponsibles(req.user.clienteId);
+    return res.status(200).json(users);
+  } catch (error) {
     next(error);
   }
 };

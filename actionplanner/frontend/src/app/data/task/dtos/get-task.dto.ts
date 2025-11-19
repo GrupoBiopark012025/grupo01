@@ -18,10 +18,12 @@ export interface GetTaskDto {
   userResponsible?: {
     id: number;
     nome: string;
+    email?: string;
   };
   userCreated?: {
     id: number;
     nome: string;
+    email?: string;
   };
   cliente?: {
     id: number;
@@ -29,10 +31,12 @@ export interface GetTaskDto {
   };
   sector?: {
     id: number;
-    nome: string;
+    name?: string;
+    nome?: string;
   };
   project?: {
     id: number;
-    title: string;
+    name?: string;
+    title?: string;
   };
 }

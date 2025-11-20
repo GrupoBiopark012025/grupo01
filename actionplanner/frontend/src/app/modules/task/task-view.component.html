@@ -34,30 +34,42 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-        <div>
-          <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Responsável</p>
-          <p class="text-gray-900">{{ task.userResponsible.nome }}</p>
-        </div>
-        <div>
-          <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Criado por</p>
-          <p class="text-gray-900">{{ task.userCreated.nome }}</p>
-        </div>
-        <div>
-          <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Prazo</p>
-          <p class="text-gray-900">{{ task.dueDate | date: 'shortDate' }}</p>
-        </div>
-        <div>
-          <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Projeto</p>
-          <p class="text-gray-900">{{ task.project.name }}</p>
-        </div>
-        <div>
-          <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Cliente</p>
-          <p class="text-gray-900">{{ task.cliente.nome }}</p>
-        </div>
-        <div>
-          <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Setor</p>
-          <p class="text-gray-900">{{ task.sector.name }}</p>
-        </div>
+        @if (task.userResponsible) {
+          <div>
+            <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Responsável</p>
+            <p class="text-gray-900">{{ task.userResponsible.nome }}</p>
+          </div>
+        }
+        @if (task.userCreated) {
+          <div>
+            <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Criado por</p>
+            <p class="text-gray-900">{{ task.userCreated.nome }}</p>
+          </div>
+        }
+        @if (task.dueDate) {
+          <div>
+            <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Prazo</p>
+            <p class="text-gray-900">{{ task.dueDate | date: 'shortDate' }}</p>
+          </div>
+        }
+        @if (task.project) {
+          <div>
+            <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Projeto</p>
+            <p class="text-gray-900">{{ task.project.name || task.project.title }}</p>
+          </div>
+        }
+        @if (task.cliente) {
+          <div>
+            <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Cliente</p>
+            <p class="text-gray-900">{{ task.cliente.nome }}</p>
+          </div>
+        }
+        @if (task.sector) {
+          <div>
+            <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Setor</p>
+            <p class="text-gray-900">{{ task.sector.name || task.sector.nome }}</p>
+          </div>
+        }
         <div>
           <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Data de Criação</p>
           <p class="text-gray-900">{{ task.createdAt | date: 'shortDate' }}</p>
@@ -79,4 +91,3 @@
     </div>
   </div>
 }
-

@@ -34,12 +34,20 @@ export interface GetTaskDto {
     id: number;
     name?: string;
     nome?: string;
+    acronym?: string;
     description?: string;
+    status?: string; 
+    color?: string;  
+    createdAt?: Date;
   };
   project?: {
     id: number;
     name?: string;
     title?: string;
+    description?: string;    // <--- ADICIONA
     actionPlanId?: number;
+    status?: string; 
+    createdAt?: Date;
+    updatedAt?: Date;
   };
 }

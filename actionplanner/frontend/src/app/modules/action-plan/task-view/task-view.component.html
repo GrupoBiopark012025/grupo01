@@ -44,10 +44,12 @@
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-            <div>
-              <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Prazo</p>
-              <p class="text-gray-900">{{ task.dueDate | date: 'shortDate' }}</p>
-            </div>
+            @if (task.dueDate) {
+              <div>
+                <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Prazo</p>
+                <p class="text-gray-900">{{ task.dueDate | date: 'shortDate' }}</p>
+              </div>
+            }
             <div>
               <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Data de Criação</p>
               <p class="text-gray-900">{{ task.createdAt | date: 'shortDate' }}</p>
@@ -72,71 +74,91 @@
       <div class="lg:col-span-3">
         <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
           <!-- Informações do Projeto -->
-          <div class="mb-6 pb-4 border-b border-gray-100">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Projeto</h2>
-            <div class="space-y-3 text-sm">
-              <div>
-                <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Nome</p>
-                <p class="text-gray-900">{{ task.project.name }}</p>
-              </div>
-              @if (task.project.description) {
+          @if (task.project) {
+            <div class="mb-6 pb-4 border-b border-gray-100">
+              <h2 class="text-lg font-semibold text-gray-900 mb-4">Projeto</h2>
+              <div class="space-y-3 text-sm">
                 <div>
-                  <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Descrição</p>
-                  <p class="text-gray-900">{{ task.project.description }}</p>
+                  <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Nome</p>
+                  <p class="text-gray-900">{{ task.project.name }}</p>
                 </div>
-              }
-              <div>
-                <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Status</p>
-                <p class="text-gray-900">{{ task.project.status }}</p>
-              </div>
-              <div>
-                <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Data de Criação</p>
-                <p class="text-gray-900">{{ task.project.createdAt | date: 'shortDate' }}</p>
+                @if (task.project.description) {
+                  <div>
+                    <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Descrição</p>
+                    <p class="text-gray-900">{{ task.project.description }}</p>
+                  </div>
+                }
+                @if (task.project.status) {
+                  <div>
+                    <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Status</p>
+                    <p class="text-gray-900">{{ task.project.status }}</p>
+                  </div>
+                }
+                @if (task.project.createdAt) {
+                  <div>
+                    <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Data de Criação</p>
+                    <p class="text-gray-900">{{ task.project.createdAt | date: 'shortDate' }}</p>
+                  </div>
+                }
               </div>
             </div>
-          </div>
+          }
 
           <!-- Informações dos Usuários -->
           <div class="mb-6 pb-4 border-b border-gray-100">
             <h2 class="text-lg font-semibold text-gray-900 mb-4">Usuários</h2>
             <div class="space-y-4 text-sm">
-              <div>
-                <p class="text-xs font-medium text-gray-500 uppercase mb-2">Responsável</p>
-                <div class="space-y-1">
-                  <p class="text-gray-900 font-medium">{{ task.userResponsible.nome }}</p>
-                  <p class="text-gray-600 text-xs">{{ task.userResponsible.email }}</p>
-                </div>
-              </div>
-              <div class="pt-3 border-t border-gray-100">
-                <p class="text-xs font-medium text-gray-500 uppercase mb-2">Criado por</p>
-                <div class="space-y-1">
-                  <p class="text-gray-900 font-medium">{{ task.userCreated.nome }}</p>
-                  <p class="text-gray-600 text-xs">{{ task.userCreated.email }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Informações do Setor -->
-          <div>
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Setor</h2>
-            <div class="space-y-3 text-sm">
-              <div>
-                <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Nome</p>
-                <p class="text-gray-900">{{ task.sector.name }}</p>
-              </div>
-              <div>
-                <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Sigla</p>
-                <p class="text-gray-900">{{ task.sector.acronym }}</p>
-              </div>
-              @if (task.sector.description) {
+              @if (task.userResponsible) {
                 <div>
-                  <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Descrição</p>
-                  <p class="text-gray-900">{{ task.sector.description }}</p>
+                  <p class="text-xs font-medium text-gray-500 uppercase mb-2">Responsável</p>
+                  <div class="space-y-1">
+                    <p class="text-gray-900 font-medium">{{ task.userResponsible.nome }}</p>
+                    @if (task.userResponsible.email) {
+                      <p class="text-gray-600 text-xs">{{ task.userResponsible.email }}</p>
+                    }
+                  </div>
+                </div>
+              }
+              @if (task.userCreated) {
+                <div class="pt-3 border-t border-gray-100">
+                  <p class="text-xs font-medium text-gray-500 uppercase mb-2">Criado por</p>
+                  <div class="space-y-1">
+                    <p class="text-gray-900 font-medium">{{ task.userCreated.nome }}</p>
+                    @if (task.userCreated.email) {
+                      <p class="text-gray-600 text-xs">{{ task.userCreated.email }}</p>
+                    }
+                  </div>
                 </div>
               }
             </div>
           </div>
+
+          <!-- Informações do Setor -->
+          @if (task.sector) {
+            <div>
+              <h2 class="text-lg font-semibold text-gray-900 mb-4">Setor</h2>
+              <div class="space-y-3 text-sm">
+                @if (task.sector.name || task.sector.nome) {
+                  <div>
+                    <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Nome</p>
+                    <p class="text-gray-900">{{ task.sector.name || task.sector.nome }}</p>
+                  </div>
+                }
+                @if (task.sector.acronym) {
+                  <div>
+                    <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Sigla</p>
+                    <p class="text-gray-900">{{ task.sector.acronym }}</p>
+                  </div>
+                }
+                @if (task.sector.description) {
+                  <div>
+                    <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Descrição</p>
+                    <p class="text-gray-900">{{ task.sector.description }}</p>
+                  </div>
+                }
+              </div>
+            </div>
+          }
         </div>
       </div>
     </div>
@@ -153,4 +175,3 @@
     </div>
   </div>
 }
-

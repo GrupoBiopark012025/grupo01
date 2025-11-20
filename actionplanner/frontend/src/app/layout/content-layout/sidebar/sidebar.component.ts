@@ -37,7 +37,6 @@ export class SidebarComponent {
     projetos: false,
     tarefas: false,
     planoAcao: false,
-    relatorios: false
     relatorios: false,
     clientes: false
   };

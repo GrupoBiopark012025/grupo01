@@ -1,5 +1,6 @@
 {
   "style": "css",
+  "packageManager": "npm",
   "tailwind": {
     "css": "src/styles.css",
     "baseColor": "zinc",
@@ -8,6 +9,5 @@
   "aliases": {
     "components": "src/app/shared/components/zardui",
     "utils": "src/app/shared/utils/zardui"
-  },
-  "theme": "zinc"
+  }
 }

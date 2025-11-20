@@ -32,6 +32,12 @@ export class UserSessionService {
       );
   }
 
+  reloadSessionData() {
+    this.localStorageService.remove(LocalStorageKey.SessionData);
+
+    return this.getSessionData();
+  }
+
   private handleUserInitials() {
     const fullName = this._state()?.nome.trim() ?? '';
 

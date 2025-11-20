@@ -69,10 +69,10 @@ model User {
   // Relacionamentos
   cliente          Cliente       @relation(fields: [clienteId], references: [id])
   userClientes     UserCliente[]
+  userSectors      UserSector[]
   auditLogs        AuditLog[]
   tasksResponsible Task[]        @relation("UserResponsibleTasks")
   tasksCreated     Task[]        @relation("UserCreatedTasks")
-  sectors          Sector[]      @relation("UserSectors")
 
   @@map("users")
 }
@@ -184,16 +184,31 @@ model Task {
 
 model Sector {
   id          Int      @id @default(autoincrement())
-  name        String   @db.VarChar(255)
-  acronym     String   @db.VarChar(5)
+  name        String?   @db.VarChar(255)
+  acronym     String?   @db.VarChar(5)
   description String?  @db.VarChar(160)
   status      String   @default("ATIVO") @db.VarChar(10)
-  color       String   @db.VarChar(7)
+  color       String?   @db.VarChar(7)
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  tasks Task[]
-  users User[] @relation("UserSectors")
+  tasks       Task[]
+  userSectors UserSector[]
 
   @@map("sectors")
+}
+
+model UserSector {
+  id        Int       @id @default(autoincrement())
+  userId    Int       @map("user_id")
+  sectorId  Int       @map("sector_id")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sector Sector @relation(fields: [sectorId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, sectorId])
+  @@map("user_sectors")
 }

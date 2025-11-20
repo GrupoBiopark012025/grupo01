@@ -1,0 +1,166 @@
+<div class="container mx-auto px-4 py-6">
+  <!-- Header -->
+  <div class="mb-6">
+    <div class="flex items-center gap-4 mb-2">
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+        (click)="goBack()"
+      >
+        <lucide-icon [img]="icons.ArrowLeftIcon" [size]="16"></lucide-icon>
+        Voltar
+      </button>
+    </div>
+    <h1 class="text-2xl font-bold text-gray-900">
+      {{ isEditMode ? 'Editar Tarefa' : 'Nova Tarefa' }}
+    </h1>
+  </div>
+
+  <!-- Loading skeleton -->
+  <div *ngIf="loadingData()" class="bg-white rounded-lg shadow p-6">
+    <div class="animate-pulse space-y-4">
+      <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+      <div class="h-10 bg-gray-200 rounded"></div>
+      <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+      <div class="h-32 bg-gray-200 rounded"></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="h-10 bg-gray-200 rounded"></div>
+        <div class="h-10 bg-gray-200 rounded"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form *ngIf="!loadingData()" [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="bg-white rounded-lg shadow">
+    <div class="p-6 space-y-6">
+      <!-- Título -->
+      <div>
+        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+          Título <span class="text-red-500">*</span>
+        </label>
+        <input
+          id="title"
+          z-input
+          type="text"
+          formControlName="title"
+          placeholder="Digite o título da tarefa"
+          [class.border-red-500]="taskForm.get('title')?.invalid && taskForm.get('title')?.touched"
+        />
+        <p *ngIf="getFieldError('title')" class="mt-1 text-sm text-red-500">
+          {{ getFieldError('title') }}
+        </p>
+      </div>
+
+      <!-- Descrição -->
+      <div>
+        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+          Descrição
+        </label>
+        <textarea
+          id="description"
+          z-input
+          formControlName="description"
+          placeholder="Descreva os detalhes da tarefa"
+          rows="4"
+          [class.border-red-500]="taskForm.get('description')?.invalid && taskForm.get('description')?.touched"
+        ></textarea>
+        <p *ngIf="getFieldError('description')" class="mt-1 text-sm text-red-500">
+          {{ getFieldError('description') }}
+        </p>
+      </div>
+
+      <!-- Grid com 2 colunas -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Status -->
+        <div>
+          <z-select
+            id="status"
+            zPlaceholder="Selecione um status"
+            [ngModel]="selectedStatus()"
+            [ngModelOptions]="{standalone: true}"
+            (zSelectionChange)="onStatusChange($event)"
+          >
+            <z-select-item *ngFor="let option of statusOptions" [zValue]="option.value">
+              {{ option.label }}
+            </z-select-item>
+          </z-select>
+          <p *ngIf="getFieldError('status')" class="mt-1 text-sm text-red-500">
+            {{ getFieldError('status') }}
+          </p>
+        </div>
+
+        <!-- Prioridade -->
+        <div>
+          <z-select
+            id="priority"
+            zPlaceholder="Selecione uma prioridade"
+            [ngModel]="selectedPriority()"
+            [ngModelOptions]="{standalone: true}"
+            (zSelectionChange)="onPriorityChange($event)"
+          >
+            <z-select-item *ngFor="let option of priorityOptions" [zValue]="option.value">
+              {{ option.label }}
+            </z-select-item>
+          </z-select>
+          <p *ngIf="getFieldError('priority')" class="mt-1 text-sm text-red-500">
+            {{ getFieldError('priority') }}
+          </p>
+        </div>
+
+        <!-- Setor -->
+        <app-form-select
+          id="sectorId"
+          label="Setor"
+          placeholder="Selecione um setor"
+          formControlName="sectorId"
+          [options]="sectorOptions()"
+          [required]="true"
+          [error]="getFieldError('sectorId')"
+        />
+
+        <!-- Responsável -->
+        <app-form-select
+          id="userResponsibleId"
+          label="Responsável"
+          placeholder="Sem responsável"
+          formControlName="userResponsibleId"
+          [options]="responsibleOptions()"
+        />
+
+        <!-- Data de Vencimento -->
+        <div>
+          <label for="dueDate" class="block text-sm font-medium text-gray-700 mb-2">
+            Data de Vencimento
+          </label>
+          <input
+            id="dueDate"
+            z-input
+            type="date"
+            formControlName="dueDate"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gray-50 px-6 py-4 rounded-b-lg flex justify-end gap-3">
+      <button
+        type="button"
+        class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        (click)="goBack()"
+        [disabled]="loading()"
+      >
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        [disabled]="loading() || taskForm.invalid"
+      >
+        <lucide-icon *ngIf="!loading()" [img]="icons.SaveIcon" [size]="16"></lucide-icon>
+        <span *ngIf="loading()" class="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+        {{ loading() ? 'Salvando...' : (isEditMode ? 'Atualizar' : 'Criar Tarefa') }}
+      </button>
+    </div>
+  </form>
+</div>

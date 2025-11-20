@@ -25,8 +25,10 @@ export class UserService {
     }
 
     if (!isAdmin && Array.isArray(userSectorIds) && userSectorIds.length > 0) {
-      data.sectors = {
-        connect: userSectorIds.map((sectorId) => ({ id: sectorId })),
+      data.userSectors = {
+        create: userSectorIds.map((sectorId) => ({
+          sector: { connect: { id: sectorId } },
+        })),
       };
     }
 
@@ -39,7 +41,11 @@ export class UserService {
             cliente: true
           }
         },
-        sectors: true
+        userSectors: {
+          include: {
+            sector: true
+          }
+        }
       }
     });
   }
@@ -54,13 +60,18 @@ export class UserService {
             cliente: true
           }
         },
-        sectors: true
+        userSectors: {
+          include: {
+            sector: true
+          }
+        }
       }
     });
 
     return {
       ...user,
-      userClientes: user?.userClientes?.map(uc => uc.cliente) || []
+      userClientes: user?.userClientes?.map(uc => uc.cliente) || [],
+      sectors: user?.userSectors?.map(us => us.sector) || []
     }
   }
 
@@ -108,7 +119,11 @@ export class UserService {
               cliente: true
             }
           },
-          sectors: true
+          userSectors: {
+            include: {
+              sector: true
+            }
+          }
         }
       }),
       prisma.user.count({ where })
@@ -117,7 +132,10 @@ export class UserService {
     const totalPages = Math.ceil(totalData / size);
 
     return {
-      users,
+      users: users.map(user => ({
+        ...user,
+        sectors: user.userSectors?.map(us => us.sector) || []
+      })),
       totalData,
       totalPages,
       currentPage: page,
@@ -158,13 +176,17 @@ export class UserService {
     }
 
     if (Array.isArray(userSectorIds)) {
-      updateData.sectors = {
-        set: [],
-        ...( !isAdmin && userSectorIds.length > 0
-            ? { connect: userSectorIds.map((sectorId) => ({ id: sectorId })) }
-            : {}
-        )
-      };
+      await prisma.userSector.deleteMany({
+        where: { userId: parseInt(id) },
+      });
+
+      if (!isAdmin && userSectorIds.length > 0) {
+        updateData.userSectors = {
+          create: userSectorIds.map((sectorId) => ({
+            sector: { connect: { id: sectorId } },
+          })),
+        };
+      }
     }
 
     return await prisma.user.update({
@@ -175,7 +197,11 @@ export class UserService {
         userClientes: {
           include: { cliente: true },
         },
-        sectors: true,
+        userSectors: {
+          include: {
+            sector: true
+          }
+        }
       },
     });
   }

@@ -26,6 +26,15 @@ export const contentLayoutRoutes: Routes = [
         canActivate: [authenticationGuard]
       },
       {
+        path: 'tasks',
+        title: 'Tarefas - ActionPlanner',
+        data: {
+          description: 'Gestão das Tarefas.'
+        },
+        loadChildren: () => import('@modules/tasks/tasks.routes').then(m => m.TasksRoutes),
+        canActivate: [authenticationGuard]
+      },
+      {
         path: 'action-plans',
         title: 'Planos de Ação - ActionPlanner',
         data: {

@@ -1,69 +1,53 @@
+import { TaskStatusEnum } from "./task-status.enum";
+import { TaskPriorityEnum } from "./task-priority.enum";
+
 export interface GetTaskDto {
   id: number;
   title: string;
-  description: string;
-  status: string;
-  priority: string;
-  dueDate: string;
-  projectId: number;
-  actionPlanId: number;
-  clienteId: number;
-  sectorId: number;
-  createdAt: string;
-  updatedAt: string;
-  userResponsibleId: number;
+  description?: string;
+  status: TaskStatusEnum;
+  priority: TaskPriorityEnum;
+  dueDate?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  projectId?: number;
+  actionPlanId?: number;
+  clienteId?: number;
+  sectorId?: number;
+  userResponsibleId?: number;
   userCreatedId: number;
-  project: TaskProjectDto;
-  cliente: TaskClienteDto;
-  sector: TaskSectorDto;
-  userResponsible: TaskUserDto;
-  userCreated: TaskUserDto;
+  userResponsible?: {
+    id: number;
+    nome: string;
+    email?: string;
+  };
+  userCreated?: {
+    id: number;
+    nome: string;
+    email?: string;
+  };
+  cliente?: {
+    id: number;
+    nome: string;
+  };
+  sector?: {
+    id: number;
+    name?: string;
+    nome?: string;
+    acronym?: string;
+    description?: string;
+    status?: string; 
+    color?: string;  
+    createdAt?: Date;
+  };
+  project?: {
+    id: number;
+    name?: string;
+    title?: string;
+    description?: string;    // <--- ADICIONA
+    actionPlanId?: number;
+    status?: string; 
+    createdAt?: Date;
+    updatedAt?: Date;
+  };
 }
-
-export interface TaskProjectDto {
-  id: number;
-  name: string;
-  description: string;
-  actionPlanId: number;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface TaskClienteDto {
-  id: number;
-  nome: string;
-  cnpj: string;
-  email: string;
-  telefone: string;
-  endereco: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface TaskSectorDto {
-  id: number;
-  name: string;
-  acronym: string;
-  description: string;
-  status: string;
-  color: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface TaskUserDto {
-  id: number;
-  nome: string;
-  email: string;
-  password: string;
-  clienteId: number;
-  isAdmin: boolean;
-  accessLevel: string;
-  onlyAttachedTasks: boolean;
-  status: string;
-  lastLogin: string;
-  createdAt: string;
-  updatedAt: string;
-}
-

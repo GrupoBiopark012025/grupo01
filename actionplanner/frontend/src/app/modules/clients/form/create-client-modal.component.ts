@@ -2,11 +2,16 @@ import { Component, EventEmitter, Output, inject } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ClientsDataService } from '@data/clients/clients-data.service'
+import { ZardButtonComponent } from '@shared/components/zardui/button/button.component'
 
 @Component({
   selector: 'app-create-client-modal',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule, 
+    ZardButtonComponent
+  ],
   templateUrl: './create-client-modal.component.html'
 })
 export class CreateClientModalComponent {

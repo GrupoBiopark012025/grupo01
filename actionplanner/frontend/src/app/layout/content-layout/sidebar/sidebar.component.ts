@@ -37,7 +37,6 @@ export class SidebarComponent {
     projetos: false,
     tarefas: false,
     planoAcao: false,
-    relatorios: false
     relatorios: false,
     clientes: false
   };
@@ -89,6 +88,19 @@ export class SidebarComponent {
     
     if (!userSection && this._isUserMenuOpen()) {
       this.closeUserMenu();
+    }
+  }
+
+  getTasksTitle(): string {
+    const user = this.user();
+    if (!user) return 'Tarefas';
+    
+    if (user.isAdmin) {
+      return 'Todas as Tarefas';
+    } else if (user.onlyAttachedTasks) {
+      return 'Minhas Tarefas';
+    } else {
+      return 'Tarefas';
     }
   }
 }

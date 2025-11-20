@@ -148,7 +148,7 @@ export class ActionPlanCreateComponent {
         }
         this.isSearchingResponsible.set(true);
         console.log('🔍 Buscando responsável com termo:', searchTerm);
-        return this.userDataService.getUsers({ nome: searchTerm, page: 1, size: 10, orderBy: 'nome' });
+        return this.userDataService.getUsers({ nome: searchTerm, page: 1, size: 10 });
       }),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({

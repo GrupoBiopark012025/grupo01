@@ -1,0 +1,144 @@
+<div class="container mx-auto px-4 py-6">
+  <!-- Header -->
+  <div class="mb-6">
+    <div class="flex items-center gap-4 mb-2">
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+        (click)="goBack()"
+      >
+        <lucide-icon [img]="icons.ArrowLeftIcon" [size]="16"></lucide-icon>
+        Voltar
+      </button>
+    </div>
+    <div class="flex justify-between items-start">
+      <h1 class="text-2xl font-bold text-gray-900">
+        Detalhes da Tarefa
+      </h1>
+      <div class="flex gap-2" *ngIf="task()">
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+          (click)="editTask()"
+        >
+          <lucide-icon [img]="icons.EditIcon" [size]="16"></lucide-icon>
+          Editar
+        </button>
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700"
+          (click)="deleteTask()"
+        >
+          <lucide-icon [img]="icons.TrashIcon" [size]="16"></lucide-icon>
+          Excluir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading skeleton -->
+  <div *ngIf="loading()" class="bg-white rounded-lg shadow p-6">
+    <div class="animate-pulse space-y-4">
+      <div class="h-6 bg-gray-200 rounded w-3/4"></div>
+      <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+      <div class="h-32 bg-gray-200 rounded"></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="h-4 bg-gray-200 rounded"></div>
+        <div class="h-4 bg-gray-200 rounded"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task Details -->
+  <div *ngIf="!loading() && task()" class="bg-white rounded-lg shadow">
+    <div class="p-6 space-y-6">
+      <!-- Título e Badges -->
+      <div>
+        <h2 class="text-xl font-semibold text-gray-900 mb-3">
+          {{ task()?.title }}
+        </h2>
+        <div class="flex gap-2">
+          <app-task-status-badge [status]="task()!.status"></app-task-status-badge>
+          <app-task-priority-badge [priority]="task()!.priority"></app-task-priority-badge>
+        </div>
+      </div>
+
+      <!-- Descrição -->
+      <div *ngIf="task()?.description">
+        <h3 class="text-sm font-medium text-gray-700 mb-2">Descrição</h3>
+        <p class="text-gray-600 whitespace-pre-wrap">{{ task()?.description }}</p>
+      </div>
+
+      <!-- Informações em Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Data de Vencimento -->
+        <div *ngIf="task()?.dueDate" class="flex items-start gap-3">
+          <div class="p-2 bg-blue-50 rounded-lg">
+            <lucide-icon [img]="icons.CalendarIcon" [size]="20" class="text-blue-600"></lucide-icon>
+          </div>
+          <div>
+            <h3 class="text-sm font-medium text-gray-700">Data de Vencimento</h3>
+            <p class="text-gray-900">{{ formatDate(task()?.dueDate) }}</p>
+          </div>
+        </div>
+
+        <!-- Responsável -->
+        <div *ngIf="task()?.userResponsible" class="flex items-start gap-3">
+          <div class="p-2 bg-green-50 rounded-lg">
+            <lucide-icon [img]="icons.UserIcon" [size]="20" class="text-green-600"></lucide-icon>
+          </div>
+          <div>
+            <h3 class="text-sm font-medium text-gray-700">Responsável</h3>
+            <p class="text-gray-900">{{ task()?.userResponsible?.nome }}</p>
+            <p *ngIf="task()?.userResponsible?.email" class="text-sm text-gray-500">{{ task()?.userResponsible?.email }}</p>
+          </div>
+        </div>
+
+        <!-- Setor -->
+        <div *ngIf="task()?.sector" class="flex items-start gap-3">
+          <div class="p-2 bg-purple-50 rounded-lg">
+            <lucide-icon [img]="icons.BuildingIcon" [size]="20" class="text-purple-600"></lucide-icon>
+          </div>
+          <div>
+            <h3 class="text-sm font-medium text-gray-700">Setor</h3>
+            <p class="text-gray-900">{{ task()?.sector?.nome || task()?.sector?.name }}</p>
+          </div>
+        </div>
+
+        <!-- Cliente -->
+        <div *ngIf="task()?.cliente" class="flex items-start gap-3">
+          <div class="p-2 bg-orange-50 rounded-lg">
+            <lucide-icon [img]="icons.BuildingIcon" [size]="20" class="text-orange-600"></lucide-icon>
+          </div>
+          <div>
+            <h3 class="text-sm font-medium text-gray-700">Cliente</h3>
+            <p class="text-gray-900">{{ task()?.cliente?.nome }}</p>
+          </div>
+        </div>
+
+        <!-- Criado por -->
+        <div *ngIf="task()?.userCreated" class="flex items-start gap-3">
+          <div class="p-2 bg-gray-50 rounded-lg">
+            <lucide-icon [img]="icons.UserIcon" [size]="20" class="text-gray-600"></lucide-icon>
+          </div>
+          <div>
+            <h3 class="text-sm font-medium text-gray-700">Criado por</h3>
+            <p class="text-gray-900">{{ task()?.userCreated?.nome }}</p>
+            <p class="text-sm text-gray-500">{{ formatDate(task()?.createdAt) }}</p>
+          </div>
+        </div>
+
+        <!-- Última atualização -->
+        <div class="flex items-start gap-3">
+          <div class="p-2 bg-gray-50 rounded-lg">
+            <lucide-icon [img]="icons.CalendarIcon" [size]="20" class="text-gray-600"></lucide-icon>
+          </div>
+          <div>
+            <h3 class="text-sm font-medium text-gray-700">Última atualização</h3>
+            <p class="text-gray-900">{{ formatDate(task()?.updatedAt) }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

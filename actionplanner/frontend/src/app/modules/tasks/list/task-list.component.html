@@ -1,0 +1,79 @@
+<app-list-header [title]="getPageTitle()" actionTitle="Nova Tarefa" (onActionClicked)="createTask()" />
+
+@if (tasks$ | async; as tasks) {
+  @if (tasks.data.length; as recordsInView) {
+    <table z-table class="w-full">
+      <thead>
+      <tr>
+        <th>Título</th>
+        <th>Prioridade</th>
+        <th>Status</th>
+        <th>Responsável</th>
+        <th>Data de Vencimento</th>
+        <th>Ações</th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (task of tasks.data; track task.id) {
+          @let isResponsible = loggedUser()?.id === task.userResponsibleId;
+          <tr>
+            <td class="font-medium">
+              <div class="flex flex-row items-center gap-2">
+                <span>{{ task.title }}</span>
+
+                @if (isResponsible) {
+                  <z-badge
+                    zType="outline"
+                    class="text-amber-400 border-amber-400 hover:text-amber-300 hover:border-amber-300 transition-colors"
+                  >
+                    Responsável
+                  </z-badge>
+                }
+              </div>
+            </td>
+            <td>
+              <app-task-priority-badge [priority]="task.priority" />
+            </td>
+            <td>
+              <app-task-status-badge [status]="task.status" />
+            </td>
+            <td>
+              {{ task.userResponsible?.nome || 'Não atribuído' }}
+            </td>
+            <td>
+              {{ task.dueDate ? (task.dueDate | date: 'shortDate') : 'Sem data' }}
+            </td>
+            <td>
+              <div class="flex items-center gap-2">
+                <z-button zType="ghost" zSize="icon" title="Ver detalhes" (click)="viewTask(task.id)">
+                  <i-lucide [img]="icons.view"></i-lucide>
+                </z-button>
+                <z-button zType="ghost" zSize="icon" title="Editar" (click)="editTask(task.id)">
+                  <i-lucide [img]="icons.edit"></i-lucide>
+                </z-button>
+                <z-button zType="ghost" zSize="icon" title="Excluir" (click)="deleteTask(task.id)">
+                  <i-lucide [img]="icons.delete"></i-lucide>
+                </z-button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <app-pagination
+      [currentPage]="query().page"
+      [pageSize]="query().size"
+      [recordsInView]="recordsInView"
+      [totalPages]="tasks.totalPages"
+      [collectionSize]="tasks.totalData"
+      (onPageChange)="changeQuery({ page: $event })"
+    />
+  } @else {
+    <app-no-list-content
+      text="Nenhuma tarefa encontrada."
+    />
+  }
+} @else {
+  <app-table-skeleton />
+}

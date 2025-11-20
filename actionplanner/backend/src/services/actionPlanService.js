@@ -24,7 +24,7 @@ export class ActionPlanService {
       observacoes: "observations",
       observations: "observations",
       createdAt: "createdAt",
-      updatedAt: "updatedAt"
+      updatedAt: "updatedAt",
     };
 
     const orderField = orderBy.replace("-", "");
@@ -32,11 +32,11 @@ export class ActionPlanService {
     const direction = orderBy.startsWith("-") ? "desc" : "asc";
 
     return {
-      [fieldName]: direction
+      [fieldName]: direction,
     };
   }
 
-  static async findMany(filters = {}, pagination = {}) {
+  static async findMany(filters = {}, pagination = {}, clienteId = null) {
     const { page = 1, size = 10, orderBy = "id" } = pagination;
     const {
       projectId,
@@ -52,12 +52,12 @@ export class ActionPlanService {
 
     const where = {};
 
+    if (clienteId) {
+      where.clienteId = clienteId;
+    }
+
     if (projectId) {
-      where.projects = {
-        some: {
-          id: parseInt(projectId)
-        }
-      };
+      where.projectId = parseInt(projectId);
     }
     if (number) {
       where.number = { contains: number, mode: "insensitive" };
@@ -92,7 +92,14 @@ export class ActionPlanService {
         take: size,
         orderBy: this.getOrderBy(orderBy),
         include: {
-          projects: true,
+          project: true,
+          cliente: {
+            select: {
+              id: true,
+              nome: true,
+              cnpj: true,
+            },
+          },
           tasks: {
             include: {
               cliente: true,
@@ -101,26 +108,28 @@ export class ActionPlanService {
               userCreated: true,
             },
             orderBy: {
-              createdAt: 'asc'
-            }
-          }
+              createdAt: "asc",
+            },
+          },
         },
       }),
       prisma.actionPlan.count({ where }),
     ]);
 
-    // Adicionar métricas para cada plano de ação e transformar projetos
-    const actionPlansWithMetrics = actionPlans.map(actionPlan => {
+    const actionPlansWithMetrics = actionPlans.map((actionPlan) => {
       const tasks = actionPlan.tasks;
       const totalTasks = tasks.length;
-      const completedTasks = tasks.filter(task => task.status === 'CONCLUIDA').length;
-      const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+      const completedTasks = tasks.filter(
+        (task) => task.status === "CONCLUIDA"
+      ).length;
+      const progress =
+        totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
 
       return {
         ...actionPlan,
         totalTasks,
         completedTasks,
-        progress
+        progress,
       };
     });
 
@@ -139,7 +148,14 @@ export class ActionPlanService {
     const actionPlan = await prisma.actionPlan.findUnique({
       where: { id: parseInt(id) },
       include: {
-        projects: true,
+        project: true,
+        cliente: {
+          select: {
+            id: true,
+            nome: true,
+            cnpj: true,
+          },
+        },
         tasks: {
           include: {
             cliente: true,
@@ -148,10 +164,10 @@ export class ActionPlanService {
             userCreated: true,
           },
           orderBy: {
-            createdAt: 'asc'
-          }
-        }
-      }
+            createdAt: "asc",
+          },
+        },
+      },
     });
 
     if (!actionPlan) return null;
@@ -160,130 +176,86 @@ export class ActionPlanService {
   }
 
   static async create(actionPlanData) {
-    const { projectIds, ...data } = actionPlanData;
-    
-    return await prisma.$transaction(async (tx) => {
-      // Criar o plano de ação
-      const actionPlan = await tx.actionPlan.create({
-        data,
-        include: {
-          projects: true,
-          tasks: {
-            include: {
-              cliente: true,
-              sector: true,
-              userResponsible: true,
-              userCreated: true,
-            },
-            orderBy: {
-              createdAt: 'asc'
-            }
-          }
-        }
-      });
+    const { projectId, clienteId, ...data } = actionPlanData;
 
-      // Se projectIds foi fornecido, vincular os projetos ao plano de ação
-      if (projectIds && projectIds.length > 0) {
-        await tx.project.updateMany({
-          where: {
-            id: { in: projectIds.map(id => parseInt(id)) }
+    return await prisma.actionPlan.create({
+      data: {
+        ...data,
+        clienteId: parseInt(clienteId),
+        projectId: projectId ? parseInt(projectId) : null,
+      },
+      include: {
+        project: true,
+        cliente: {
+          select: {
+            id: true,
+            nome: true,
+            cnpj: true,
           },
-          data: {
-            actionPlanId: actionPlan.id
-          }
-        });
-      }
-
-      // Buscar o plano de ação atualizado com os projetos vinculados
-      return await tx.actionPlan.findUnique({
-        where: { id: actionPlan.id },
-        include: {
-          projects: true,
-          tasks: {
-            include: {
-              cliente: true,
-              sector: true,
-              userResponsible: true,
-              userCreated: true,
-            },
-            orderBy: {
-              createdAt: 'asc'
-            }
-          }
-        }
-      });
+        },
+        tasks: {
+          include: {
+            cliente: true,
+            sector: true,
+            userResponsible: true,
+            userCreated: true,
+          },
+        },
+      },
     });
   }
 
   static async update(id, actionPlanData) {
-    const { projectIds, ...data } = actionPlanData;
-    
-    return await prisma.$transaction(async (tx) => {
-      // Atualizar o plano de ação
-      await tx.actionPlan.update({
-        where: { id: parseInt(id) },
-        data
-      });
+    const { projectId, ...data } = actionPlanData;
 
-      // Se projectIds foi fornecido, atualizar os relacionamentos
-      if (projectIds !== undefined) {
-        // Remover a vinculação de todos os projetos que estavam vinculados a este plano
-        await tx.project.updateMany({
-          where: { actionPlanId: parseInt(id) },
-          data: { actionPlanId: null }
-        });
-        
-        // Vincular os novos projetos se houver projectIds
-        if (projectIds && projectIds.length > 0) {
-          await tx.project.updateMany({
-            where: {
-              id: { in: projectIds.map(projectId => parseInt(projectId)) }
-            },
-            data: {
-              actionPlanId: parseInt(id)
-            }
-          });
-        }
-      }
-      
-      // Buscar o plano de ação atualizado
-      const updatedActionPlan = await tx.actionPlan.findUnique({
-        where: { id: parseInt(id) },
-        include: {
-          projects: true,
-          tasks: {
-            include: {
-              cliente: true,
-              sector: true,
-              userResponsible: true,
-              userCreated: true,
-            },
-            orderBy: {
-              createdAt: 'asc'
-            }
-          }
-        }
-      });
-
-      return updatedActionPlan;
+    return await prisma.actionPlan.update({
+      where: { id: parseInt(id) },
+      data: {
+        ...data,
+        projectId: projectId ? parseInt(projectId) : null,
+      },
+      include: {
+        project: true,
+        cliente: {
+          select: {
+            id: true,
+            nome: true,
+            cnpj: true,
+          },
+        },
+        tasks: {
+          include: {
+            cliente: true,
+            sector: true,
+            userResponsible: true,
+            userCreated: true,
+          },
+        },
+      },
     });
   }
-  
 
   static async inactive(id) {
     return await prisma.$transaction(async (tx) => {
       // Atualizar todas as tarefas relacionadas para CANCELADA
       await tx.task.updateMany({
         where: { actionPlanId: parseInt(id) },
-        data: { status: 'CANCELADA' }
+        data: { status: "CANCELADA" },
       });
 
       // Atualizar o plano de ação para CANCELADO
       const inactivatedActionPlan = await tx.actionPlan.update({
         where: { id: parseInt(id) },
-        data: { status: 'CANCELADO' },
+        data: { status: "CANCELADO" },
         include: {
-          projects: true,
+          project: true,
+          cliente: {
+            select: {
+              id: true,
+              nome: true,
+              cnpj: true,
+            },
+          },
           tasks: {
             include: {
               cliente: true,
@@ -292,10 +264,10 @@ export class ActionPlanService {
               userCreated: true,
             },
             orderBy: {
-              createdAt: 'asc'
-            }
-          }
-        }
+              createdAt: "asc",
+            },
+          },
+        },
       });
 
       return inactivatedActionPlan;

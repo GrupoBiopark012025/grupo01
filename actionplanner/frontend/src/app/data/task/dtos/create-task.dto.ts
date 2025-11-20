@@ -7,10 +7,11 @@ export interface CreateTaskDto {
   status: TaskStatusEnum;
   priority: TaskPriorityEnum;
   dueDate?: Date;
-  projectId?: number;
-  clienteId?: number;
-  sectorId?: number;
+  actionPlanId: number;
+  sectorId: number;
   userResponsibleId?: number;
 }
 
-export interface UpdateTaskDto extends Partial<CreateTaskDto> {}
+export interface UpdateTaskDto extends Partial<Omit<CreateTaskDto, 'actionPlanId'>> {
+  actionPlanId?: number;
+}

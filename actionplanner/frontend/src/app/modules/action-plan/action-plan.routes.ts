@@ -17,11 +17,6 @@ export const ActionPlanRoutes: Routes = [
         loadComponent: () => import('./create/action-plan-create.component').then((c) => c.ActionPlanCreateComponent),
       },
       {
-        path: 'tasks/:id',
-        title: 'Ver Tarefa - ActionPlanner',
-        loadComponent: () => import('./task-view/task-view.component').then((c) => c.TaskViewComponent),
-      },
-      {
         path: ':id',
         title: 'Ver Plano de Ação - ActionPlanner',
         loadComponent: () => import('./view/action-plan-view.component').then((c) => c.ActionPlanViewComponent),

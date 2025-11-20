@@ -86,7 +86,11 @@ export const listActionPlans = async (req, res, next) => {
       orderBy
     };
 
-    const result = await ActionPlanService.findMany(filters, pagination);
+    const result = await ActionPlanService.findMany(
+      filters, 
+      pagination,
+      req.user.clienteId
+    );
     return res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -137,6 +141,8 @@ export const createActionPlan = async (req, res, next) => {
   }
   */
   try {
+    req.body.clienteId = req.user.clienteId;
+    
     const actionPlan = await ActionPlanService.create(req.body);
     return res.status(201).json(actionPlan);
   } catch (error) {
@@ -168,6 +174,18 @@ export const updateActionPlan = async (req, res, next) => {
   }
   */
   try {
+    const existingPlan = await ActionPlanService.findById(req.params.id);
+    
+    if (!existingPlan) {
+      return res.status(404).json({ error: 'Plano de ação não encontrado' });
+    }
+    
+    if (existingPlan.clienteId !== req.user.clienteId) {
+      return res.status(403).json({ error: 'Acesso negado a este plano de ação' });
+    }
+
+    delete req.body.clienteId;
+    
     const updatedActionPlan = await ActionPlanService.update(req.params.id, req.body);
     return res.status(200).json(updatedActionPlan);
   } catch (error) {

@@ -1,5 +1,7 @@
-import { TaskStatusEnum } from "./task-status.enum";
+import { TaskCommentDto } from "./task-comment.dto";
+import { TaskLogDto } from "./task-log.dto";
 import { TaskPriorityEnum } from "./task-priority.enum";
+import { TaskStatusEnum } from "./task-status.enum";
 
 export interface GetTaskDto {
   id: number;
@@ -10,12 +12,14 @@ export interface GetTaskDto {
   dueDate?: Date;
   createdAt: Date;
   updatedAt: Date;
+
   projectId?: number;
   actionPlanId?: number;
   clienteId?: number;
   sectorId?: number;
   userResponsibleId?: number;
   userCreatedId: number;
+
   userResponsible?: {
     id: number;
     nome: string;
@@ -29,6 +33,20 @@ export interface GetTaskDto {
   cliente?: {
     id: number;
     nome: string;
+  };
+  actionPlan?: {
+    id: number;
+    number: string;
+    what: string;
+    how: string;
+    responsible: string;
+    startDate: Date;
+    endDate: Date;
+    status: string;
+    project?: {
+      id: number;
+      name: string;
+    };
   };
   sector?: {
     id: number;
@@ -44,10 +62,13 @@ export interface GetTaskDto {
     id: number;
     name?: string;
     title?: string;
-    description?: string;    // <--- ADICIONA
+    description?: string;
     actionPlanId?: number;
     status?: string; 
     createdAt?: Date;
     updatedAt?: Date;
   };
+
+  comments?: TaskCommentDto[];
+  logs?: TaskLogDto[];
 }

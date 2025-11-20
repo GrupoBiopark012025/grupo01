@@ -96,16 +96,11 @@ export class ActionPlanCreateComponent {
           return of([]);
         }
         this.isSearchingProjects.set(true);
-        console.log('🔍 Buscando projetos com termo:', searchTerm);
         return this.projectDataService.getProjects({ name: searchTerm });
       }),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (projects) => {
-        console.log('✅ Resposta da API de projetos:', projects);
-        console.log('📦 Tipo da resposta:', typeof projects);
-        console.log('📦 É array?', Array.isArray(projects));
-        console.log('📦 Quantidade de projetos:', projects?.length);
         
         // Verifica se a resposta é um array ou se está dentro de uma propriedade
         let projectsArray: GetProjectDto[] = [];
@@ -115,8 +110,7 @@ export class ActionPlanCreateComponent {
           // Pode estar em uma propriedade como 'projects', 'data', etc.
           projectsArray = (projects as any).projects || (projects as any).data || [];
         }
-        
-        console.log('📋 Projetos processados:', projectsArray);
+
         this.foundProjects.set(projectsArray);
         this.isSearchingProjects.set(false);
         
@@ -124,13 +118,8 @@ export class ActionPlanCreateComponent {
         if (projectsArray.length > 0) {
           this.showProjectDropdown.set(true);
         }
-        
-        console.log('🎯 foundProjects signal atualizado:', this.foundProjects());
-        console.log('🎯 showProjectDropdown:', this.showProjectDropdown());
-        console.log('🎯 foundProjects().length:', this.foundProjects().length);
       },
       error: (error) => {
-        console.error('❌ Erro ao buscar projetos', error);
         this.foundProjects.set([]);
         this.isSearchingProjects.set(false);
       }
@@ -147,13 +136,12 @@ export class ActionPlanCreateComponent {
           return of([]);
         }
         this.isSearchingResponsible.set(true);
-        console.log('🔍 Buscando responsável com termo:', searchTerm);
+
         return this.userDataService.getUsers({ nome: searchTerm, page: 1, size: 10 });
       }),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: (response) => {
-        console.log('✅ Resposta da API de usuários:', response);
         
         // Extrai o array de usuários da resposta paginada
         let usersArray: GetUserDto[] = [];
@@ -162,18 +150,14 @@ export class ActionPlanCreateComponent {
         } else if (Array.isArray(response)) {
           usersArray = response;
         }
-        
-        console.log('📋 Usuários processados:', usersArray);
+
         this.foundResponsibles.set(usersArray);
         this.isSearchingResponsible.set(false);
-        
-        // Garante que o dropdown apareça se houver resultados
+
         if (usersArray.length > 0) {
           this.showResponsibleDropdown.set(true);
         }
-        
-        console.log('🎯 foundResponsibles signal atualizado:', this.foundResponsibles());
-        console.log('🎯 showResponsibleDropdown:', this.showResponsibleDropdown());
+
       },
       error: (error) => {
         console.error('❌ Erro ao buscar responsável', error);
@@ -234,7 +218,6 @@ export class ActionPlanCreateComponent {
   }
 
   onProjectSearchChange(value: string): void {
-    console.log('⌨️ Input alterado:', value);
     
     // Se o usuário começar a digitar e já houver um projeto selecionado, limpa a seleção
     if (this.selectedProject() && value !== this.selectedProject()?.name) {
@@ -244,12 +227,10 @@ export class ActionPlanCreateComponent {
     this.projectSearchTerm.set(value);
     const shouldShow = value.length >= 2;
     this.showProjectDropdown.set(shouldShow);
-    console.log('🎯 showProjectDropdown definido para:', shouldShow);
     this.projectSearchSubject.next(value);
   }
 
   selectProject(project: GetProjectDto): void {
-    console.log('📦 Projeto selecionado:', project);
     this.selectedProject.set(project);
     this.projectSearchTerm.set(project.name);
     this.form.get('projectSearch')?.setValue(project.name);
@@ -288,8 +269,6 @@ export class ActionPlanCreateComponent {
   }
 
   onResponsibleSearchChange(value: string): void {
-    console.log('⌨️ Input responsável alterado:', value);
-    
     // Se o usuário começar a digitar e já houver um responsável selecionado, limpa a seleção
     if (this.selectedResponsible() && value !== this.selectedResponsible()?.nome) {
       this.selectedResponsible.set(null);
@@ -299,12 +278,10 @@ export class ActionPlanCreateComponent {
     this.responsibleSearchTerm.set(value);
     const shouldShow = value.length >= 2;
     this.showResponsibleDropdown.set(shouldShow);
-    console.log('🎯 showResponsibleDropdown definido para:', shouldShow);
     this.responsibleSearchSubject.next(value);
   }
 
   selectResponsible(user: GetUserDto): void {
-    console.log('👤 Responsável selecionado:', user);
     this.selectedResponsible.set(user);
     this.form.get('responsible')?.setValue(user.nome);
     this.form.get('responsible')?.markAsTouched();

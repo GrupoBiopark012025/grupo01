@@ -1,0 +1,277 @@
+<div class="space-y-6 pb-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-semibold text-gray-900">Criar Plano de Ação</h1>
+    <z-button zType="default" [routerLink]="['/action-plans']" class="bg-black text-white hover:bg-gray-800">
+      Voltar
+    </z-button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+    <z-card class="w-full" zTitle="Informações do Plano" zDescription="Preencha os dados do plano de ação">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Número -->
+        <div class="space-y-2">
+          <z-form-field>
+            <label z-form-label zRequired>Número</label>
+            <z-form-control>
+              <input
+                z-input
+                type="text"
+                placeholder="PA-157"
+                formControlName="number"
+              />
+            </z-form-control>
+            @if (form.get('number')?.hasError('required') && form.get('number')?.touched) {
+              <z-form-message zType="error">O número é obrigatório.</z-form-message>
+            }
+          </z-form-field>
+        </div>
+
+        <!-- Responsável -->
+        <div class="space-y-2">
+          <z-form-field>
+            <label z-form-label zRequired>Responsável</label>
+            <z-form-control>
+              <div class="relative">
+                <input
+                  z-input
+                  type="text"
+                  placeholder="Buscar responsável por nome..."
+                  formControlName="responsibleSearch"
+                  [value]="selectedResponsible() ? selectedResponsible()!.nome : responsibleSearchTerm()"
+                  (input)="onResponsibleSearchChange($any($event.target).value)"
+                  (focus)="onResponsibleInputFocus()"
+                  (blur)="onResponsibleInputBlur()"
+                />
+                
+                <!-- Campo hidden para validação -->
+                <input
+                  type="hidden"
+                  formControlName="responsible"
+                  [value]="selectedResponsible()?.nome || ''"
+                />
+                
+                <!-- Dropdown de resultados -->
+                @if (showResponsibleDropdown()) {
+                  <div class="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
+                    @if (isSearchingResponsible()) {
+                      <div class="px-4 py-3 text-sm text-gray-500 text-center">
+                        Buscando...
+                      </div>
+                    } @else if (foundResponsibles().length === 0) {
+                      <div class="px-4 py-3 text-sm text-gray-500 text-center">
+                        Nenhum responsável encontrado
+                      </div>
+                    } @else {
+                      @for (user of foundResponsibles(); track user.id) {
+                        <button
+                          type="button"
+                          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
+                          (mousedown)="selectResponsible(user); $event.preventDefault()"
+                        >
+                          <div class="font-medium">{{ user.nome }}</div>
+                          @if (user.email) {
+                            <div class="text-xs text-gray-500 mt-0.5">{{ user.email }}</div>
+                          }
+                        </button>
+                      }
+                    }
+                  </div>
+                }
+              </div>
+            </z-form-control>
+            @if (form.get('responsible')?.hasError('required') && form.get('responsible')?.touched) {
+              <z-form-message zType="error">O responsável é obrigatório.</z-form-message>
+            }
+            <z-form-message zType="default">
+              Digite pelo menos 2 caracteres para buscar responsável por nome
+            </z-form-message>
+          </z-form-field>
+        </div>
+
+        <!-- What -->
+        <div class="space-y-2 md:col-span-2">
+          <z-form-field>
+            <label z-form-label zRequired>O quê</label>
+            <z-form-control>
+              <input
+                z-input
+                type="text"
+                placeholder="Implementar sistema de gestão de tarefas"
+                formControlName="what"
+              />
+            </z-form-control>
+            @if (form.get('what')?.hasError('required') && form.get('what')?.touched) {
+              <z-form-message zType="error">O campo O quê é obrigatório.</z-form-message>
+            }
+          </z-form-field>
+        </div>
+
+        <!-- How -->
+        <div class="space-y-2 md:col-span-2">
+          <z-form-field>
+            <label z-form-label zRequired>Como</label>
+            <z-form-control>
+              <textarea
+                z-input
+                rows="3"
+                placeholder="Desenvolver aplicação web com React e Node.js"
+                formControlName="how"
+              ></textarea>
+            </z-form-control>
+            @if (form.get('how')?.hasError('required') && form.get('how')?.touched) {
+              <z-form-message zType="error">O campo Como é obrigatório.</z-form-message>
+            }
+          </z-form-field>
+        </div>
+
+        <!-- Data de Início -->
+        <div class="space-y-2">
+          <z-form-field>
+            <label z-form-label zRequired>Data de início</label>
+            <z-form-control>
+              <input
+                z-input
+                type="date"
+                formControlName="startDate"
+              />
+            </z-form-control>
+            @if (form.get('startDate')?.hasError('required') && form.get('startDate')?.touched) {
+              <z-form-message zType="error">A data de início é obrigatória.</z-form-message>
+            }
+          </z-form-field>
+        </div>
+
+        <!-- Data de Término -->
+        <div class="space-y-2">
+          <z-form-field>
+            <label z-form-label zRequired>Data de término</label>
+            <z-form-control>
+              <input
+                z-input
+                type="date"
+                formControlName="endDate"
+              />
+            </z-form-control>
+            @if (form.get('endDate')?.hasError('required') && form.get('endDate')?.touched) {
+              <z-form-message zType="error">A data de término é obrigatória.</z-form-message>
+            }
+          </z-form-field>
+        </div>
+
+        <!-- Data de Adiamento (opcional) -->
+        <div class="space-y-2">
+          <z-form-field>
+            <label z-form-label>Data de adiamento (opcional)</label>
+            <z-form-control>
+              <input
+                z-input
+                type="date"
+                formControlName="postponedDate"
+              />
+            </z-form-control>
+          </z-form-field>
+        </div>
+
+        <!-- Observações -->
+        <div class="space-y-2 md:col-span-2">
+          <z-form-field>
+            <label z-form-label>Observações</label>
+            <z-form-control>
+              <textarea
+                z-input
+                rows="3"
+                placeholder="Plano de ação para modernização do sistema"
+                formControlName="observations"
+              ></textarea>
+            </z-form-control>
+          </z-form-field>
+        </div>
+
+        <!-- Projetos -->
+        <div class="space-y-2 md:col-span-2">
+          <z-form-field>
+            <label z-form-label>Projeto relacionado</label>
+            <z-form-control>
+              <div class="relative">
+                <input
+                  z-input
+                  type="text"
+                  placeholder="Buscar projeto por nome..."
+                  formControlName="projectSearch"
+                  [value]="selectedProject() ? selectedProject()!.name : projectSearchTerm()"
+                  (input)="onProjectSearchChange($any($event.target).value)"
+                  (focus)="onProjectInputFocus()"
+                  (blur)="onProjectInputBlur()"
+                />
+                
+                <!-- Dropdown de resultados -->
+                @if (showProjectDropdown()) {
+                  <div class="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
+                    @if (isSearchingProjects()) {
+                      <div class="px-4 py-3 text-sm text-gray-500 text-center">
+                        Buscando...
+                      </div>
+                    } @else if (foundProjects().length === 0) {
+                      <div class="px-4 py-3 text-sm text-gray-500 text-center">
+                        Nenhum projeto encontrado
+                      </div>
+                    } @else {
+                      @for (project of foundProjects(); track project.id) {
+                        <button
+                          type="button"
+                          class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
+                          (mousedown)="selectProject(project); $event.preventDefault()"
+                        >
+                          <div class="font-medium">{{ project.name }}</div>
+                          @if (project.description) {
+                            <div class="text-xs text-gray-500 mt-0.5 line-clamp-1">{{ project.description }}</div>
+                          }
+                        </button>
+                      }
+                    }
+                  </div>
+                }
+              </div>
+            </z-form-control>
+            <z-form-message zType="default">
+              Digite pelo menos 2 caracteres para buscar projeto por nome
+            </z-form-message>
+          </z-form-field>
+        </div>
+      </div>
+
+      <!-- Mensagem de erro geral -->
+      @if (submitError()) {
+        <div class="mt-4 rounded-md bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+          {{ submitError() }}
+        </div>
+      }
+
+      <!-- Ações -->
+      <div class="mt-6 flex items-center justify-end gap-3">
+        <z-button
+          zType="outline"
+          type="button"
+          [routerLink]="['/action-plans']"
+        >
+          Cancelar
+        </z-button>
+
+        <button
+          z-button
+          zType="default"
+          type="submit"
+          class="bg-black text-white hover:bg-gray-800"
+          [disabled]="isSubmitting()"
+        >
+          @if (isSubmitting()) {
+            Salvando...
+          } @else {
+            Salvar Plano
+          }
+        </button>
+      </div>
+    </z-card>
+  </form>
+</div>

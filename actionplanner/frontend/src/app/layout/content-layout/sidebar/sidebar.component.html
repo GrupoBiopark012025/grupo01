@@ -63,6 +63,31 @@
         </div>
       </div>
       
+      <!-- Plano de Ação com submenu -->
+      <div class="space-y-1">
+        <button 
+          class="w-full flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 hover:border hover:border-gray-200 active:bg-gray-200 focus:bg-gray-200 transition-all border border-transparent"
+          (click)="toggleSubmenu('planoAcao')"
+        >
+          <span class="text-sm font-medium">Plano de Ação</span>
+        </button>
+        
+        <div
+          class="overflow-hidden transition-all duration-300 ease-in-out"
+          [style.max-height]="expandedMenus.planoAcao ? '200px' : '0px'"
+          [style.opacity]="expandedMenus.planoAcao ? '1' : '0'"
+        >
+          <div class="ml-4 space-y-1 border-l border-gray-200 pl-4">
+            <a [routerLink]="['/action-plans/create']" class="block px-3 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 hover:text-gray-800 transition-colors">
+              Criar Plano
+            </a>
+            <a [routerLink]="['/action-plans']" class="block px-3 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 hover:text-gray-800 transition-colors">
+              Meus Planos
+            </a>
+          </div>
+        </div>
+      </div>
+      
       <!-- Relatórios com submenu -->
       <div class="space-y-1">
         <button 

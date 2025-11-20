@@ -3,6 +3,7 @@ import { ZardButtonComponent } from "@shared/components/zardui/button/button.com
 
 @Component({
   selector: 'app-list-header',
+  standalone: true,
   imports: [
     ZardButtonComponent
   ],
@@ -11,6 +12,7 @@ import { ZardButtonComponent } from "@shared/components/zardui/button/button.com
 export class ListHeaderComponent {
   title = input.required<string>();
   actionTitle = input.required<string>();
+  actionVariant = input<string>('default');
 
   onActionClicked = output<void>();
 }

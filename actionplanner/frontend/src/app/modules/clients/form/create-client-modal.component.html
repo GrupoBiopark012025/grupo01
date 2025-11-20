@@ -3,46 +3,77 @@
     <h2 class="text-lg font-semibold mb-4">Novo Cliente</h2>
 
     <form class="flex flex-col gap-4" [formGroup]="form" (ngSubmit)="save()">
-      <app-text-input
-        id="nome"
-        label="Nome"
-        formControlName="nome"
-      />
+      <div>
+        <label for="nome" class="block text-sm font-medium mb-1">Nome *</label>
+        <input 
+          id="nome" 
+          type="text" 
+          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          formControlName="nome"
+          placeholder="Digite o nome do cliente"
+        >
+        @if (form.get('nome')?.invalid && form.get('nome')?.touched) {
+          <p class="text-sm text-red-500 mt-1">Nome é obrigatório</p>
+        }
+      </div>
 
-      <app-text-input
-        id="cnpj"
-        label="CNPJ"
-        formControlName="cnpj"
-      />
+      <div>
+        <label for="cnpj" class="block text-sm font-medium mb-1">CNPJ *</label>
+        <input 
+          id="cnpj" 
+          type="text" 
+          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          formControlName="cnpj"
+          placeholder="Digite o CNPJ"
+        >
+        @if (form.get('cnpj')?.invalid && form.get('cnpj')?.touched) {
+          <p class="text-sm text-red-500 mt-1">CNPJ é obrigatório</p>
+        }
+      </div>
 
-      <app-text-input
-        id="email"
-        label="Email"
-        type="email"
-        formControlName="email"
-      />
+      <div>
+        <label for="email" class="block text-sm font-medium mb-1">Email</label>
+        <input 
+          id="email" 
+          type="email" 
+          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          formControlName="email"
+          placeholder="Digite o email"
+        >
+      </div>
 
-      <app-text-input
-        id="telefone"
-        label="Telefone"
-        formControlName="telefone"
-      />
+      <div>
+        <label for="telefone" class="block text-sm font-medium mb-1">Telefone</label>
+        <input 
+          id="telefone" 
+          type="text" 
+          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          formControlName="telefone"
+          placeholder="Digite o telefone"
+        >
+      </div>
 
-      <app-text-input
-        id="endereco"
-        label="Endereço"
-        formControlName="endereco"
-      />
+      <div>
+        <label for="endereco" class="block text-sm font-medium mb-1">Endereço</label>
+        <input 
+          id="endereco" 
+          type="text" 
+          class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          formControlName="endereco"
+          placeholder="Digite o endereço"
+        >
+      </div>
 
       @if (serverError) {
-        <p class="text-sm text-red-500">{{ serverError }}</p>
+        <div class="w-full p-3 rounded bg-red-100 text-red-700 border border-red-300">
+          {{ serverError }}
+        </div>
       }
 
       <div class="flex justify-end gap-2">
         <button z-button zType="outline" type="button" (click)="cancel()">
-          Fechar
+          Cancelar
         </button>
-
         <button z-button type="submit">
           Salvar
         </button>

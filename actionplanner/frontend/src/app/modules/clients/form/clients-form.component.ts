@@ -3,11 +3,16 @@ import { CommonModule } from '@angular/common'
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms'
 import { ClientsDataService } from '@data/clients/clients-data.service'
 import { GetClientsDto } from '@data/clients/dtos'
+import { ZardButtonComponent } from '@shared/components/zardui/button/button.component'
 
 @Component({
   selector: 'app-clients-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule,
+    ZardButtonComponent
+  ],
   templateUrl: './clients-form.component.html'
 })
 export class ClientsFormComponent implements OnChanges {

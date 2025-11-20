@@ -10,42 +10,65 @@
   }
 
   <form class="flex flex-col gap-4" [formGroup]="form" (ngSubmit)="save()">
-    <app-text-input
-      id="nome"
-      label="Nome"
-      formControlName="nome"
-    />
+    <div>
+      <label for="nome" class="block text-sm font-medium mb-1">Nome</label>
+      <input 
+        id="nome" 
+        type="text" 
+        class="w-full border border-gray-300 rounded px-3 py-2"
+        formControlName="nome"
+        [readonly]="mode() === 'view'"
+      >
+    </div>
 
-    <app-text-input
-      id="cnpj"
-      label="CNPJ"
-      formControlName="cnpj"
-    />
+    <div>
+      <label for="cnpj" class="block text-sm font-medium mb-1">CNPJ</label>
+      <input 
+        id="cnpj" 
+        type="text" 
+        class="w-full border border-gray-300 rounded px-3 py-2"
+        formControlName="cnpj"
+        [readonly]="mode() === 'view'"
+      >
+    </div>
 
-    <app-text-input
-      id="email"
-      label="Email"
-      type="email"
-      formControlName="email"
-    />
+    <div>
+      <label for="email" class="block text-sm font-medium mb-1">Email</label>
+      <input 
+        id="email" 
+        type="email" 
+        class="w-full border border-gray-300 rounded px-3 py-2"
+        formControlName="email"
+        [readonly]="mode() === 'view'"
+      >
+    </div>
 
-    <app-text-input
-      id="telefone"
-      label="Telefone"
-      formControlName="telefone"
-    />
+    <div>
+      <label for="telefone" class="block text-sm font-medium mb-1">Telefone</label>
+      <input 
+        id="telefone" 
+        type="text" 
+        class="w-full border border-gray-300 rounded px-3 py-2"
+        formControlName="telefone"
+        [readonly]="mode() === 'view'"
+      >
+    </div>
 
-    <app-text-input
-      id="endereco"
-      label="Endereço"
-      formControlName="endereco"
-    />
+    <div>
+      <label for="endereco" class="block text-sm font-medium mb-1">Endereço</label>
+      <input 
+        id="endereco" 
+        type="text" 
+        class="w-full border border-gray-300 rounded px-3 py-2"
+        formControlName="endereco"
+        [readonly]="mode() === 'view'"
+      >
+    </div>
 
-    <div class="flex justify-end gap-2 mt-2">
+    <div class="flex justify-end gap-2">
       <button z-button zType="outline" type="button" (click)="cancel()">
-        Fechar
+        {{ mode() === 'view' ? 'Fechar' : 'Cancelar' }}
       </button>
-
       @if (mode() !== 'view') {
         <button z-button type="submit">
           Salvar

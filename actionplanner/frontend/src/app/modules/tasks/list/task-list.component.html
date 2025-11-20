@@ -1,4 +1,4 @@
-<app-list-header [title]="getPageTitle()" actionTitle="Nova Tarefa" (onAction)="createTask()" />
+<app-list-header [title]="getPageTitle()" actionTitle="Nova Tarefa" (onActionClicked)="createTask()" />
 
 @if (tasks$ | async; as tasks) {
   @if (tasks.data.length; as recordsInView) {

@@ -11,6 +11,7 @@ export interface GetTaskDto {
   createdAt: Date;
   updatedAt: Date;
   projectId?: number;
+  actionPlanId?: number;
   clienteId?: number;
   sectorId?: number;
   userResponsibleId?: number;
@@ -33,10 +34,12 @@ export interface GetTaskDto {
     id: number;
     name?: string;
     nome?: string;
+    description?: string;
   };
   project?: {
     id: number;
     name?: string;
     title?: string;
+    actionPlanId?: number;
   };
 }

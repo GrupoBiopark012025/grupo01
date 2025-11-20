@@ -35,6 +35,15 @@ export const contentLayoutRoutes: Routes = [
         canActivate: [authenticationGuard]
       },
       {
+        path: 'action-plans',
+        title: 'Planos de Ação - ActionPlanner',
+        data: {
+          description: 'Gestão dos Planos de Ação.'
+        },
+        loadChildren: () => import('@modules/action-plan/action-plan.routes').then(m => m.ActionPlanRoutes),
+        canActivate: [authenticationGuard]
+       },
+       {
         path: 'clients',
         title: 'Clientes - ActionPlanner',
         data: {
@@ -50,6 +59,7 @@ export const contentLayoutRoutes: Routes = [
           description: 'Gestão de Setores registrados.'
         },
         loadChildren: () => import('@modules/sector/sector.routes').then(m => m.SectorRoutes),
+        canActivate: [authenticationGuard]
       },
       {
         path: '',

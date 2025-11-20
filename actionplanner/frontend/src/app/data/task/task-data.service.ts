@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { ApiPaginatedList } from '@data/common/dtos';
 import { GetTaskDto, GetTaskQuery, GetTaskDataDto } from './dtos';
@@ -28,7 +28,6 @@ export class TaskDataService {
     );
   }
 
-  // Os outros métodos permanecem inalterados
   getTaskById(id: number): Observable<GetTaskDto> {
     return this.http.get<GetTaskDto>(`${this.baseUrl}/${id}`);
   }
@@ -39,6 +38,15 @@ export class TaskDataService {
 
   updateTask(id: number, task: Partial<GetTaskDto>): Observable<GetTaskDto> {
     return this.http.put<GetTaskDto>(`${this.baseUrl}/${id}`, task);
+  }
+
+  updateTaskStatus(id: number, status: string): Observable<GetTaskDto> {
+    return this.http.put<GetTaskDto>(`${this.baseUrl}/${id}/status`, { status })
+      .pipe(
+        tap((response) => {
+          console.log('Status da tarefa atualizado:', response);
+        })
+      );
   }
 
   deleteTask(id: number): Observable<void> {

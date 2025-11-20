@@ -36,6 +36,8 @@ export class SidebarComponent {
   expandedMenus = {
     projetos: false,
     tarefas: false,
+    planoAcao: false,
+    relatorios: false
     relatorios: false,
     clientes: false
   };

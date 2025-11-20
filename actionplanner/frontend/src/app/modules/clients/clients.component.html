@@ -1,0 +1,75 @@
+<app-list-header
+  title="Clientes"
+  actionTitle="Novo Cliente"
+  actionVariant="custom"
+  (onActionClicked)="openCreateModal()"
+/>
+
+@if (clients$ | async; as clients) {
+  @if (clients.data.length; as recordsInView) {
+    <table z-table class="w-full">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>CNPJ/CPF</th>
+          <th>Endereço</th>
+          <th>E-mail</th>
+          <th>Telefone</th>
+          <th>Setor</th>
+          <th>Criado em</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (client of clients.data; track client.id) {
+          <tr>
+            <td class="font-medium">{{ client.nome }}</td>
+            <td>{{ client.cnpj || client.cpf }}</td>
+            <td>{{ client.endereco }}</td>
+            <td>{{ client.email }}</td>
+            <td>{{ client.telefone }}</td>
+            <td>{{ client.setor?.nome || '—' }}</td>
+            <td>{{ client.createdAt | date: 'shortDate' }}</td>
+            <td>
+              <div class="flex items-center gap-2">
+                <z-button zType="ghost" zSize="icon" title="Editar" (click)="openClientForm(client)">
+                  <i-lucide [img]="icons.edit"></i-lucide>
+                </z-button>
+                <z-button zType="ghost" zSize="icon" title="Ver detalhes" (click)="viewClient(client)">
+                  <i-lucide [img]="icons.view"></i-lucide>
+                </z-button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <app-pagination
+      [currentPage]="query().page"
+      [pageSize]="query().size"
+      [recordsInView]="recordsInView"
+      [totalPages]="clients.totalPages"
+      [collectionSize]="clients.totalData"
+      (onPageChange)="changeQuery({ page: $event })"
+    />
+  } @else {
+    <app-no-list-content text="Nenhum cliente encontrado." />
+  }
+} @else {
+  <app-table-skeleton />
+}
+
+@if (showForm()) {
+  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <app-clients-form
+      [client]="editingClient()"
+      [mode]="formMode()"
+      (closed)="closeForm($event)"
+    />
+  </div>
+}
+
+@if (showCreateModal()) {
+  <app-create-client-modal (closed)="closeCreateModal($event)" />
+}

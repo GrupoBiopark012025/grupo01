@@ -36,7 +36,8 @@ export class SidebarComponent {
   expandedMenus = {
     projetos: false,
     tarefas: false,
-    relatorios: false
+    relatorios: false,
+    clientes: false
   };
 
   toggleSubmenu(menu: keyof typeof this.expandedMenus) {

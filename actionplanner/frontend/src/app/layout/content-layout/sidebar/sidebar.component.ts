@@ -2,7 +2,7 @@ import { Component, inject, HostListener, computed, signal, DestroyRef } from '@
 import { CommonModule } from '@angular/common';
 import { AuthenticationService } from '@core/services/authentication/authentication.service';
 import { ZardAvatarComponent } from '@shared/components/zardui/avatar/avatar.component';
-import { Router, RouterLink } from "@angular/router";
+import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { UserSessionService } from "@core/services/user-session/user-session.service";
 import { Building2, LucideAngularModule } from "lucide-angular";
 import { ZardDialogService } from "@shared/components/zardui/dialog/dialog.service";
@@ -12,10 +12,11 @@ import {
 import { take } from "rxjs";
 import { toast } from "ngx-sonner";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { UserAccessLevelEnum } from "@data/user/dtos";
 
 @Component({
   selector: 'app-sidebar',
-  imports: [CommonModule, ZardAvatarComponent, RouterLink, LucideAngularModule],
+  imports: [CommonModule, ZardAvatarComponent, RouterLink, LucideAngularModule, RouterLinkActive],
   templateUrl: './sidebar.component.html'
 })
 export class SidebarComponent {
@@ -32,8 +33,32 @@ export class SidebarComponent {
   isUserMenuOpen = this._isUserMenuOpen.asReadonly();
   user = computed(() => this.userSessionService.user());
   userInitials = computed(() => this.userSessionService.userInitials());
+  isOwner = computed(() => {
+    const userAccessLevel = this.user()?.accessLevel;
+
+    if(userAccessLevel) {
+      return [UserAccessLevelEnum.Admin, UserAccessLevelEnum.Consultor].includes(userAccessLevel);
+    }
+
+    return false;
+  });
+
+  isManager = computed(() => {
+    const userAccessLevel = this.user()?.accessLevel;
+
+    if(userAccessLevel) {
+      return [
+        UserAccessLevelEnum.Admin,
+        UserAccessLevelEnum.Consultor,
+        UserAccessLevelEnum.GestorCliente
+      ].includes(userAccessLevel);
+    }
+
+    return false;
+  });
 
   expandedMenus = {
+    usuarios: false,
     projetos: false,
     tarefas: false,
     planoAcao: false,

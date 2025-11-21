@@ -45,10 +45,8 @@
             </div>
           </div>
         </div>
-      }
 
-      <!-- Clientes-->
-      @if (isOwner()) {
+        <!-- Clientes-->
         <a
           routerLink="/clients"
           routerLinkActive="text-gray-900 font-semibold bg-gray-100"
@@ -56,6 +54,8 @@
         >
           <span class="text-sm font-medium">Clientes</span>
         </a>
+
+        <div class="border-t border-gray-100 my-1"></div>
       }
 
       @if(isManager()) {
@@ -171,6 +171,8 @@
 
       @if (isManager()) {
         <!-- Relatórios com submenu -->
+        <div class="border-t border-gray-100 my-1"></div>
+
         <div class="space-y-1">
           <button
             class="w-full flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-100 hover:border hover:border-gray-200 active:bg-gray-200 focus:bg-gray-200 transition-all border border-transparent"

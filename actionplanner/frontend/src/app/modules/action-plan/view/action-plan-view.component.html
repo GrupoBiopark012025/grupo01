@@ -54,13 +54,25 @@
               <p class="text-xs font-medium text-gray-500 uppercase mb-0.5">Observações</p>
               <p class="text-gray-900">{{ plan.observations }}</p>
             </div>
-            <z-button zType="default" zSize="sm" class="bg-sky-500 text-white hover:bg-sky-600">
+            <z-button 
+              zType="default" 
+              zSize="sm" 
+              class="bg-sky-500 text-white hover:bg-sky-600"
+              [routerLink]="['/tasks/new']"
+              [queryParams]="{ actionPlanId: plan.id, returnTo: '/action-plans/' + plan.id }"
+            >
               + Adicionar Tarefa
             </z-button>
           </div>
         } @else {
           <div class="md:col-span-2 flex justify-end">
-            <z-button zType="default" zSize="sm" class="bg-sky-500 text-white hover:bg-sky-600">
+            <z-button 
+              zType="default" 
+              zSize="sm" 
+              class="bg-sky-500 text-white hover:bg-sky-600"
+              [routerLink]="['/tasks/new']"
+              [queryParams]="{ actionPlanId: plan.id, returnTo: '/action-plans/' + plan.id }"
+            >
               + Adicionar Tarefa
             </z-button>
           </div>
@@ -72,20 +84,49 @@
     @if (plan.tasks && plan.tasks.length > 0) {
       <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
         <div class="p-4 border-b border-gray-200">
-          <div class="flex items-center justify-between gap-4">
+          <div class="flex items-center justify-between gap-4 mb-4">
             <h2 class="text-lg font-semibold text-gray-900">Tarefas</h2>
-            <div class="flex-1 max-w-xs">
-              <input 
-                z-input 
-                type="text" 
-                placeholder="Buscar tarefa por nome..."
-                [value]="taskSearchTerm()"
-                (input)="onTaskSearchChange($any($event.target).value)"
-                class="w-full border-gray-300 focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
-              />
-            </div>
           </div>
+          
+          <!-- Filtros -->
+        <div class="flex items-center gap-3">
+          <div class="flex-1 max-w-xs">
+            <input 
+              z-input 
+              type="text" 
+              placeholder="Buscar tarefa..."
+              [value]="taskSearchTerm()"
+              (input)="onTaskSearchChange($any($event.target).value)"
+              class="w-full border-gray-300 focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+            />
+          </div>
+          
+          <div class="w-48">
+            <z-select
+              zPlaceholder="Todos os status"
+              [ngModel]="selectedStatusFilter()"
+              (zSelectionChange)="onStatusFilterChange($event)"
+              class="w-full"
+            >
+              <z-select-item [zValue]="''">Todos os status</z-select-item>
+              <z-select-item *ngFor="let option of statusOptions" [zValue]="option.value">
+                {{ option.label }}
+              </z-select-item>
+            </z-select>
+          </div>
+
+          @if (selectedStatusFilter()) {
+            <button
+              type="button"
+              class="text-sm text-gray-600 hover:text-gray-900 whitespace-nowrap"
+              (click)="clearStatusFilter()"
+            >
+              Limpar filtro
+            </button>
+          }
         </div>
+        </div>
+        
         <div class="divide-y divide-gray-100">
           @for (task of paginatedTasks(); track task.id) {
             <div class="p-4 hover:bg-gray-50 transition-colors">
@@ -93,16 +134,18 @@
                 <div class="flex-1">
                   <div class="flex items-center gap-3 mb-1.5">
                     <h3 class="font-semibold text-gray-900">{{ task.title }}</h3>
-                    <z-badge 
-                      zType="outline"
-                      [class]="task.status === 'CONCLUIDO' 
-                        ? 'bg-emerald-500 text-white border-transparent' 
-                        : task.status === 'EM_ANDAMENTO'
-                        ? 'bg-indigo-500 text-white border-transparent'
-                        : 'bg-amber-500 text-white border-transparent'"
-                    >
-                      {{ task.status }}
-                    </z-badge>
+                    
+                    <div class="min-w-[160px]">
+                      <z-select
+                        [ngModel]="task.status"
+                        (zSelectionChange)="onTaskStatusChange(task.id, $event)"
+                      >
+                        <z-select-item *ngFor="let option of statusOptions" [zValue]="option.value">
+                          {{ option.label }}
+                        </z-select-item>
+                      </z-select>
+                    </div>
+
                     @if (task.priority) {
                       <z-badge 
                         zType="outline"
@@ -116,16 +159,24 @@
                     <p class="text-sm text-gray-600 mb-2">{{ task.description }}</p>
                   }
                   <div class="flex items-center gap-4 text-xs text-gray-500">
-                    <span>Responsável: {{ task.userResponsible.nome }}</span>
+                    @if (task.userResponsible) {
+                      <span>Responsável: {{ task.userResponsible.nome }}</span>
+                    } @else {
+                      <span>Responsável: Não atribuído</span>
+                    }
                     @if (task.dueDate) {
                       <span>Prazo: {{ task.dueDate | date: 'shortDate' }}</span>
                     }
                   </div>
                 </div>
                 <z-button zType="default" zSize="sm" class="bg-black text-white hover:bg-gray-800" (click)="viewTask(task.id)">
-                  Visualizar Tarefa
+                  Ver Detalhes
                 </z-button>
               </div>
+            </div>
+          } @empty {
+            <div class="p-8 text-center text-gray-500">
+              Nenhuma tarefa encontrada com os filtros aplicados.
             </div>
           }
         </div>
@@ -153,4 +204,3 @@
     </div>
   </div>
 }
-

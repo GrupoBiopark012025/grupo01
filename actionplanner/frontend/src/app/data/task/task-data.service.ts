@@ -5,6 +5,8 @@ import { map, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { ApiPaginatedList } from '@data/common/dtos';
 import { GetTaskDto, GetTaskQuery, GetTaskDataDto } from './dtos';
+import { TaskLogDto } from './dtos/task-log.dto';
+import { TaskCommentDto } from './dtos/task-comment.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -75,4 +77,13 @@ export class TaskDataService {
       }) as ApiPaginatedList<GetTaskDto>)
     );
   }
+
+  getAvailableActionPlans(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/available-action-plans`);
+  }
+
+  addComment(taskId: number, dto: { content: string }): Observable<TaskCommentDto> {
+    return this.http.post<TaskCommentDto>(`${this.baseUrl}/${taskId}/comments`, dto);
+  }
+
 }

@@ -31,20 +31,20 @@ export const createTaskValidator = yup.object({
     .date()
     .nullable()
     .transform((value, originalValue) => {
-      // Se for string vazia ou null, retorna null
       if (!originalValue) return null;
-      // Caso contrário, tenta converter para Date
-      const parsed = new Date(originalValue);
-      return parsed;
+      return new Date(originalValue);
     }),
   
-  projectId: yup
+  actionPlanId: yup
     .number()
-    .integer("ID do projeto deve ser um número inteiro")
-    .positive("ID do projeto deve ser positivo")
-    .nullable()
+    .integer("ID do plano de ação deve ser um número inteiro")
+    .positive("ID do plano de ação deve ser positivo")
+    .required("Plano de ação é obrigatório")
     .transform((value, originalValue) => {
-      return originalValue === '' || originalValue === null || originalValue === undefined ? null : value;
+      if (typeof originalValue === 'string') {
+        return parseInt(originalValue, 10);
+      }
+      return originalValue;
     }),
   
   sectorId: yup
@@ -53,7 +53,6 @@ export const createTaskValidator = yup.object({
     .positive("ID do setor deve ser positivo")
     .required("Setor é obrigatório")
     .transform((value, originalValue) => {
-      // Se for string, converte para número
       if (typeof originalValue === 'string') {
         return parseInt(originalValue, 10);
       }
@@ -66,11 +65,9 @@ export const createTaskValidator = yup.object({
     .positive("ID do usuário responsável deve ser positivo")
     .nullable()
     .transform((value, originalValue) => {
-      // Se for string vazia, null ou undefined, retorna null
       if (originalValue === '' || originalValue === null || originalValue === undefined) {
         return null;
       }
-      // Se for string, converte para número
       if (typeof originalValue === 'string') {
         return parseInt(originalValue, 10);
       }
@@ -110,13 +107,15 @@ export const updateTaskValidator = yup.object({
       return new Date(originalValue);
     }),
   
-  projectId: yup
+  actionPlanId: yup
     .number()
-    .integer("ID do projeto deve ser um número inteiro")
-    .positive("ID do projeto deve ser positivo")
-    .nullable()
+    .integer("ID do plano de ação deve ser um número inteiro")
+    .positive("ID do plano de ação deve ser positivo")
     .transform((value, originalValue) => {
-      return originalValue === '' || originalValue === null || originalValue === undefined ? null : value;
+      if (typeof originalValue === 'string') {
+        return parseInt(originalValue, 10);
+      }
+      return originalValue;
     }),
   
   sectorId: yup

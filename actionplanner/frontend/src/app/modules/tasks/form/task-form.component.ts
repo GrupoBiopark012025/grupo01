@@ -47,6 +47,7 @@ export class TaskFormComponent implements OnInit {
 
   sectors = signal<any[]>([]);
   availableResponsibles = signal<any[]>([]);
+  actionPlans = signal<any[]>([]);
 
   selectedStatus = signal<string>(TaskStatusEnum.PENDENTE);
   selectedPriority = signal<string>(TaskPriorityEnum.MEDIA);
@@ -75,9 +76,24 @@ export class TaskFormComponent implements OnInit {
     label: descricaoTaskPriorityEnum[value]
   }));
 
+  actionPlanOptions = computed(() => 
+    this.actionPlans().map(plan => ({
+      label: `${plan.number} - ${plan.what.substring(0, 50)}...`,
+      value: plan.id
+    }))
+  );
+
+
   ngOnInit(): void {
     this.initForm();
     this.loadFormData();
+
+    const actionPlanIdParam = this.route.snapshot.queryParams['actionPlanId'];
+    if (actionPlanIdParam) {
+      this.taskForm.patchValue({
+        actionPlanId: parseInt(actionPlanIdParam, 10)
+      });
+    }
 
     const id = this.route.snapshot.paramMap.get('id');
     if (id && !isNaN(+id)) {
@@ -96,6 +112,7 @@ export class TaskFormComponent implements OnInit {
       status: [TaskStatusEnum.PENDENTE, Validators.required],
       priority: [TaskPriorityEnum.MEDIA, Validators.required],
       dueDate: [''],
+      actionPlanId: [null, Validators.required],
       sectorId: [null, Validators.required],
       userResponsibleId: [null]
     });
@@ -105,9 +122,8 @@ export class TaskFormComponent implements OnInit {
   }
 
 
-  loadFormData(): void {
-    const user = this.userSessionService.user();
 
+  loadFormData(): void {
     this.sectorDataService.getSectors({ page: 1, size: 100 }).subscribe({
       next: (response) => {
         this.sectors.set(response.data || []);
@@ -125,6 +141,15 @@ export class TaskFormComponent implements OnInit {
         console.error('Erro ao carregar responsáveis:', error);
       }
     });
+
+    this.taskDataService.getAvailableActionPlans().subscribe({
+      next: (actionPlans) => {
+        this.actionPlans.set(actionPlans);
+      },
+      error: (error) => {
+        console.error('Erro ao carregar planos de ação:', error);
+      }
+    });
   }
 
   loadTask(): void {
@@ -139,6 +164,7 @@ export class TaskFormComponent implements OnInit {
           status: task.status,
           priority: task.priority,
           dueDate: task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : '',
+          actionPlanId: task.actionPlanId || null,  // <-- ADICIONE ESTA LINHA
           sectorId: task.sectorId || null,
           userResponsibleId: task.userResponsibleId || null
         });
@@ -166,15 +192,14 @@ export class TaskFormComponent implements OnInit {
 
     const formValue = this.taskForm.value;
     
-    // Converter valores para o formato correto do DTO
     const taskData = {
       title: formValue.title,
       description: formValue.description || undefined,
       status: formValue.status,
       priority: formValue.priority,
+      actionPlanId: formValue.actionPlanId ? Number(formValue.actionPlanId) : undefined,  // <-- ADICIONE
       sectorId: formValue.sectorId ? Number(formValue.sectorId) : undefined,
       userResponsibleId: formValue.userResponsibleId ? Number(formValue.userResponsibleId) : undefined,
-      // NÃO envia clienteId - o backend define automaticamente
       dueDate: formValue.dueDate ? new Date(formValue.dueDate) : undefined
     };
 

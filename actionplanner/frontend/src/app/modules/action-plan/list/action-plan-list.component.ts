@@ -151,7 +151,9 @@ export class ActionPlanListComponent {
       return 0;
     }
     
-    const completedTasks = plan.tasks.filter(task => task.status === 'CONCLUIDO').length;
+  const completedTasks = plan.tasks.filter(task => 
+      task.status === 'CONCLUIDA' || task.status === 'CONCLUIDO'
+    ).length;
     const totalTasks = plan.tasks.length;
     
     return Math.round((completedTasks / totalTasks) * 100);
@@ -161,7 +163,9 @@ export class ActionPlanListComponent {
     if (!plan.tasks || plan.tasks.length === 0) {
       return 0;
     }
-    return plan.tasks.filter(task => task.status === 'CONCLUIDO').length;
+    return plan.tasks.filter(task => 
+      task.status === 'CONCLUIDA' || task.status === 'CONCLUIDO'
+    ).length;
   }
 
   onSearchChange(value: string): void {

@@ -118,6 +118,16 @@
           [error]="getFieldError('sectorId')"
         />
 
+        <app-form-select
+          id="actionPlanId"
+          label="Plano de Ação"
+          placeholder="Selecione um plano de ação"
+          formControlName="actionPlanId"
+          [options]="actionPlanOptions()"
+          [required]="true"
+          [error]="getFieldError('actionPlanId')"
+        />
+
         <!-- Responsável -->
         <app-form-select
           id="userResponsibleId"

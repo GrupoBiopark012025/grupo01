@@ -1,0 +1,33 @@
+<div *ngIf="isLoading">Carregando dashboard...</div>
+
+<div *ngIf="!isLoading">
+  <div *ngIf="dataStatus && dataStatus.length > 0" style="display:flex; align-items:flex-start; gap:24px; margin-bottom:24px;">
+    <div style="width:260px; height:220px;">
+      <h3 style="margin:0 0 8px 0;">Status das Tarefas</h3>
+      <div style="width:100%; height:180px; position:relative;">
+        <canvas #statusChart width="260" height="180"></canvas>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px; padding-top:18px;">
+      <div *ngFor="let item of statusLegend; trackBy: trackById" style="display:flex; align-items:center; gap:8px;">
+        <div [style.background]="item.color" style="width:14px; height:14px; border-radius:3px;"></div>
+        <span>{{ item.label }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="dataProjetos && dataProjetos.length > 0" style="width:450px; margin-bottom:24px; text-align:left; height:260px;">
+    <h3 style="margin:0 0 8px 0;">Distribuição por Projetos</h3>
+    <div style="width:100%; height:220px;">
+      <canvas #projectChart width="450" height="220"></canvas>
+    </div>
+  </div>
+
+  <div *ngIf="dataSetores && dataSetores.length > 0" style="width:450px; margin-bottom:24px; text-align:left; height:260px;">
+    <h3 style="margin:0 0 8px 0;">Distribuição por Setores</h3>
+    <div style="width:100%; height:220px;">
+      <canvas #sectorChart width="450" height="220"></canvas>
+    </div>
+  </div>
+</div>

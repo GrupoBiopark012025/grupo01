@@ -2,7 +2,6 @@
   "name": "actionplanner-backend",
   "version": "1.0.0",
   "type": "module",
-  
   "scripts": {
     "start": "node src/server",
     "start:watch": "node --watch src/server",
@@ -17,6 +16,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.15.0",
+    "@sendgrid/mail": "^8.1.6",
     "amqplib": "~0.10.7",
     "bcrypt": "^5.1.0",
     "compression": "1.8.0",

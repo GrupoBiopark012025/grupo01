@@ -1,32 +1,121 @@
-<div *ngIf="!isLoading" class="grid">
+<div *ngIf="isLoading" class="loading-container">
+  <div class="spinner"></div>
+</div>
 
-  <div class="card">
-    <h3 class="titulo-grafico">Projetos</h3>
-    <div #chartProjetos class="chart"></div>
+<div *ngIf="!isLoading" class="dashboard-container">
+
+  <div class="kpi-grid">
+    <div class="kpi-card kpi-danger">
+      <div class="kpi-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <div class="kpi-content">
+        <div class="kpi-value">{{ atrasadas }}</div>
+        <div class="kpi-label">Tarefas Atrasadas</div>
+      </div>
+    </div>
+
+    <div class="kpi-card kpi-warning">
+      <div class="kpi-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+      </div>
+      <div class="kpi-content">
+        <div class="kpi-value">{{ proximasVencimento }}</div>
+        <div class="kpi-label">Vencem em 3 Dias</div>
+      </div>
+    </div>
+
+    <div class="kpi-card kpi-info">
+      <div class="kpi-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 11 12 14 22 4"></polyline>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+        </svg>
+      </div>
+      <div class="kpi-content">
+        <div class="kpi-value">{{ pendentes }}</div>
+        <div class="kpi-label">Em Andamento</div>
+      </div>
+    </div>
+
+    <div class="kpi-card kpi-success">
+      <div class="kpi-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+      <div class="kpi-content">
+        <div class="kpi-value">{{ concluidas }}</div>
+        <div class="kpi-label">Concluídas</div>
+      </div>
+    </div>
   </div>
 
-  <div class="card card-pie-big">
-    <h3 class="titulo-grafico">Status dos Projetos</h3>
-    <div class="pie-inner">
-      <div class="pie-top">
-        <div class="pie-wrapper">
-          <div #chartPie class="pie-chart"></div>
-          <div class="pie-legend">
-            <div *ngFor="let item of dataStatus" class="legend-item">
-              <span class="legend-color" [style.background]="item.color"></span>
-              <span class="legend-text">
-                {{ item.name }}: {{ item.value }} Tarefas ({{ item.percent }}%)
-              </span>
+  <div class="charts-grid">
+    
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">Distribuição por Status</h3>
+        <div class="chart-subtitle">Visão geral do pipeline de tarefas</div>
+      </div>
+      <div class="chart-body">
+        <div #chartPie class="chart-wrapper"></div>
+        <div class="status-legend">
+          <div *ngFor="let item of dataStatus" class="status-item">
+            <div class="status-indicator">
+              <span class="status-dot" [style.background]="item.color"></span>
+              <span class="status-name">{{ item.name }}</span>
+            </div>
+            <div class="status-metrics">
+              <span class="status-count">{{ item.value }}</span>
+              <span class="status-percent">{{ item.percent }}%</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="pie-bottom"></div>
+    </div>
+    <div class="chart-card card-metric" *ngIf="tempoMedio !== null">
+      <div class="chart-header">
+        <h3 class="chart-title">Tempo Médio de Conclusão</h3>
+        <div class="chart-subtitle">Eficiência operacional</div>
+      </div>
+      <div class="chart-body metric-body">
+        <div class="metric-value">
+          {{ tempoMedio | number:'1.0-0' }}<span class="metric-unit">h</span>
+        </div>
+        <div class="metric-description">
+          Tempo médio entre criação e conclusão de tarefas
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">Projetos Mais Ativos</h3>
+        <div class="chart-subtitle">Por volume de tarefas</div>
+      </div>
+      <div class="chart-body">
+        <div #chartProjetos class="chart-wrapper"></div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-header">
+        <h3 class="chart-title">Carga por Setor</h3>
+        <div class="chart-subtitle">Distribuição de demanda</div>
+      </div>
+      <div class="chart-body">
+        <div #chartSetores class="chart-wrapper"></div>
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <h3 class="titulo-grafico">Setores</h3>
-    <div #chartSetores class="chart"></div>
-  </div>
 </div>

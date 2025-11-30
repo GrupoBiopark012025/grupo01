@@ -17,7 +17,6 @@ function addDays(date, days) {
 async function main() {
   console.log("🧹 Limpando banco (deleteMany em ordem segura)...");
 
-  // Ajuste a ordem conforme suas FK; essa ordem é defensiva
   await prisma.taskLog.deleteMany();
   await prisma.taskComment.deleteMany();
   await prisma.task.deleteMany();
@@ -25,17 +24,15 @@ async function main() {
   await prisma.project.deleteMany();
   await prisma.userSector.deleteMany().catch(() => {});
   await prisma.userCliente.deleteMany().catch(() => {});
-  // apagar usuários depois de relações intermediárias
   await prisma.user.deleteMany();
   await prisma.sector.deleteMany();
   await prisma.cliente.deleteMany();
   await prisma.auditLog.deleteMany().catch(() => {});
-  // Alguns modelos podem não existir dependendo da sua versão do schema, por isso .catch()
 
   console.log("✨ Banco limpo.");
 
   // ---------------------------
-  // CLIENTES (mantidos conforme solicitado)
+  // CLIENTES
   // ---------------------------
   console.log("🌱 Criando clientes (IDs 1 e 2)...");
   const cliente1 = await prisma.cliente.upsert({
@@ -47,8 +44,7 @@ async function main() {
       cnpj: "61.465.711/0001-26",
       email: "hermes.inacio@gmail.com",
       telefone: "(45) 99127-9097",
-      endereco:
-        "Rua Julcimar Coppini, 0134, Jardim Coopagro - Toledo, PR"
+      endereco: "Rua Julcimar Coppini, 0134, Jardim Coopagro - Toledo, PR"
     }
   });
 
@@ -68,7 +64,7 @@ async function main() {
   console.log("✅ Clientes criados.");
 
   // ---------------------------
-  // USUÁRIOS (admin e colaborador por cliente)
+  // USUÁRIOS
   // ---------------------------
   console.log("🔐 Criando usuários (hashing de senha)...");
 
@@ -77,9 +73,7 @@ async function main() {
 
   const adminC = await prisma.user.upsert({
     where: { email: "admin@copiloto.com" },
-    update: {
-      password: pass
-    },
+    update: { password: pass },
     create: {
       nome: "Admin Copiloto",
       email: "admin@copiloto.com",
@@ -93,9 +87,7 @@ async function main() {
 
   const colaboradorCopiloto = await prisma.user.upsert({
     where: { email: "colaborador@copiloto.com" },
-    update: {
-      password: pass
-    },
+    update: { password: pass },
     create: {
       nome: "Colaborador Copiloto",
       email: "colaborador@copiloto.com",
@@ -109,9 +101,7 @@ async function main() {
 
   const gestorN = await prisma.user.upsert({
     where: { email: "gestor@natyapp.com" },
-    update: {
-      password: pass
-    },
+    update: { password: pass },
     create: {
       nome: "Gestor NatyApp",
       email: "gestor@natyapp.com",
@@ -124,9 +114,7 @@ async function main() {
 
   const colabN = await prisma.user.upsert({
     where: { email: "colaborador@natyapp.com" },
-    update: {
-      password: pass
-    },
+    update: { password: pass },
     create: {
       nome: "Colaborador NatyApp",
       email: "colaborador@natyapp.com",
@@ -160,20 +148,28 @@ async function main() {
 
   const setores = [];
   for (const s of setoresDados) {
-    const sec = await prisma.sector.create({ data: { name: s.name, acronym: s.acronym, description: s.description, color: s.color, status: "ATIVO" } });
+    const sec = await prisma.sector.create({ 
+      data: { 
+        name: s.name, 
+        acronym: s.acronym, 
+        description: s.description, 
+        color: s.color, 
+        status: "ATIVO" 
+      } 
+    });
     setores.push(sec);
   }
 
   console.log("✅ Setores criados:", setores.map(s => s.name).join(", "));
 
   // ---------------------------
-  // PROJETOS (2 por cliente)
+  // PROJETOS (3 por cliente para ter mais distribuição)
   // ---------------------------
-  console.log("📁 Criando projetos (2 por cliente)...");
+  console.log("📁 Criando projetos (3 por cliente)...");
 
   const projetos = [];
   for (const cliente of [cliente1, cliente2]) {
-    for (let p = 1; p <= 2; p++) {
+    for (let p = 1; p <= 3; p++) {
       const proj = await prisma.project.create({
         data: {
           name: `${cliente.nome} - Projeto ${p}`,
@@ -191,7 +187,9 @@ async function main() {
   // ---------------------------
   console.log("🗂️ Criando planos de ação (3 por projeto)...");
 
+  const hoje = new Date(2025, 11, 2); // 02/12/2025
   const planos = [];
+  
   for (const { proj, clienteId } of projetos) {
     for (let a = 1; a <= 3; a++) {
       const numero = `${clienteId === 1 ? "PA-COP" : "PA-NAT"}-${proj.id}-${a.toString().padStart(2, "0")}`;
@@ -201,8 +199,8 @@ async function main() {
           what: `Plano ${a} para ${proj.name}`,
           how: `Executar tarefas relacionadas ao plano ${a} do projeto ${proj.name}`,
           responsible: clienteId === 1 ? "Admin Copiloto" : "Gestor NatyApp",
-          startDate: new Date(2025, 0, 10 * a),
-          endDate: new Date(2025, 0, 10 * a + 30),
+          startDate: addDays(hoje, -60 + (a * 15)),
+          endDate: addDays(hoje, -30 + (a * 20)),
           status: a === 1 ? "EM_ANDAMENTO" : "PENDENTE",
           clienteId,
           projectId: proj.id
@@ -215,9 +213,9 @@ async function main() {
   console.log("✅ Planos de ação criados:", planos.length);
 
   // ---------------------------
-  // TAREFAS (10 por plano) + COMENTÁRIOS (3-6) + LOGS (5-12)
+  // TAREFAS (12 por plano) - DISTRIBUIÇÃO ESTRATÉGICA
   // ---------------------------
-  console.log("🔨 Gerando tarefas, comentários e logs (datas em 2025)...");
+  console.log("🔨 Gerando tarefas com datas estratégicas para 02/12/2025...");
 
   const commentTemplates = [
     "Favor revisar o escopo e confirmar disponibilidade.",
@@ -237,7 +235,6 @@ async function main() {
     { action: "TASK_CREATED", desc: () => "Tarefa criada" }
   ];
 
-  // Helper para gerar logs com valores coerentes
   function genOldNewFor(actionType, baseIndex) {
     switch (actionType) {
       case "STATUS_CHANGED":
@@ -247,27 +244,60 @@ async function main() {
       case "RESPONSIBLE_CHANGED":
         return { oldValue: "Usuário A", newValue: "Usuário B" };
       case "DUE_DATE_UPDATED":
-        return { oldValue: new Date(2025, 1, 10 + baseIndex).toISOString(), newValue: new Date(2025, 2, 10 + baseIndex).toISOString() };
+        return { oldValue: addDays(hoje, -10 + baseIndex).toISOString(), newValue: addDays(hoje, 5 + baseIndex).toISOString() };
       default:
         return { oldValue: null, newValue: null };
     }
   }
 
+  // DISTRIBUIÇÃO: 12 tarefas por plano
+  // 3 CONCLUIDAS, 2 ATRASADAS, 2 VENCEM 1-3 DIAS, 3 EM_ANDAMENTO, 2 PENDENTE
+  const taskDistribution = [
+    { status: "CONCLUIDA", priority: "ALTA", daysFromToday: -15, createDaysAgo: -30 },
+    { status: "CONCLUIDA", priority: "MEDIA", daysFromToday: -10, createDaysAgo: -25 },
+    { status: "CONCLUIDA", priority: "BAIXA", daysFromToday: -5, createDaysAgo: -20 },
+    { status: "EM_ANDAMENTO", priority: "ALTA", daysFromToday: -8, createDaysAgo: -18 },
+    { status: "PENDENTE", priority: "MEDIA", daysFromToday: -3, createDaysAgo: -10 },
+    { status: "EM_ANDAMENTO", priority: "ALTA", daysFromToday: 1, createDaysAgo: -5 },
+    { status: "PENDENTE", priority: "MEDIA", daysFromToday: 3, createDaysAgo: -7 },
+    { status: "EM_ANDAMENTO", priority: "ALTA", daysFromToday: 10, createDaysAgo: -8 },
+    { status: "EM_ANDAMENTO", priority: "MEDIA", daysFromToday: 15, createDaysAgo: -5 },
+    { status: "EM_ANDAMENTO", priority: "BAIXA", daysFromToday: 20, createDaysAgo: -3 },
+    { status: "ABERTA", priority: "MEDIA", daysFromToday: 25, createDaysAgo: -2 },
+    { status: "PENDENTE", priority: "BAIXA", daysFromToday: 30, createDaysAgo: -1 }
+  ];
+
   let totalTasks = 0;
+  let totalConcluidas = 0;
+  let totalAtrasadas = 0;
+  let totalProximasVenc = 0;
+
   for (const { plan, clienteId } of planos) {
-    for (let t = 1; t <= 10; t++) {
-      // escolha de responsáveis: clientes 1 usa adminC/colaboradorCopiloto; cliente 2 usa gestorN/colabN
-      const creator = clienteId === 1 ? adminC : gestorN;
-      const responsibles = clienteId === 1 ? [adminC, colaboradorCopiloto] : [gestorN, colabN];
+    const creator = clienteId === 1 ? adminC : gestorN;
+    const responsibles = clienteId === 1 ? [adminC, colaboradorCopiloto] : [gestorN, colabN];
+
+    for (let t = 0; t < taskDistribution.length; t++) {
+      const { status, priority, daysFromToday, createDaysAgo } = taskDistribution[t];
       const responsible = randomFrom(responsibles);
+
+      const dueDate = addDays(hoje, daysFromToday);
+      const createdAt = addDays(hoje, createDaysAgo);
+      
+      let updatedAt = createdAt;
+      if (status === "CONCLUIDA") {
+        const conclusionDay = Math.floor(Math.random() * Math.abs(daysFromToday - createDaysAgo)) + createDaysAgo;
+        updatedAt = addDays(hoje, conclusionDay);
+      }
 
       const task = await prisma.task.create({
         data: {
-          title: `${plan.number} - Tarefa ${t}`,
-          description: `Atividade ${t} vinculada ao plano ${plan.number} do cliente ${clienteId}.`,
-          status: t % 4 === 0 ? "CONCLUIDA" : (t % 3 === 0 ? "EM_ANDAMENTO" : "PENDENTE"),
-          priority: ["BAIXA", "MEDIA", "ALTA"][t % 3],
-          dueDate: addDays(new Date(2025, 0, 15), t * 3),
+          title: `${plan.number} - Tarefa ${t + 1}`,
+          description: `Atividade ${t + 1} vinculada ao plano ${plan.number} do cliente ${clienteId}.`,
+          status,
+          priority,
+          dueDate,
+          createdAt,
+          updatedAt: status === "CONCLUIDA" ? updatedAt : createdAt,
           clienteId,
           sectorId: randomFrom(setores).id,
           actionPlanId: plan.id,
@@ -277,23 +307,25 @@ async function main() {
       });
 
       totalTasks++;
+      if (status === "CONCLUIDA") totalConcluidas++;
+      else if (dueDate < hoje) totalAtrasadas++;
+      if (status !== "CONCLUIDA" && daysFromToday >= 1 && daysFromToday <= 3) totalProximasVenc++;
 
-      // criar um log de criação
       await prisma.taskLog.create({
         data: {
           taskId: task.id,
           userId: creator.id,
           action: "TASK_CREATED",
-          description: "Tarefa criada pelo seed com dados iniciais"
+          description: "Tarefa criada pelo seed",
+          createdAt
         }
       });
 
-      // comentários (3–6)
       const numComments = Math.floor(Math.random() * 4) + 3;
       for (let c = 0; c < numComments; c++) {
         const commenter = randomFrom([creator, ...responsibles]);
         const content = randomFrom(commentTemplates);
-        const comment = await prisma.taskComment.create({
+        await prisma.taskComment.create({
           data: {
             taskId: task.id,
             userId: commenter.id,
@@ -301,7 +333,6 @@ async function main() {
           }
         });
 
-        // log para cada comentário
         await prisma.taskLog.create({
           data: {
             taskId: task.id,
@@ -312,9 +343,8 @@ async function main() {
         });
       }
 
-      // logs adicionais (5–12 total including the creation log above)
-      const alreadyCreatedLogs = 1 + numComments; // creation + comment logs
-      const targetLogs = Math.floor(Math.random() * 8) + 5; // 5..12
+      const alreadyCreatedLogs = 1 + numComments;
+      const targetLogs = Math.floor(Math.random() * 8) + 5;
       const moreLogsToCreate = Math.max(0, targetLogs - alreadyCreatedLogs);
 
       for (let L = 0; L < moreLogsToCreate; L++) {
@@ -334,8 +364,8 @@ async function main() {
     }
   }
 
-  console.log(`✅ Criadas ${totalTasks} tarefas com comentários e logs.`);
-  console.log("🎉 Seed realista finalizado com sucesso!");
+  console.log(`✅ ${totalTasks} tarefas criadas (${totalConcluidas} concluídas, ${totalAtrasadas} atrasadas, ${totalProximasVenc} vencem em 1-3 dias)`);
+  console.log("🎉 Seed finalizada para apresentação 02/12/2025!");
   console.log("");
   console.log("Usuários criados (login / senha):");
   console.log(` - ${adminC.email} / 123456 (Admin Copiloto)`);

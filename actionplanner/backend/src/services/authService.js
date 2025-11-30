@@ -143,7 +143,7 @@ export class AuthService {
 
     // Verifica se o cliente informado está entre os acessíveis
     const hasAccess = user.userClientes.some(
-      (uc) => uc.cliente.id === parseInt(clienteId)
+      (uc) => uc.id === parseInt(clienteId)
     );
 
     if (!hasAccess) {
@@ -152,8 +152,8 @@ export class AuthService {
 
     // Busca o cliente selecionado (já incluso no user.userClientes)
     const cliente = user.userClientes.find(
-      (uc) => uc.cliente.id === parseInt(clienteId)
-    ).cliente;
+      (uc) => uc.id === parseInt(clienteId)
+    );
 
     // Gera novo token com clienteId atualizado
     const token = AuthService.generateToken({

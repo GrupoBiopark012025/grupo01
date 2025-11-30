@@ -12,6 +12,7 @@ export class UserService {
 
     const data = {
       ...rest,
+      isAdmin,
       password: hashedPassword,
       clienteId: rest.clienteId ?? (isAdmin ? 1 : undefined)
     };

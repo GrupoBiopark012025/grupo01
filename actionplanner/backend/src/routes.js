@@ -11,6 +11,7 @@ import SectorRouter from "./routes/sectorRouter.js";
 import TasksRouter from "./routes/tasksRouter.js";
 import ActionPlanRouter from "./routes/actionPlanRouter.js";
 import ProjectRouter from "./routes/projectRouter.js";
+import DashboardRouter from "./routes/dashboardRoutes.js";
 
 const routes = Router();
 
@@ -33,5 +34,6 @@ routes.use("/api/sectors", SectorRouter);
 routes.use("/api/tasks", TasksRouter);
 routes.use("/api/actionPlans", ActionPlanRouter);
 routes.use("/api/projects", ProjectRouter);
+routes.use("/api/dashboard", DashboardRouter);
 
 export default routes;

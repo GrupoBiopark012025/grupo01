@@ -1,0 +1,32 @@
+<div *ngIf="!isLoading" class="grid">
+
+  <div class="card">
+    <h3 class="titulo-grafico">Projetos</h3>
+    <div #chartProjetos class="chart"></div>
+  </div>
+
+  <div class="card card-pie-big">
+    <h3 class="titulo-grafico">Status dos Projetos</h3>
+    <div class="pie-inner">
+      <div class="pie-top">
+        <div class="pie-wrapper">
+          <div #chartPie class="pie-chart"></div>
+          <div class="pie-legend">
+            <div *ngFor="let item of dataStatus" class="legend-item">
+              <span class="legend-color" [style.background]="item.color"></span>
+              <span class="legend-text">
+                {{ item.name }}: {{ item.value }} Tarefas ({{ item.percent }}%)
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pie-bottom"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 class="titulo-grafico">Setores</h3>
+    <div #chartSetores class="chart"></div>
+  </div>
+</div>

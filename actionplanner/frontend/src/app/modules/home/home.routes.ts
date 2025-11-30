@@ -1,9 +1,9 @@
 import { Routes } from "@angular/router";
-import { HomeComponent } from "@modules/home/home/home.component";
 
 export const HomeRoutes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    loadComponent: () =>
+      import('@modules/dashboard/dashboard.component').then(c => c.DashboardComponent)
   }
 ];

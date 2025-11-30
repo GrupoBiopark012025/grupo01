@@ -1,0 +1,78 @@
+.grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: minmax(350px, auto);
+  gap: 15px;
+}
+
+.titulo-grafico {
+  font-size: 18px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px 24px 24px 24px;
+  box-shadow: 0 6px 20px rgba(8, 20, 50, 0.06);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-pie-big {
+  grid-row: span 2;
+}
+
+.chart {
+  width: 100%;
+  height: 100%;
+}
+
+.pie-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pie-chart {
+  width: 400px;
+  height: 400px;
+}
+
+.pie-legend {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+  align-items: flex-start;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 6px;
+  width: 100%;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-text {
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.legend-text span:last-child {
+  opacity: 0.75;
+}

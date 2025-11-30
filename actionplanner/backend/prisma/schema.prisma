@@ -76,8 +76,22 @@ model User {
   tasksCreated     Task[]        @relation("UserCreatedTasks")
   taskComments TaskComment[]
   taskLogs     TaskLog[]
+  passwordResets   PasswordReset[]
 
   @@map("users")
+}
+
+model PasswordReset {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  token     String   @unique @db.VarChar(255)
+  expiresAt DateTime @map("expires_at")
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_resets")
 }
 
 // Tabela de relacionamento User-Cliente (quais clientes o usuario pode acessar)

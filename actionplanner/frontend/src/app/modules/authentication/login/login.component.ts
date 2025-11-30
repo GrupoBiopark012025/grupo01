@@ -6,7 +6,7 @@ import { ZardFormModule } from "@shared/components/zardui/form/form.module";
 import { ZardInputDirective } from "@shared/components/zardui/input/input.directive";
 import { take } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { toast } from "ngx-sonner";
 import { AuthenticationService } from "@core/services/authentication/authentication.service";
 
@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
   private _returnUrl = signal<string | undefined>(undefined);
 
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly authenticationService = inject(AuthenticationService);
   private readonly destroyRef = inject(DestroyRef);
@@ -57,5 +58,10 @@ export class LoginComponent implements OnInit {
           toast.error(e.error.message || 'Acesso temporariamente indisponível.');
         }
       })
+  }
+
+  navigateToForgotPassword(event: Event) {
+    event.preventDefault();
+    this.router.navigate(['/forgot-password']);
   }
 }

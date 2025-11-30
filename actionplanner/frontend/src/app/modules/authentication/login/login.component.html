@@ -1,6 +1,7 @@
 <div class="flex h-screen justify-center items-center">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <z-card class="w-full max-w-sm" zTitle="Faça login na sua conta" zDescription="Insira seu e-mail abaixo para logar em sua conta">
+    <z-card class="w-full max-w-sm" zTitle="Faça login na sua conta"
+      zDescription="Insira seu e-mail abaixo para logar em sua conta">
       <div class="space-y-4">
         <div class="space-y-2">
           @let emailControl = form.get('email')!;
@@ -8,12 +9,13 @@
           <z-form-field>
             <label z-form-label zRequired>Email</label>
             <z-form-control>
-              <input z-input type="email" placeholder="seu.email@exemplo.com" formControlName="email" [zStatus]="emailControl.invalid && emailControl.touched ? 'error' : undefined" />
+              <input z-input type="email" placeholder="seu.email@exemplo.com" formControlName="email"
+                [zStatus]="emailControl.invalid && emailControl.touched ? 'error' : undefined" />
             </z-form-control>
             @if (emailControl.hasError('required') && emailControl.touched) {
-              <z-form-message zType="error">É necessário informar e-mail.</z-form-message>
+            <z-form-message zType="error">É necessário informar e-mail.</z-form-message>
             } @else if (emailControl.hasError('email') && emailControl.touched) {
-              <z-form-message zType="error">Por favor, insira um e-mail válido.</z-form-message>
+            <z-form-message zType="error">Por favor, insira um e-mail válido.</z-form-message>
             }
           </z-form-field>
         </div>
@@ -21,22 +23,23 @@
           @let passwordControl = form.get('password')!;
 
           <z-form-field>
-            <label z-form-label zRequired>Password</label>
+            <div class="flex items-center justify-between">
+              <label z-form-label zRequired>Senha</label>
+            </div>
             <z-form-control>
               <input z-input type="password" placeholder="Crie uma senha" formControlName="password" />
             </z-form-control>
             @if (passwordControl.hasError('required') && passwordControl.touched) {
-              <z-form-message zType="error">É necessário informar senha.</z-form-message>
+            <z-form-message zType="error">É necessário informar senha.</z-form-message>
             }
           </z-form-field>
+          <a href="/forgot-password" class="text-xs text-secondary hover:underline cursor-pointer"
+            (click)="navigateToForgotPassword($event)" style="color: var(--destructive);">
+            Esqueci minha senha
+          </a>
         </div>
         <div class="space-y-2">
-          <button
-            z-button
-            zType="default"
-            type="submit"
-            class="w-full cursor-pointer"
-          >
+          <button z-button zType="default" type="submit" class="w-full cursor-pointer">
             Login
           </button>
         </div>

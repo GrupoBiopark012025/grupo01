@@ -9,6 +9,11 @@ import {
   verify,
   changeEnvironment
 } from "../controllers/authController.js";
+import {
+  requestPasswordReset,
+  validateResetToken,
+  resetPassword
+} from "../controllers/passwordResetController.js";
 
 const router = Router();
 
@@ -17,5 +22,10 @@ router.post("/refresh", verify, refreshToken);
 router.post("/logout", verify, logout);
 router.get("/validate", verify, validateToken);
 router.post("/change-environment", verify, changeEnvironment);
+
+// Rotas de recuperação de senha
+router.post("/request-password-reset", requestPasswordReset);
+router.get("/validate-reset-token", validateResetToken);
+router.post("/reset-password", resetPassword);
 
 export default router;

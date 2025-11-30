@@ -46,6 +46,87 @@ export class DashboardService {
       }
     })
 
+    // ===== NOVOS INDICADORES ESTRATÉGICOS =====
+    
+    // 1. Taxa de conclusão no prazo (tarefas concluídas antes ou na data de vencimento)
+    const concluidasNoPrazo = await prisma.$queryRaw`
+      SELECT COUNT(*) as count
+      FROM tasks 
+      WHERE cliente_id = ${clienteId}
+        AND status = 'CONCLUIDA'
+        AND updated_at <= due_date
+    `
+    
+    const concluidasNoPrazoCount = Number(concluidasNoPrazo[0].count)
+    const taxaConclusaoPrazo = concluidas > 0 
+      ? ((concluidasNoPrazoCount / concluidas) * 100).toFixed(1) 
+      : "0"
+    // 2. Projetos com maior taxa de atraso
+    const projetosCriticos = await prisma.$queryRaw`
+      SELECT 
+        ap.id,
+        ap.number,
+        COUNT(t.id) as total_tarefas,
+        SUM(CASE WHEN t.status != 'CONCLUIDA' AND t.due_date < NOW() THEN 1 ELSE 0 END) as tarefas_atrasadas,
+        ROUND(
+          (SUM(CASE WHEN t.status != 'CONCLUIDA' AND t.due_date < NOW() THEN 1 ELSE 0 END)::numeric / 
+          NULLIF(COUNT(t.id), 0)) * 100, 1
+        ) as taxa_atraso
+      FROM action_plans ap
+      LEFT JOIN tasks t ON t.action_plan_id = ap.id
+      WHERE ap.cliente_id = ${clienteId}
+      GROUP BY ap.id, ap.number
+      HAVING COUNT(t.id) > 0 AND SUM(CASE WHEN t.status != 'CONCLUIDA' AND t.due_date < NOW() THEN 1 ELSE 0 END) > 0
+      ORDER BY taxa_atraso DESC
+      LIMIT 5
+    `
+
+    // 3. Setores sobrecarregados (com mais de 10 tarefas pendentes)
+    const setoresSobrecarregados = await prisma.$queryRaw`
+      SELECT 
+        s.id,
+        s.name,
+        s.acronym,
+        COUNT(t.id) as total_pendentes,
+        SUM(CASE WHEN t.status != 'CONCLUIDA' AND t.due_date < NOW() THEN 1 ELSE 0 END) as atrasadas
+      FROM sectors s
+      LEFT JOIN tasks t ON t.sector_id = s.id AND t.cliente_id = ${clienteId}
+      WHERE s.status = 'ATIVO'
+        AND t.status IN ('ABERTA', 'EM_ANDAMENTO', 'PENDENTE')
+      GROUP BY s.id, s.name, s.acronym
+      HAVING COUNT(t.id) >= 5
+      ORDER BY total_pendentes DESC
+      LIMIT 5
+    `
+
+    // 4. Distribuição de tarefas por prioridade
+    const distribuicaoPrioridade = await prisma.task.groupBy({
+      by: ["priority"],
+      where: { 
+        clienteId,
+        status: { in: ["ABERTA", "EM_ANDAMENTO", "PENDENTE"] }
+      },
+      _count: { priority: true }
+    })
+
+    // 5. Usuários com mais tarefas atribuídas
+    const topResponsaveis = await prisma.$queryRaw`
+      SELECT 
+        u.id,
+        u.nome,
+        COUNT(t.id) as total_tarefas,
+        SUM(CASE WHEN t.status = 'CONCLUIDA' THEN 1 ELSE 0 END) as concluidas,
+        SUM(CASE WHEN t.status != 'CONCLUIDA' THEN 1 ELSE 0 END) as pendentes
+      FROM users u
+      LEFT JOIN tasks t ON t.user_responsible_id = u.id AND t.cliente_id = ${clienteId}
+      WHERE u.cliente_id = ${clienteId} AND u.status = 'ATIVO'
+      GROUP BY u.id, u.nome
+      HAVING COUNT(t.id) > 0
+      ORDER BY total_tarefas DESC
+      LIMIT 5
+    `
+
+    // ===== DISTRIBUIÇÕES EXISTENTES =====
     const rawStatus = await prisma.task.groupBy({
       by: ["status"],
       where: { clienteId },
@@ -100,13 +181,13 @@ export class DashboardService {
       }
     })
 
+    // Tempo médio de conclusão
     const concluidasComDatas = await prisma.task.findMany({
       where: { clienteId, status: "CONCLUIDA" },
       select: { createdAt: true, updatedAt: true }
     })
 
     let tempoMedio = null
-
     if (concluidasComDatas.length > 0) {
       const somatorio = concluidasComDatas.reduce((acc, t) => {
         const diff = t.updatedAt.getTime() - t.createdAt.getTime()
@@ -123,9 +204,35 @@ export class DashboardService {
       paralisadas,
       proximasVencimento,
       tempoMedio,
+      
       distribuicaoStatus,
       distribuicaoProjetos,
-      distribuicaoSetores
+      distribuicaoSetores,
+
+      taxaConclusaoPrazo,
+      projetosCriticos: projetosCriticos.map(p => ({
+        ...p,
+        total_tarefas: Number(p.total_tarefas),
+        tarefas_atrasadas: Number(p.tarefas_atrasadas),
+        taxa_atraso: Number(p.taxa_atraso)
+      })),
+      setoresSobrecarregados: setoresSobrecarregados.map(s => ({
+        ...s,
+        total_pendentes: Number(s.total_pendentes),
+        atrasadas: Number(s.atrasadas)
+      })),
+      distribuicaoPrioridade: distribuicaoPrioridade.map(p => ({
+        key: p.priority,
+        label: p.priority,
+        count: p._count.priority
+      })),
+      topResponsaveis: topResponsaveis.map(u => ({
+        ...u,
+        total_tarefas: Number(u.total_tarefas),
+        concluidas: Number(u.concluidas),
+        pendentes: Number(u.pendentes)
+      }))
     }
+
   }
 }

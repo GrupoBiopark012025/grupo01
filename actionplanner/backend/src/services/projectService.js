@@ -12,7 +12,7 @@ export class ProjectService {
         status: projectData.status || 'ATIVO'
       },
       include: {
-        tasks: true
+        actionPlans: true
       }
     });
   }
@@ -22,7 +22,7 @@ export class ProjectService {
     return await prisma.project.findUnique({
       where: { id: parseInt(id) },
       include: {
-        tasks: true
+        actionPlans: true
       }
     });
   }
@@ -37,7 +37,7 @@ export class ProjectService {
         }
       },
       include: {
-        tasks: true
+        actionPlans: true
       }
     });
   }
@@ -69,7 +69,7 @@ export class ProjectService {
     const where = {};
     if (name) where.name = { contains: name, mode: 'insensitive' };
     if (description) where.description = { contains: description, mode: 'insensitive' };
-    if (status) where.status = status;
+    if (status) where.status = status.toUpperCase();
 
     Object.assign(where, otherFilters);
 
@@ -80,7 +80,7 @@ export class ProjectService {
         take: size,
         orderBy: { [orderBy.replace('-', '')]: orderBy.startsWith('-') ? 'desc' : 'asc' },
         include: {
-          tasks: true
+          actionPlans: true
         }
       }),
       prisma.project.count({ where })
@@ -103,7 +103,7 @@ export class ProjectService {
       where: { id: parseInt(id) },
       data: projectData,
       include: {
-        tasks: true
+        actionPlans: true
       }
     });
   }
@@ -124,7 +124,7 @@ export class ProjectService {
       where: { id: parseInt(id) },
       data: { status: 'INATIVO' },
       include: {
-        tasks: true
+        actionPlans: true
       }
     });
   }
@@ -145,7 +145,7 @@ export class ProjectService {
       where: { id: parseInt(id) },
       data: { status: 'ATIVO' },
       include: {
-        tasks: true
+        actionPlans: true
       }
     });
   }
@@ -155,7 +155,7 @@ export class ProjectService {
     const project = await prisma.project.findUnique({ 
       where: { id: parseInt(id) },
       include: {
-        tasks: true
+        actionPlans: true
       }
     });
     
@@ -165,9 +165,9 @@ export class ProjectService {
       throw err;
     }
 
-    // Verificar se há tarefas associadas
-    if (project.tasks && project.tasks.length > 0) {
-      const err = new Error('Não é possível excluir projeto com tarefas associadas');
+    // Verificar se há planos de ação associados
+    if (project.actionPlans && project.actionPlans.length > 0) {
+      const err = new Error('Não é possível excluir projeto com planos de ação associados');
       err.code = 'P2003';
       throw err;
     }
@@ -177,18 +177,18 @@ export class ProjectService {
     });
   }
 
-  // Contar tarefas de um projeto
-  static async countTasks(id) {
+  // Contar planos de ação de um projeto
+  static async countActionPlans(id) {
     const project = await prisma.project.findUnique({
       where: { id: parseInt(id) },
       include: {
         _count: {
-          select: { tasks: true }
+          select: { actionPlans: true }
         }
       }
     });
 
-    return project?._count?.tasks || 0;
+    return project?._count?.actionPlans || 0;
   }
 
   // Obter estatísticas do projeto
@@ -196,9 +196,13 @@ export class ProjectService {
     const project = await prisma.project.findUnique({
       where: { id: parseInt(id) },
       include: {
-        tasks: {
-          select: {
-            status: true
+        actionPlans: {
+          include: {
+            tasks: {
+              select: {
+                status: true
+              }
+            }
           }
         }
       }
@@ -206,16 +210,20 @@ export class ProjectService {
 
     if (!project) return null;
 
-    const totalTasks = project.tasks.length;
-    const completedTasks = project.tasks.filter(t => t.status === 'CONCLUIDA').length;
-    const activeTasks = project.tasks.filter(t => 
+    // Agregar todas as tarefas dos planos de ação
+    const allTasks = project.actionPlans.flatMap(plan => plan.tasks);
+
+    const totalTasks = allTasks.length;
+    const completedTasks = allTasks.filter(t => t.status === 'CONCLUIDA').length;
+    const activeTasks = allTasks.filter(t => 
       t.status !== 'CANCELADA' && t.status !== 'CONCLUIDA'
     ).length;
-    const canceledTasks = project.tasks.filter(t => t.status === 'CANCELADA').length;
+    const canceledTasks = allTasks.filter(t => t.status === 'CANCELADA').length;
 
     return {
       projectId: project.id,
       projectName: project.name,
+      totalActionPlans: project.actionPlans.length,
       totalTasks,
       activeTasks,
       completedTasks,
@@ -224,4 +232,3 @@ export class ProjectService {
     };
   }
 }
-

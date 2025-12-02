@@ -17,7 +17,7 @@ import {
 } from "@data/action-plan/dtos";
 import { ActionPlanDataService } from "@data/action-plan/action-plan-data.service";
 import { ProjectDataService } from "@data/project/project-data.service";
-import { GetProjectDto } from "@data/project/dtos";
+import { ProjectDto } from "@data/project/dto/project-dto";
 import { UserDataService } from "@data/user/user-data.service";
 import { GetUserDto } from "@data/user/dtos";
 import { debounceTime, distinctUntilChanged, switchMap } from "rxjs/operators";
@@ -53,8 +53,8 @@ export class ActionPlanCreateComponent {
 
   // Projetos
   projectSearchTerm = signal<string>('');
-  foundProjects = signal<GetProjectDto[]>([]);
-  selectedProject = signal<GetProjectDto | null>(null);
+  foundProjects = signal<ProjectDto[]>([]);
+  selectedProject = signal<ProjectDto | null>(null);
   isSearchingProjects = signal(false);
   showProjectDropdown = signal(false);
   private projectSearchSubject = new Subject<string>();
@@ -103,7 +103,7 @@ export class ActionPlanCreateComponent {
       next: (projects) => {
         
         // Verifica se a resposta é um array ou se está dentro de uma propriedade
-        let projectsArray: GetProjectDto[] = [];
+        let projectsArray: ProjectDto[] = [];
         if (Array.isArray(projects)) {
           projectsArray = projects;
         } else if (projects && typeof projects === 'object') {
@@ -230,7 +230,7 @@ export class ActionPlanCreateComponent {
     this.projectSearchSubject.next(value);
   }
 
-  selectProject(project: GetProjectDto): void {
+  selectProject(project: ProjectDto): void {
     this.selectedProject.set(project);
     this.projectSearchTerm.set(project.name);
     this.form.get('projectSearch')?.setValue(project.name);

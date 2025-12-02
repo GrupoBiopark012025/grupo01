@@ -19,7 +19,7 @@ export const showProject = async (req, res, next) => {
       return res.status(404).json({ error: 'Projeto não encontrado' });
     }
     
-    res.hateoas_item(project);
+    res.json(project);
   } catch (err) {
     next(err);
   }
@@ -57,7 +57,7 @@ export const listProjects = async (req, res, next) => {
   #swagger.parameters['status'] = {
     in: 'query',
     description: 'Filtrar por status',
-    enum: ['ativo', 'inativo']
+    enum: ['ATIVO', 'INATIVO']
   }
   #swagger.responses[200] = {
     description: "Lista de projetos",
@@ -86,11 +86,7 @@ export const listProjects = async (req, res, next) => {
 
     const result = await ProjectService.findMany(filters, pagination);
 
-    res.hateoas_list(result.projects, result.totalPages, {
-      totalData: result.totalData,
-      currentPage: result.currentPage,
-      size: result.size
-    });
+    res.json(result);
   } catch (err) {
     next(err);
   }
@@ -193,7 +189,7 @@ export const editProject = async (req, res, next) => {
     
     const project = await ProjectService.update(id, updateData);
     
-    res.hateoas_item(project);
+    res.json(project);
   } catch (err) {
     if (err.code === 'P2025') {
       return res.status(404).json({ error: 'Projeto não encontrado' });
@@ -217,12 +213,12 @@ export const deleteProject = async (req, res, next) => {
     description: "Projeto não encontrado"
   }
   #swagger.responses[400] = {
-    description: "Não é possível excluir projeto com tarefas associadas"
+    description: "Não é possível excluir projeto com planos de ação associados"
   }
   */
   try {
     const project = await ProjectService.softDelete(req.params.id);
-    res.hateoas_item(project);
+    res.json(project);
   } catch (err) {
     if (err.code === 'P2025') {
       return res.status(404).json({ error: 'Projeto não encontrado' });
@@ -242,6 +238,7 @@ export const getProjectStatistics = async (req, res, next) => {
       properties: {
         projectId: { type: "integer" },
         projectName: { type: "string" },
+        totalActionPlans: { type: "integer" },
         totalTasks: { type: "integer" },
         activeTasks: { type: "integer" },
         completedTasks: { type: "integer" },
@@ -268,4 +265,3 @@ export const getProjectStatistics = async (req, res, next) => {
     next(err);
   }
 };
-

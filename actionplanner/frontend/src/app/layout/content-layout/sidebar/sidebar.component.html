@@ -109,26 +109,19 @@
           >
             <div class="ml-4 space-y-1 border-l border-gray-200 pl-4">
               <a
-                href="#"
-                routerLinkActive="bg-gray-50 text-gray-800"
+                [routerLink]="['/projects']"
+                routerLinkActive="text-gray-900 font-semibold bg-gray-100"
                 [routerLinkActiveOptions]="{exact: true}"
                 class="block px-3 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 hover:text-gray-800 transition-colors"
               >
                 Meus Projetos
               </a>
               <a
-                href="#"
-                routerLinkActive="bg-gray-50 text-gray-800"
+                [routerLink]="['/projects/create']"
+                routerLinkActive="text-gray-900 font-semibold bg-gray-100"
                 class="block px-3 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 hover:text-gray-800 transition-colors"
               >
                 Novo Projeto
-              </a>
-              <a
-                href="#"
-                routerLinkActive="bg-gray-50 text-gray-800"
-                class="block px-3 py-2 text-sm text-gray-600 rounded hover:bg-gray-50 hover:text-gray-800 transition-colors"
-              >
-                Arquivados
               </a>
             </div>
           </div>

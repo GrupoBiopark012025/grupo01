@@ -1,0 +1,168 @@
+<div class="container mx-auto px-4 py-6">
+  <!-- Header -->
+  <div class="mb-6">
+    <div class="flex items-center gap-4 mb-2">
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+        (click)="goBack()"
+      >
+        <lucide-icon [img]="icons.ArrowLeftIcon" [size]="16"></lucide-icon>
+        Voltar
+      </button>
+    </div>
+    <div class="flex justify-between items-start">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">{{ project()?.name }}</h1>
+        <p class="text-sm text-gray-500 mt-1">
+          Criado em {{ project()?.createdAt | date:'dd/MM/yyyy HH:mm' }}
+        </p>
+      </div>
+      <span
+        *ngIf="project()"
+        class="px-3 py-1 text-sm font-semibold rounded-full"
+        [class.bg-green-100]="project()!.status === 'ATIVO'"
+        [class.text-green-800]="project()!.status === 'ATIVO'"
+        [class.bg-red-100]="project()!.status === 'INATIVO'"
+        [class.text-red-800]="project()!.status === 'INATIVO'"
+      >
+        {{ project()!.status === 'ATIVO' ? 'Ativo' : 'Inativo' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading()" class="bg-white rounded-lg shadow p-6">
+    <div class="animate-pulse space-y-4">
+      <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+      <div class="h-20 bg-gray-200 rounded"></div>
+      <div class="grid grid-cols-4 gap-4">
+        <div class="h-24 bg-gray-200 rounded"></div>
+        <div class="h-24 bg-gray-200 rounded"></div>
+        <div class="h-24 bg-gray-200 rounded"></div>
+        <div class="h-24 bg-gray-200 rounded"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!loading() && project()">
+    <!-- Informações -->
+    <div class="bg-white rounded-lg shadow mb-6">
+      <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Informações do Projeto</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="text-sm font-medium text-gray-500">Descrição</label>
+            <p class="text-sm text-gray-900 mt-1">
+              {{ project()!.description || 'Sem descrição' }}
+            </p>
+          </div>
+          <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+            <div>
+              <label class="text-sm font-medium text-gray-500">Criado em</label>
+              <p class="text-sm text-gray-900 mt-1">
+                {{ project()!.createdAt | date:'dd/MM/yyyy HH:mm' }}
+              </p>
+            </div>
+            <div>
+              <label class="text-sm font-medium text-gray-500">Atualizado em</label>
+              <p class="text-sm text-gray-900 mt-1">
+                {{ project()!.updatedAt | date:'dd/MM/yyyy HH:mm' }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estatísticas -->
+    <div *ngIf="statistics()" class="bg-white rounded-lg shadow">
+      <div class="p-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4">Estatísticas</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+          <div class="bg-purple-50 rounded-lg p-4 border border-purple-200">
+            <div class="text-sm font-medium text-purple-800">Planos de Ação</div>
+            <div class="text-2xl font-bold text-purple-900 mt-1">
+              {{ statistics()!.totalActionPlans }}
+            </div>
+          </div>
+
+          <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+            <div class="text-sm font-medium text-blue-800">Total de Tarefas</div>
+            <div class="text-2xl font-bold text-blue-900 mt-1">
+              {{ statistics()!.totalTasks }}
+            </div>
+          </div>
+
+          <div class="bg-green-50 rounded-lg p-4 border border-green-200">
+            <div class="text-sm font-medium text-green-800">Concluídas</div>
+            <div class="text-2xl font-bold text-green-900 mt-1">
+              {{ statistics()!.completedTasks }}
+            </div>
+          </div>
+
+          <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
+            <div class="text-sm font-medium text-yellow-800">Ativas</div>
+            <div class="text-2xl font-bold text-yellow-900 mt-1">
+              {{ statistics()!.activeTasks }}
+            </div>
+          </div>
+
+          <div class="bg-red-50 rounded-lg p-4 border border-red-200">
+            <div class="text-sm font-medium text-red-800">Canceladas</div>
+            <div class="text-2xl font-bold text-red-900 mt-1">
+              {{ statistics()!.canceledTasks }}
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <div class="text-sm font-medium text-gray-700">Taxa de Conclusão</div>
+              <div class="text-sm text-gray-500 mt-1">
+                {{ statistics()!.completedTasks }} de {{ statistics()!.totalTasks }} tarefas concluídas
+              </div>
+            </div>
+            <div class="text-3xl font-bold text-gray-900">
+              {{ statistics()!.completionRate }}%
+            </div>
+          </div>
+          
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div
+              class="bg-green-500 h-2 rounded-full transition-all duration-300"
+              [style.width.%]="statistics()!.completionRate"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ações -->
+    <div class="flex justify-end mt-6">
+      <button
+        type="button"
+        class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
+        (click)="navigateToEdit()"
+      >
+        <lucide-icon [img]="icons.EditIcon" [size]="16"></lucide-icon>
+        Editar Projeto
+      </button>
+    </div>
+  </div>
+
+  <!-- Not Found -->
+  <div *ngIf="!loading() && !project()" class="bg-white rounded-lg shadow p-12 text-center">
+    <p class="text-gray-500 mb-4">Projeto não encontrado</p>
+    <button
+      type="button"
+      class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700"
+      (click)="goBack()"
+    >
+      Voltar
+    </button>
+  </div>
+</div>
